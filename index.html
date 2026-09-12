@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v13.4 · Hard Editor Fix</title>
+<title>Project Control v13.5 · Editor Runtime Fix</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -152,7 +152,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v13.4</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v13.5</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -302,7 +302,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <button id="saveTemplatesBtn" class="btn blue">Simpan Template</button>
     <button id="resetTemplatesBtn" class="btn">Reset Template Default</button>
 
-    <div class="info-box"><b>Sistem Project Health v13.4:</b><br>
+    <div class="info-box"><b>Sistem Project Health v13.5:</b><br>
       Project, PLN, Oneflux, Binder, dan BAST Doc masing-masing dihitung 0–100%. Health total = rata-rata 5 bagian. Deadline hanya alert dan tidak mengurangi persentase Health.
     </div>
     <div class="info-box">Mode zero-cost: edit dari WebApp masuk ke Google Form/EDIT LOG, lalu WEBAPP DATA otomatis menampilkan nilai edit terbaru saat Sync. Tidak memakai Google Cloud, Apps Script, Make, atau layanan berbayar.</div>
@@ -397,11 +397,11 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v13_4_data";
-const LEGACY_STORAGE_KEY="project_control_v13_3_data";
+const STORAGE_KEY="project_control_v13_5_data";
+const LEGACY_STORAGE_KEY="project_control_v13_4_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="13.4";
+const APP_VERSION="13.5";
 const FORM_PREFILL_KEY="project_control_v13_form_prefill";
 const DEFAULT_FORM_PREFILL_LINK='https://docs.google.com/forms/d/e/1FAIpQLSdbWBU4D_K01CLZ-ekGv3vBNXZDRTnfiNAUMY7gRMs1GJlIXw/viewform?usp=pp_url&entry.2083509010=PC_SITE_KEY&entry.2040458586=PC_SITE_NAME&entry.2031819333=PC_PROJECT_ID&entry.857121428=PC_SOW&entry.1904932691=PC_FIELD&entry.301212394=PC_OLD&entry.421562129=PC_NEW&entry.135893051=PC_EDITOR';
 const EMBEDDED_FORM_CONFIG={
@@ -544,6 +544,12 @@ function parseDeadline(value){
   if(m)return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12);
   const d=new Date(s);
   return Number.isNaN(d.getTime())?null:new Date(d.getFullYear(),d.getMonth(),d.getDate(),12);
+}
+function toDateInput(value){
+  const d=parseDeadline(value);
+  if(!d)return "";
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
 }
 function daysToDeadline(s){
   const d=parseDeadline(s.deadline);if(!d)return null;
@@ -1231,11 +1237,12 @@ function hardSelectOptions(values,current){
   return values.map(v=>`<option value="${attr(v)}"${norm(current)===norm(v)?' selected':''}>${esc(v||"-")}</option>`).join("");
 }
 function openGoogleEditor(){
-  if(!currentDetail){toast("Buka detail site dulu");return}
-  document.getElementById("pcHardEditor")?.remove();
-  editorContext={recordId:currentDetail.recordId};
+  try{
+    if(!currentDetail){toast("Buka detail site dulu");return}
+    document.getElementById("pcHardEditor")?.remove();
+    editorContext={recordId:currentDetail.recordId};
 
-  const overlay=document.createElement("div");
+    const overlay=document.createElement("div");
   overlay.id="pcHardEditor";
   overlay.innerHTML=`
     <div class="pc-hard-wrap">
@@ -1287,9 +1294,13 @@ function openGoogleEditor(){
   document.documentElement.style.overflow="hidden";
   document.body.style.overflow="hidden";
 
-  hardEditorEl("pcHardClose").onclick=closeGoogleEditor;
-  hardEditorEl("pcHardCancel").onclick=closeGoogleEditor;
-  hardEditorEl("pcHardSave").onclick=saveGoogleEditor;
+    hardEditorEl("pcHardClose").onclick=closeGoogleEditor;
+    hardEditorEl("pcHardCancel").onclick=closeGoogleEditor;
+    hardEditorEl("pcHardSave").onclick=saveGoogleEditor;
+  }catch(err){
+    console.error("Editor gagal dibuka:",err);
+    toast("Editor error: "+err.message);
+  }
 }
 function closeGoogleEditor(){
   document.getElementById("pcHardEditor")?.remove();
