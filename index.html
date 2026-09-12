@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v6 · Published Sheets</title>
+<title>Project Control v7 · Integrated Dashboard</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -42,11 +42,28 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 .modal{display:none;position:fixed;inset:0;background:rgba(7,12,23,.58);z-index:100;align-items:flex-end}.modal.show{display:flex}.sheet{width:min(580px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:26px 26px 0 0;padding:9px 16px 26px;margin:auto}.grab{width:42px;height:5px;background:#d7dce4;border-radius:99px;margin:0 auto 14px}.sheet-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.sheet-head h2{font-size:18px;margin:0 0 4px}.close-btn{border:0;background:#f1f4f7;width:35px;height:35px;border-radius:11px;font-size:18px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.detail-box{background:#f7f9fb;border-radius:12px;padding:10px}.detail-box.full{grid-column:1/-1}.detail-k{font-size:8px;color:var(--muted)}.detail-v{font-size:10px;font-weight:700;margin-top:3px;word-break:break-word}.journey{margin-top:14px}.journey-row{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0;font-size:10px}.ok{color:var(--green);font-weight:800}.pending{color:var(--amber);font-weight:800}.note{margin-top:12px;background:#fff8e7;border:1px solid #f4e0a4;border-radius:12px;padding:10px;font-size:9px;color:#705a1a;line-height:1.5}
 .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(15px);opacity:0;pointer-events:none;transition:.2s;background:#0b1220;color:#fff;padding:9px 13px;border-radius:999px;font-size:9px;z-index:200}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(min-width:480px){.kpi-grid{grid-template-columns:repeat(4,1fr)}}
+
+.integrated-detail{display:grid;gap:10px;margin:12px 0}
+.track-card{border:1px solid var(--line);background:#fff;border-radius:18px;padding:13px}
+.track-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.track-head h4{margin:0;font-size:13px}.track-sub{color:var(--muted);font-size:9px}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.track-item{background:#f7f9fc;border-radius:12px;padding:9px;min-width:0}
+.track-item small{display:block;color:var(--muted);font-size:8px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.track-item b{display:block;font-size:11px;overflow-wrap:anywhere}
+.status-pill{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:800;background:#edf2f7;color:#536075}
+.status-pill.good{background:var(--soft-green);color:var(--green)}
+.status-pill.warn{background:var(--soft-amber);color:#9a6200}
+.status-pill.bad{background:var(--soft-red);color:var(--red)}
+.bast-row{display:grid;grid-template-columns:92px 1fr 58px;gap:8px;align-items:center;margin:8px 0;font-size:9px}
+.bast-track{height:7px;background:#edf1f5;border-radius:999px;overflow:hidden}.bast-track span{display:block;height:100%;background:var(--green);border-radius:999px}
+.track-note{margin-top:8px;padding:9px;background:#f7f9fc;border-radius:12px;font-size:9px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}
+
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="header-inner"><div class="brand"><small>Published Google Sheet Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
+<header><div class="header-inner"><div class="brand"><small>Integrated Project Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
 <main>
 <div id="errorBanner" class="error-banner"></div>
 
@@ -108,6 +125,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
   <div class="chips" id="outstandingTabs">
     <button class="chip active" data-mode="PROGRESS">Progress</button>
     <button class="chip" data-mode="BAST">BAST</button>
+    <button class="chip" data-mode="PLN">PLN</button>
     <button class="chip" data-mode="ONEFLUX">Oneflux</button>
     <button class="chip" data-mode="BINDER">Binder</button>
     <button class="chip" data-mode="HOLD">Hold/Drop</button>
@@ -156,6 +174,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
       <div class="section-head"><h3>Project Journey</h3><span>Master status</span></div>
       <div id="journeyList"></div>
     </div>
+    <div id="integratedDetail" class="integrated-detail"></div>
     <div id="detailNote" class="note"></div>
     <div class="actions"><button id="mapsBtn" class="btn blue" style="display:none">Open Maps</button><button id="copyBtn" class="btn">Copy Project ID</button></div>
   </div>
@@ -168,11 +187,12 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v6_data";
+const STORAGE_KEY="project_control_v7_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="6.0";
+const APP_VERSION="7.0";
 const LIVE_SHEET="WEBAPP DATA";
+const DEFAULT_PUBLISHED_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQRV2r05O24mFkpUQAOPbJjtJgYztDCym3tnMjmkx0ybVyTPss-bmoX4BtOU8wYryuHgdWxCqTial3f/pub?gid=1893911107&single=true&output=csv";
 let data=[];
 let activeRegional="ALL";
 let outstandingMode="PROGRESS";
@@ -193,7 +213,7 @@ const refs={
   conditionFilter:$("conditionFilter"),siteList:$("siteList"),outstandingCount:$("outstandingCount"),outstandingTabs:$("outstandingTabs"),
   outstandingList:$("outstandingList"),reportList:$("reportList"),dataInfo:$("dataInfo"),syncInfo:$("syncInfo"),syncNowBtn:$("syncNowBtn"),publishedUrlInput:$("publishedUrlInput"),savePublishedBtn:$("savePublishedBtn"),csvInput:$("csvInput"),jsonInput:$("jsonInput"),
   exportJsonBtn:$("exportJsonBtn"),exportCsvBtn:$("exportCsvBtn"),resetBtn:$("resetBtn"),detailModal:$("detailModal"),
-  detailName:$("detailName"),detailSub:$("detailSub"),detailGrid:$("detailGrid"),journeyList:$("journeyList"),detailNote:$("detailNote"),
+  detailName:$("detailName"),detailSub:$("detailSub"),detailGrid:$("detailGrid"),journeyList:$("journeyList"),integratedDetail:$("integratedDetail"),detailNote:$("detailNote"),
   closeDetailBtn:$("closeDetailBtn"),mapsBtn:$("mapsBtn"),copyBtn:$("copyBtn"),toast:$("toast")
 };
 
@@ -233,7 +253,7 @@ function storageAvailable(){
 }
 function loadData(){
   const fallback=seed();
-  try{lastSync=localStorage.getItem(LAST_SYNC_KEY)||"";publishedUrl=localStorage.getItem(PUBLISHED_URL_KEY)||""}catch(_){}
+  try{lastSync=localStorage.getItem(LAST_SYNC_KEY)||"";publishedUrl=localStorage.getItem(PUBLISHED_URL_KEY)||DEFAULT_PUBLISHED_URL}catch(_){publishedUrl=DEFAULT_PUBLISHED_URL}
   if(!storageAvailable()){storageMode="memory";return clone(fallback)}
   storageMode="local";
   try{
@@ -280,9 +300,9 @@ function renderDashboard(){
   const hold=data.filter(s=>low(s.status).includes("hold")||low(s.status).includes("drop")).length;
   const progress=data.filter(s=>low(s.status)==="progress").length;
   refs.homeTotal.textContent=data.length;refs.homeDone.textContent=done;refs.homeProgress.textContent=progress;refs.homeBast.textContent=bast;refs.homeHold.textContent=hold;
-  refs.dataCaption.textContent=`${data.length} record · ${syncMode==="live"?"Google Sheet live":"cache lokal"}`;
+  refs.dataCaption.textContent=`${data.length} record · ${syncMode==="live"?"Integrated live":"cache lokal"}`;
   refs.outProgress.textContent=progress;refs.outBast.textContent=bast;
-  refs.outOf.textContent=data.filter(s=>isActive(s)&&!s.oneflux).length;
+  refs.outOf.textContent=data.filter(s=>isActive(s)&&((s.onefluxStatus&&low(s.onefluxStatus)!=="selesai")||(!s.onefluxStatus&&!s.oneflux))).length;
   refs.outBinder.textContent=data.filter(s=>isActive(s)&&!s.binder).length;
 
   const areas=unique("area");
@@ -309,7 +329,7 @@ function fillFilters(){
 function filteredSites(){
   const q=low(refs.searchInput.value),tenant=refs.tenantFilter.value,sow=refs.sowFilter.value,status=refs.statusFilter.value,condition=refs.conditionFilter.value;
   return data.filter(s=>{
-    const text=[s.name,s.projectId,s.siteId,s.dmtId,s.tenant,s.area,s.sow,s.status,s.note].map(low).join(" ");
+    const text=[s.name,s.projectId,s.siteId,s.dmtId,s.tenant,s.area,s.sow,s.status,s.note,s.plnStatus,s.plnNote,s.onefluxStatus,s.onefluxIssue,s.onefluxNote].map(low).join(" ");
     const regionOk=activeRegional==="ALL"||s.area===activeRegional;
     const conditionOk=!condition||(condition==="DONE"?isDone(s):!isDone(s));
     return (!q||text.includes(q))&&regionOk&&(!tenant||s.tenant===tenant)&&(!sow||s.sow===sow)&&(!status||s.status===status)&&conditionOk;
@@ -322,7 +342,8 @@ function renderSites(){
 function outstandingRows(){
   if(outstandingMode==="PROGRESS")return data.filter(s=>low(s.status)==="progress");
   if(outstandingMode==="BAST")return data.filter(s=>low(s.status).includes("bast"));
-  if(outstandingMode==="ONEFLUX")return data.filter(s=>isActive(s)&&!s.oneflux);
+  if(outstandingMode==="PLN")return data.filter(s=>isActive(s)&&low(s.plnStatus)!=="done");
+  if(outstandingMode==="ONEFLUX")return data.filter(s=>isActive(s)&&((s.onefluxStatus&&low(s.onefluxStatus)!=="selesai")||(!s.onefluxStatus&&!s.oneflux)));
   if(outstandingMode==="BINDER")return data.filter(s=>isActive(s)&&!s.binder);
   if(outstandingMode==="HOLD")return data.filter(s=>low(s.status).includes("hold")||low(s.status).includes("drop"));
   return [];
@@ -346,12 +367,61 @@ function renderReport(){
 }
 function renderSettings(){
   const areas=unique("area").join(", ")||"-",tenants=unique("tenant").join(", ")||"-";
-  refs.dataInfo.innerHTML=`<b>${data.length} record</b> aktif di aplikasi.<br>Regional: ${esc(areas)}<br>Tenant: ${esc(tenants)}<br>Sumber: ${syncMode==="live"?"Published Sheet":"cache/local"} · App v${APP_VERSION}`;
+  refs.dataInfo.innerHTML=`<b>${data.length} record</b> aktif di aplikasi.<br>Regional: ${esc(areas)}<br>Tenant: ${esc(tenants)}<br>Sumber: ${syncMode==="live"?"Integrated Published Sheet":"cache/local"} · App v${APP_VERSION}`;
   if(refs.syncInfo)refs.syncInfo.innerHTML=`Tab: <b>${LIVE_SHEET}</b><br>Mode: <b>Published CSV</b><br>URL: <b>${publishedUrl?"tersimpan":"belum diisi"}</b><br>Sync terakhir: <b>${formatSyncTime(lastSync)}</b>`;
   if(refs.publishedUrlInput&&document.activeElement!==refs.publishedUrlInput)refs.publishedUrlInput.value=publishedUrl;
   refs.storageBadge.textContent=syncing?"SYNCING…":(syncMode==="live"?"LIVE ✓":(storageMode==="local"?"CACHE":"MEMORY"));
 }
 function renderAll(){fillFilters();renderDashboard();renderSites();renderOutstanding();renderReport();renderSettings()}
+
+
+function yesNo(v){return v?"DONE":"BELUM"}
+function toneFor(v){
+  const t=low(v);
+  if(["done","selesai","permanen","6/6 done","true"].some(x=>t===x||t.includes(x)))return "good";
+  if(t.includes("hold")||t.includes("drop")||t.includes("gagal")||t.includes("error"))return "bad";
+  if(!t||t==="-"||t==="⛔")return "";
+  return "warn";
+}
+function pill(v){
+  const text=norm(v)||"-";
+  return `<span class="status-pill ${toneFor(text)}">${esc(text)}</span>`;
+}
+function bastProgress(label,value){
+  const v=norm(value),m=v.match(/(\d+)\s*\/\s*6/),n=m?Math.max(0,Math.min(6,Number(m[1]))):0,p=Math.round(n/6*100);
+  return `<div class="bast-row"><b>${esc(label)}</b><div class="bast-track"><span style="width:${p}%"></span></div><span>${esc(v||"-")}</span></div>`;
+}
+function integratedCards(s){
+  return `
+  <div class="track-card">
+    <div class="track-head"><h4>PLN</h4>${pill(s.plnStatus)}</div>
+    <div class="track-grid">
+      <div class="track-item"><small>RFI</small><b>${esc(yesNo(!!s.plnRfi))}</b></div>
+      <div class="track-item"><small>Connect</small><b>${esc(s.plnConnect||"-")}</b></div>
+      <div class="track-item"><small>HO</small><b>${esc(yesNo(!!s.plnHo))}</b></div>
+      <div class="track-item"><small>Dok PLN</small><b>${esc(yesNo(!!s.plnDoc))}</b></div>
+      <div class="track-item"><small>Daya</small><b>${esc(s.plnPower||"-")}</b></div>
+      <div class="track-item"><small>Status</small><b>${esc(s.plnStatus||"-")}</b></div>
+    </div>
+    ${s.plnNote?`<div class="track-note">${esc(s.plnNote)}</div>`:""}
+  </div>
+  <div class="track-card">
+    <div class="track-head"><h4>Oneflux</h4>${pill(s.onefluxStatus||(s.oneflux?"Selesai":"Belum"))}</div>
+    <div class="track-grid">
+      <div class="track-item"><small>Status</small><b>${esc(s.onefluxStatus||(s.oneflux?"Selesai":"Belum"))}</b></div>
+      <div class="track-item"><small>Issue</small><b>${esc(s.onefluxIssue||"-")}</b></div>
+    </div>
+    ${s.onefluxNote?`<div class="track-note">${esc(s.onefluxNote)}</div>`:""}
+  </div>
+  <div class="track-card">
+    <div class="track-head"><h4>BAST / Document</h4><span class="track-sub">progress dokumen</span></div>
+    ${bastProgress("SITAC",s.bastSitac)}
+    ${bastProgress("CME",s.bastCme)}
+    ${bastProgress("IMB",s.bastImb)}
+    ${bastProgress("Addwork 1",s.bastAdd1)}
+    ${bastProgress("Addwork 2",s.bastAdd2)}
+  </div>`;
+}
 
 function openDetail(recordId){
   const s=data.find(x=>x.recordId===recordId);if(!s)return;
@@ -362,7 +432,8 @@ function openDetail(recordId){
   ];
   refs.detailGrid.innerHTML=fields.map(([k,v])=>`<div class="detail-box"><div class="detail-k">${esc(k)}</div><div class="detail-v">${esc(v||"-")}</div></div>`).join("");
   refs.journeyList.innerHTML=
-    journey("Binder",!!s.binder)+journey("Oneflux",!!s.oneflux)+journey("BAST Flag",!!s.bast);
+    journey("Binder",!!s.binder)+journey("Oneflux",s.onefluxStatus?low(s.onefluxStatus)==="selesai":!!s.oneflux)+journey("BAST Flag",!!s.bast);
+  refs.integratedDetail.innerHTML=integratedCards(s);
   refs.detailNote.textContent=s.note||"Tidak ada keterangan.";
   refs.mapsBtn.disabled=true;refs.mapsBtn.style.opacity=".45";
   refs.detailModal.classList.add("show");
@@ -411,7 +482,12 @@ function importMasterCSV(text){
       bast:truthy(get(r,"BAST DONE","BAST")),oneflux:truthy(get(r,"ONEFLUX","OF")),binder:truthy(get(r,"BINDER")),
       tenant:get(r,"TENANT"),area:get(r,"REGIONAL","AREA"),status:get(r,"STATUS PROJECT","STATUS")||"PROGRESS",
       projectId:pid,siteId:sid,dmtId:get(r,"SITE ID DMT"),
-      deadline:get(r,"DEADLINE PROJECT"),note:get(r,"KETERANGAN")});
+      deadline:get(r,"DEADLINE PROJECT"),note:get(r,"KETERANGAN"),
+      plnStatus:get(r,"STATUS PLN"),plnRfi:truthy(get(r,"RFI")),plnConnect:get(r,"CONNECT"),plnHo:truthy(get(r,"HO")),
+      plnDoc:truthy(get(r,"DOK PLN")),plnNote:get(r,"PLN NOTE"),plnPower:get(r,"DAYA PLN"),
+      onefluxStatus:get(r,"STATUS ONEFLUX"),onefluxIssue:get(r,"ONEFLUX ISSUE"),onefluxNote:get(r,"ONEFLUX NOTE"),
+      bastSitac:get(r,"BAST SITAC"),bastCme:get(r,"BAST CME"),bastImb:get(r,"BAST IMB"),
+      bastAdd1:get(r,"BAST ADDWORK 1"),bastAdd2:get(r,"BAST ADDWORK 2")});
   });
   if(!out.length)throw new Error("Tidak ada record site yang terbaca.");
   return ensureRecordIds(out);
@@ -504,8 +580,8 @@ function bindEvents(){
   });
   refs.exportJsonBtn.addEventListener("click",()=>download("project-control-backup-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify({version:APP_VERSION,exportedAt:new Date().toISOString(),data},null,2),"application/json"));
   refs.exportCsvBtn.addEventListener("click",()=>{
-    const headers=["NAME SITE","SOW","TENANT","REGIONAL","STATUS PROJECT","PROJECT ID","SITE ID","SITE ID DMT","BAST DONE","ONEFLUX","BINDER","DEADLINE PROJECT","KETERANGAN"];
-    const rows=data.map(s=>[s.name,s.sow,s.tenant,s.area,s.status,s.projectId,s.siteId,s.dmtId,s.bast,s.oneflux,s.binder,s.deadline,s.note]);
+    const headers=["NAME SITE","SOW","TENANT","REGIONAL","STATUS PROJECT","PROJECT ID","SITE ID","SITE ID DMT","BAST DONE","ONEFLUX","BINDER","DEADLINE PROJECT","KETERANGAN","STATUS PLN","RFI","CONNECT","HO","DOK PLN","PLN NOTE","DAYA PLN","STATUS ONEFLUX","ONEFLUX ISSUE","ONEFLUX NOTE","BAST SITAC","BAST CME","BAST IMB","BAST ADDWORK 1","BAST ADDWORK 2"];
+    const rows=data.map(s=>[s.name,s.sow,s.tenant,s.area,s.status,s.projectId,s.siteId,s.dmtId,s.bast,s.oneflux,s.binder,s.deadline,s.note,s.plnStatus,s.plnRfi,s.plnConnect,s.plnHo,s.plnDoc,s.plnNote,s.plnPower,s.onefluxStatus,s.onefluxIssue,s.onefluxNote,s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2]);
     download("project-control-"+new Date().toISOString().slice(0,10)+".csv",[headers,...rows].map(r=>r.map(csvEscape).join(",")).join("\n"),"text/csv");
   });
   refs.resetBtn.addEventListener("click",()=>{if(!confirm("Reset cache lokal ke database bawaan?"))return;data=ensureRecordIds(seed());syncMode="cache";activeRegional="ALL";saveData();clearError();renderAll();toast("Database bawaan dimuat ulang")});

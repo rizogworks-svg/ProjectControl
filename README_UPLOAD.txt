@@ -1,14 +1,18 @@
-PROJECT CONTROL v6 - PUBLISHED SHEET
+PROJECT CONTROL v7 - INTEGRATED DASHBOARD
 
-1. Di Google Sheet PROJECT CONTROL - MASTER DATABASE:
-   File > Share > Publish to web.
-2. Pilih tab WEBAPP DATA saja.
-3. Pilih format Comma-separated values (.csv).
-4. Publish dan copy URL yang dihasilkan.
-5. Di GitHub repo ProjectControl, ganti index.html lama dengan index.html v6 ini.
-6. Buka Project Control > Settings.
-7. Paste Published CSV URL > Simpan Published URL.
-8. Tekan Sync Sekarang dari Published Sheet.
+Perubahan utama:
+- Detail site kini menampilkan MASTER + PLN + ONEFLUX + BAST/DOCUMENT.
+- Outstanding baru: PLN.
+- Oneflux Outstanding memakai STATUS ONEFLUX aktual bila tersedia.
+- URL Published Sheet v6 tetap digunakan otomatis.
+- Data publik tetap berasal dari tab WEBAPP DATA saja.
 
-v6 tidak memakai Apps Script.
-Fallback lokal hanya berisi field yang sama dengan WEBAPP DATA (tidak berisi alamat lengkap, koordinat, PO, atau link Drive).
+Cara update GitHub:
+1. Buka repository ProjectControl.
+2. Ganti index.html lama dengan index.html v7 ini.
+3. Commit changes.
+4. Tunggu GitHub Pages selesai deploy.
+5. Buka ulang https://rizogworks-svg.github.io/ProjectControl/
+6. Tekan Sync Sekarang dari Published Sheet.
+
+Tidak perlu Apps Script dan tidak perlu Publish ulang URL.
