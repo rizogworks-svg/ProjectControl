@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v13.6 · Form Submit Fix</title>
+<title>Project Control v14.0 · Oneflux & BAST Flow</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -142,6 +142,48 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 #pcHardEditor .pc-hard-actions button{min-height:48px}
 #pcHardEditor.pc-busy{pointer-events:none;opacity:.65}
 
+
+.process-card-click{cursor:pointer;transition:.16s}
+.process-card-click:active{transform:scale(.995)}
+.process-summary{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+.process-big{font-size:28px;font-weight:900;line-height:1}
+.process-big small{font-size:12px;color:var(--muted)}
+.process-copy{font-size:9px;color:var(--muted);line-height:1.45}
+.process-bar{height:8px;background:#edf1f5;border-radius:999px;overflow:hidden;margin-top:9px}
+.process-bar span{display:block;height:100%;background:var(--blue);border-radius:999px}
+.process-bar.done span{background:var(--green)}
+.process-bar.bad span{background:var(--red)}
+.process-mini{margin-top:9px;display:flex;justify-content:space-between;gap:10px;font-size:9px}
+.process-blocker{margin-top:8px;padding:8px 9px;border-radius:11px;background:var(--soft-red);color:#9d2f2f;font-size:9px;line-height:1.45}
+.process-next{margin-top:5px;color:var(--muted);font-size:8px}
+.bast-row{grid-template-columns:82px 1fr 54px}
+.bast-row-wrap{padding:5px 0;border-bottom:1px solid #f0f2f6}.bast-row-wrap:last-child{border-bottom:0}
+.bast-row-sub{font-size:8px;color:var(--muted);padding-left:90px;margin-top:-3px}
+#pcProcessDetail{position:fixed!important;inset:0!important;z-index:1000000!important;background:#f4f7fb!important;overflow:auto!important;-webkit-overflow-scrolling:touch}
+#pcProcessDetail .pc-proc-wrap{width:min(720px,100%);margin:0 auto;padding:14px 14px 40px}
+#pcProcessDetail .pc-proc-head{position:sticky;top:0;z-index:3;background:#f4f7fb;padding:6px 0 12px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+#pcProcessDetail .pc-proc-head h2{margin:0;font-size:20px}
+#pcProcessDetail .pc-proc-head p{margin:4px 0 0;color:var(--muted);font-size:10px}
+#pcProcessDetail .pc-proc-close{width:40px;height:40px;border:1px solid var(--line);background:#fff;border-radius:12px;font-size:20px}
+.pc-proc-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px;margin-bottom:10px}
+.pc-proc-card h3{margin:0 0 10px;font-size:13px}
+.pc-proc-section{font-size:10px;font-weight:900;margin:16px 0 7px;color:#42506a;text-transform:uppercase;letter-spacing:.05em}
+.pc-check-row{border:1px solid #edf0f4;border-radius:14px;padding:10px;margin:8px 0;background:#fbfcfe}
+.pc-check-title{font-size:10px;font-weight:850;line-height:1.4}
+.pc-check-sub{font-size:8px;color:var(--muted);margin-top:3px}
+.pc-check-grid{display:grid;grid-template-columns:120px 1fr;gap:8px;margin-top:8px}
+.pc-check-grid select,.pc-check-grid input{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px;font-size:10px;background:#fff}
+.pc-proc-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;position:sticky;bottom:0;background:#f4f7fb;padding:10px 0}
+.pc-stage{display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:center;padding:9px 0;border-bottom:1px solid #eef1f5}
+.pc-stage:last-child{border-bottom:0}
+.pc-stage-no{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#eef2f7;font-size:9px;font-weight:900}
+.pc-stage-name{font-size:10px;font-weight:800}
+.pc-stage-note{font-size:8px;color:var(--muted);margin-top:2px}
+.pc-stage-state{font-size:8px;font-weight:900;border-radius:999px;padding:5px 7px;background:#eef2f7;color:#617087}
+.pc-stage-state.ok{background:var(--soft-green);color:var(--green)}
+.pc-stage-state.wait{background:var(--soft-amber);color:#956000}
+.pc-stage-state.bad{background:var(--soft-red);color:var(--red)}
+
 </style>
 </head>
 <body>
@@ -152,7 +194,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v13.6</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v14.0</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -302,7 +344,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <button id="saveTemplatesBtn" class="btn blue">Simpan Template</button>
     <button id="resetTemplatesBtn" class="btn">Reset Template Default</button>
 
-    <div class="info-box"><b>Sistem Project Health v13.6:</b><br>
+    <div class="info-box"><b>Sistem Project Health v14.0:</b><br>
       Project, PLN, Oneflux, Binder, dan BAST Doc masing-masing dihitung 0–100%. Health total = rata-rata 5 bagian. Deadline hanya alert dan tidak mengurangi persentase Health.
     </div>
     <div class="info-box">Mode zero-cost: edit dari WebApp masuk ke Google Form/EDIT LOG, lalu WEBAPP DATA otomatis menampilkan nilai edit terbaru saat Sync. Tidak memakai Google Cloud, Apps Script, Make, atau layanan berbayar.</div>
@@ -358,7 +400,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
           <select id="editMasterStatus"><option>PROGRESS</option><option>BAST</option><option>DONE</option><option>HOLD</option><option>DROP BY DMT</option></select>
         </div>
         <label class="editor-check"><input id="editMasterBinder" type="checkbox"> Binder selesai</label>
-        <label class="editor-check"><input id="editMasterOneflux" type="checkbox"> Oneflux flag selesai</label>
+        <label class="editor-check"><input id="editMasterOneflux" type="checkbox"> Oneflux (legacy)</label>
         <label class="editor-check"><input id="editMasterBast" type="checkbox"> BAST flag selesai</label>
         <div class="editor-field"><label>Deadline Project</label><input id="editMasterDeadline" type="date"></div>
         <div class="editor-field"><label>Keterangan</label><textarea id="editMasterNote"></textarea></div>
@@ -397,11 +439,13 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v13_6_data";
-const LEGACY_STORAGE_KEY="project_control_v13_5_data";
+const STORAGE_KEY="project_control_v14_0_data";
+const LEGACY_STORAGE_KEY="project_control_v13_6_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="13.6";
+const APP_VERSION="14.0";
+const ONEFLUX_TEMPLATES=[{"sow":"PERKUATAN","section":"Material Perkuatan","subject":"Fabrikasi Material Perkuatan","code":"PERK_GALVANIS","requirement":"Sertifikat Galvanis","required":true},{"sow":"PERKUATAN","section":"Material Perkuatan","subject":"Fabrikasi Material Perkuatan","code":"PERK_INSPEKSI_MATERIAL","requirement":"Dokumentasi periksa material + Pengukuran dimensi material STR dan ketebalan galvanis","required":true},{"sow":"PERKUATAN","section":"Material Perkuatan","subject":"NOD (Note of Delivery) Material STR","code":"PERK_NOD","requirement":"NOD by Mitra ke Fabrikator → jika Fabrikasi By Mitra","required":true},{"sow":"PERKUATAN","section":"Material Perkuatan","subject":"Sortir dan Pickup Material","code":"PERK_SORTIR_PICKUP","requirement":"Foto Sortir + Pickup Material","required":true},{"sow":"PERKUATAN","section":"Material Perkuatan","subject":"Sortir dan Pickup Material","code":"PERK_BA_SERAH_MATERIAL","requirement":"BA Serah terima + Check list Material dari pabrikator","required":true},{"sow":"PERKUATAN","section":"Material Perkuatan","subject":"Material STR On Site","code":"PERK_MATERIAL_ONSITE","requirement":"BA Material Onsite + Foto Material Onsite","required":true},{"sow":"PERKUATAN","section":"Pekerjaan Perkuatan","subject":"Implementasi Perkuatan Tower","code":"PERK_IMPL_0100","requirement":"Foto Proses Pekerjaan 0-100% (Per-Item Pekerjaan)","required":true},{"sow":"PERKUATAN","section":"ATP Perkuatan","subject":"Undangan ATP Perkuatan","code":"PERK_ATP_EMAIL","requirement":"Capture Email Undangan ATP STR","required":true},{"sow":"PERKUATAN","section":"ATP Perkuatan","subject":"Undangan ATP Perkuatan","code":"PERK_ATP_SOFTCOPY","requirement":"Dokumen Soft Copy Undangan ATP","required":true},{"sow":"PERKUATAN","section":"ATP Perkuatan","subject":"Pelaksanaan ATP Perkuatan","code":"PERK_ATP_FOTO100","requirement":"Foto pekerjaan 100%","required":true},{"sow":"PERKUATAN","section":"ATP Perkuatan","subject":"Closing Pending dan ATP Perkuatan","code":"PERK_CLOSING_CHECKLIST_BA","requirement":"Doc Cheklist ATP + BA ATP","required":true},{"sow":"PERKUATAN","section":"ATP Perkuatan","subject":"Closing Pending dan ATP Perkuatan","code":"PERK_CLOSING_ABD","requirement":"ABD (Full sign)","required":true},{"sow":"PERKUATAN","section":"ATP Perkuatan","subject":"Closing Pending dan ATP Perkuatan","code":"PERK_CLOSING_DOK","requirement":"Dokumentasi ATP","required":true},{"sow":"PERKUATAN","section":"ATP Perkuatan","subject":"Closing Pending dan ATP Perkuatan","code":"PERK_CLOSING_AFTER_BEFORE","requirement":"BA Closing Pending & Dokumentasi After - Before (Jika ada Pendingan)","required":true},{"sow":"PERKUATAN","section":"ATP Perkuatan","subject":"BAST Perkuatan","code":"PERK_BAST_FULLSIGN","requirement":"Doc BAST Full Sign","required":true},{"sow":"COLLOCATION","section":"CME PLN Colo","subject":"Mini CME Colo","code":"COLO_MINI_CME_0100","requirement":"Proses pekerjaan 0-100% (Galian/Batu Kali, lantai kerja, pembesian, pengecoran, finising, ME dan instalasi Tray + Mounting)","required":true},{"sow":"COLLOCATION","section":"CME PLN Colo","subject":"Penyambungan PLN Colo","code":"COLO_PLN_PERMOHONAN","requirement":"Surat Permohonan Pemasangan PLN","required":true},{"sow":"COLLOCATION","section":"CME PLN Colo","subject":"Penyambungan PLN Colo","code":"COLO_PLN_JAWABAN","requirement":"Surat Jawaban PLN","required":true},{"sow":"COLLOCATION","section":"CME PLN Colo","subject":"Penyambungan PLN Colo","code":"COLO_PLN_SPK","requirement":"Surat Perintah Kerja (SPK) PLN","required":true},{"sow":"COLLOCATION","section":"CME PLN Colo","subject":"Penyambungan PLN Colo","code":"COLO_PLN_KUITANSI","requirement":"Kuitansi BPU","required":true},{"sow":"COLLOCATION","section":"CME PLN Colo","subject":"Penyambungan PLN Colo","code":"COLO_PLN_PKS_SPJBTL","requirement":"PKS / Document PLN / SPJBTL","required":true},{"sow":"COLLOCATION","section":"CME PLN Colo","subject":"Penyambungan PLN Colo","code":"COLO_PLN_SLO","requirement":"Surat Laik Operasi / SLO","required":true},{"sow":"COLLOCATION","section":"CME PLN Colo","subject":"Penyambungan PLN Colo","code":"COLO_PLN_AKLI","requirement":"Surat Jaminan Instalasi / AKLI","required":true},{"sow":"COLLOCATION","section":"CME PLN Colo","subject":"Penyambungan PLN Colo","code":"COLO_PLN_GARANSI_TRAFO","requirement":"Kartu Garansi Trafo (optional)","required":false},{"sow":"COLLOCATION","section":"CME PLN Colo","subject":"RFI Declare Colo","code":"COLO_RFI_NOTICE_DOC","requirement":"RFI Notice Dan Doc RFI (Sesuai Tenant)","required":true},{"sow":"COLLOCATION","section":"ATP Colo","subject":"Undangan ATP Colo","code":"COLO_ATP_UNDANGAN","requirement":"Capture Email ATP Dan Doc Undangan ATP","required":true},{"sow":"COLLOCATION","section":"ATP Colo","subject":"Pelaksanaan Pra ATP Colo","code":"COLO_ATP_FOTO100","requirement":"Foto pekerjaan 100%","required":true},{"sow":"COLLOCATION","section":"ATP Colo","subject":"Closing Pending & ATP Colo","code":"COLO_CLOSING_GALVANIS","requirement":"Doc. Galvanis","required":true},{"sow":"COLLOCATION","section":"ATP Colo","subject":"Closing Pending & ATP Colo","code":"COLO_CLOSING_PANEL","requirement":"Sertifikat Panel","required":true},{"sow":"COLLOCATION","section":"ATP Colo","subject":"Closing Pending & ATP Colo","code":"COLO_CLOSING_CHECKLIST_BA","requirement":"Doc. Ceklist ATP + BA ATP","required":true},{"sow":"COLLOCATION","section":"ATP Colo","subject":"Closing Pending & ATP Colo","code":"COLO_CLOSING_HANDOVER_KEY","requirement":"Doc. Hand Over Key","required":true},{"sow":"COLLOCATION","section":"ATP Colo","subject":"Closing Pending & ATP Colo","code":"COLO_CLOSING_ABD_DOK","requirement":"ABD (Full sign) + Dokumentasi ATP","required":true},{"sow":"COLLOCATION","section":"ATP Colo","subject":"Closing Pending & ATP Colo","code":"COLO_CLOSING_AFTER_BEFORE","requirement":"BA Closing Pending dan Doc. After - Before (Jika Ada Pendingan)","required":true},{"sow":"COLLOCATION","section":"ATP Colo","subject":"BAST CME Colo","code":"COLO_BAST_FULLSIGN","requirement":"BAST Full Sign","required":true}];
+
 const FORM_PREFILL_KEY="project_control_v13_form_prefill";
 const DEFAULT_FORM_PREFILL_LINK='https://docs.google.com/forms/d/e/1FAIpQLSdbWBU4D_K01CLZ-ekGv3vBNXZDRTnfiNAUMY7gRMs1GJlIXw/viewform?usp=pp_url&entry.2083509010=PC_SITE_KEY&entry.2040458586=PC_SITE_NAME&entry.2031819333=PC_PROJECT_ID&entry.857121428=PC_SOW&entry.1904932691=PC_FIELD&entry.301212394=PC_OLD&entry.421562129=PC_NEW&entry.135893051=PC_EDITOR';
 const EMBEDDED_FORM_CONFIG={
@@ -566,13 +610,19 @@ function deadlineState(s){
   if(days<=7)return {code:"H7",label:`H-${days}`,days,cls:"h7"};
   return {code:"OK",label:`H-${days}`,days,cls:"ok"};
 }
+function bastPercentValue(v){
+  const x=norm(v);
+  if(!x)return 0;
+  const n=Number(x.replace(",","."));
+  if(Number.isFinite(n))return Math.max(0,Math.min(100,n));
+  const m=x.match(/(\d+)\s*\/\s*6/i);
+  if(m)return Math.max(0,Math.min(6,Number(m[1])))/6*100;
+  return low(x).includes("done")?100:0;
+}
 function docRatio(s){
-  const vals=[s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2].map(norm).filter(Boolean);
-  if(vals.length){
-    let sum=0;
-    vals.forEach(v=>{const m=v.match(/(\d+)\s*\/\s*6/i);sum+=m?Math.max(0,Math.min(6,Number(m[1])))/6:(low(v).includes("done")?1:0)});
-    return sum/vals.length;
-  }
+  const vals=[s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2].map(bastPercentValue);
+  const available=vals.filter(v=>v>0);
+  if(available.length)return vals.reduce((a,b)=>a+b,0)/(vals.length*100);
   if(s.bast)return 1;
   if(low(s.status).includes("bast"))return .6;
   return 0;
@@ -598,12 +648,53 @@ function plnPercent(s){
   if(idPel && idPel!=="-" && idPel!=="⛔")done++;
   return Math.round(done/total*100);
 }
-function onefluxPercent(s){
-  const st=low(s.onefluxStatus);
-  if(st==="selesai"||s.oneflux===true)return 100;
-  if(st.includes("hold"))return 25;
-  return 0;
+
+function onefluxTemplateFor(s){return ONEFLUX_TEMPLATES.filter(x=>x.sow===headerKey(s.sow))}
+function encodeOnefluxValue(status,note){return String(status||"BELUM").toUpperCase()+"~"+encodeURIComponent(note||"")}
+function decodeOnefluxValue(raw){
+  const p=String(raw||"").split("~");
+  let note="";try{note=decodeURIComponent(p.slice(1).join("~")||"")}catch(_){note=p.slice(1).join("~")||""}
+  return {status:(p[0]||"BELUM").toUpperCase(),note};
 }
+function onefluxStateMap(s){
+  const tpl=onefluxTemplateFor(s),baseDone=norm(s.onefluxStatus)?low(s.onefluxStatus)==="selesai":s.oneflux===true;
+  const map={};
+  tpl.forEach(x=>map[x.code]={status:baseDone?"OK":"BELUM",note:""});
+  const raw=String(s.onefluxChecklistEdits||"");
+  if(raw){
+    raw.split("§").forEach(part=>{
+      const i=part.indexOf("=");
+      if(i<1)return;
+      const field=part.slice(0,i),value=part.slice(i+1);
+      if(!field.startsWith("OF_"))return;
+      const code=field.slice(3);
+      if(map[code])map[code]=decodeOnefluxValue(value);
+    });
+  }
+  return map;
+}
+function onefluxSummary(s){
+  const tpl=onefluxTemplateFor(s);
+  if(!tpl.length){
+    const done=norm(s.onefluxStatus)?low(s.onefluxStatus)==="selesai":s.oneflux===true;
+    const complicated=low(s.onefluxStatus).includes("hold")||!!norm(s.onefluxIssue);
+    return {pct:done?100:(complicated?25:0),state:done?"Completed":(complicated?"Complicated":"Belum"),ok:done?1:0,total:1,nok:complicated?1:0,blockers:complicated?[s.onefluxIssue||"Issue Oneflux"]:[],map:{},template:[]};
+  }
+  const map=onefluxStateMap(s),required=tpl.filter(x=>x.required);
+  const ok=required.filter(x=>map[x.code]?.status==="OK").length;
+  const nokItems=required.filter(x=>map[x.code]?.status==="NOK");
+  const pct=Math.round(ok/Math.max(1,required.length)*100);
+  const legacyBlock=low(s.onefluxStatus).includes("hold")||!!norm(s.onefluxIssue);
+  let state="Belum";
+  if(nokItems.length||(legacyBlock&&ok<required.length))state="Complicated";
+  else if(ok===required.length)state="Completed";
+  else if(ok>0)state="Progress";
+  const blockers=nokItems.map(x=>map[x.code]?.note?`${x.requirement}: ${map[x.code].note}`:x.requirement);
+  if(legacyBlock&&ok<required.length&&norm(s.onefluxIssue)&&!blockers.includes(s.onefluxIssue))blockers.push(s.onefluxIssue);
+  return {pct,state,ok,total:required.length,nok:nokItems.length+(legacyBlock&&ok<required.length?1:0),blockers,map,template:tpl};
+}
+function onefluxPercent(s){return onefluxSummary(s).pct}
+
 function binderPercent(s){return s.binder?100:0}
 function bastDocPercent(s){return Math.round(docRatio(s)*100)}
 function healthBreakdown(s){
@@ -779,7 +870,7 @@ function renderDashboard(){
   refs.homeTotal.textContent=data.length;refs.homeDone.textContent=done;refs.homeProgress.textContent=progress;refs.homeBast.textContent=bast;refs.homeHold.textContent=hold;
   refs.dataCaption.textContent=`${data.length} record · ${syncMode==="live"?"Integrated live":"cache lokal"}`;
   refs.outProgress.textContent=progress;refs.outBast.textContent=bast;
-  refs.outOf.textContent=data.filter(s=>isActive(s)&&((s.onefluxStatus&&low(s.onefluxStatus)!=="selesai")||(!s.onefluxStatus&&!s.oneflux))).length;
+  refs.outOf.textContent=data.filter(s=>isActive(s)&&(onefluxSummary(s).state!=="Completed")).length;
   refs.outBinder.textContent=data.filter(s=>isActive(s)&&!s.binder).length;
 
   const healthRows=data.map(s=>healthState(s));
@@ -826,7 +917,7 @@ function matchesFocus(s,mode){
   if(mode==="OVERDUE")return isActive(s)&&d.code==="OVERDUE";
   if(mode==="H7")return isActive(s)&&(d.code==="H3"||d.code==="H7");
   if(mode==="PLN")return isActive(s)&&low(s.plnStatus)!=="done";
-  if(mode==="ONEFLUX")return isActive(s)&&((s.onefluxStatus&&low(s.onefluxStatus)!=="selesai")||(!s.onefluxStatus&&!s.oneflux));
+  if(mode==="ONEFLUX")return isActive(s)&&(onefluxSummary(s).state!=="Completed");
   if(mode==="BINDER")return isActive(s)&&!s.binder;
   if(mode==="BASTDOC")return isActive(s)&&docRatio(s)<1;
   return true;
@@ -871,7 +962,7 @@ function outstandingRows(){
   if(outstandingMode==="PROGRESS")return data.filter(s=>low(s.status)==="progress");
   if(outstandingMode==="BAST")return data.filter(s=>low(s.status).includes("bast"));
   if(outstandingMode==="PLN")return data.filter(s=>isActive(s)&&low(s.plnStatus)!=="done");
-  if(outstandingMode==="ONEFLUX")return data.filter(s=>isActive(s)&&((s.onefluxStatus&&low(s.onefluxStatus)!=="selesai")||(!s.onefluxStatus&&!s.oneflux)));
+  if(outstandingMode==="ONEFLUX")return data.filter(s=>isActive(s)&&(onefluxSummary(s).state!=="Completed"));
   if(outstandingMode==="BINDER")return data.filter(s=>isActive(s)&&!s.binder);
   if(outstandingMode==="HOLD")return data.filter(s=>low(s.status).includes("hold")||low(s.status).includes("drop"));
   return [];
@@ -927,9 +1018,22 @@ function pill(v){
   const text=norm(v)||"-";
   return `<span class="status-pill ${toneFor(text)}">${esc(text)}</span>`;
 }
-function bastProgress(label,value){
-  const v=norm(value),m=v.match(/(\d+)\s*\/\s*6/),n=m?Math.max(0,Math.min(6,Number(m[1]))):0,p=Math.round(n/6*100);
-  return `<div class="bast-row"><b>${esc(label)}</b><div class="bast-track"><span style="width:${p}%"></span></div><span>${esc(v||"-")}</span></div>`;
+function formatPct(v){
+  const n=Math.max(0,Math.min(100,Number(v)||0));
+  return (Math.abs(n-Math.round(n))<.001?String(Math.round(n)):n.toFixed(2).replace(/0+$/,"").replace(/\.$/,""))+"%";
+}
+function parseBastDetail(raw){
+  const out={};String(raw||"").split("|").forEach(p=>{const i=p.indexOf("=");if(i>0)out[p.slice(0,i).trim().toUpperCase()]=p.slice(i+1).trim().toUpperCase()});
+  return out;
+}
+function bastStageInfo(value,detail){
+  const pct=bastPercentValue(value),names=["BOQ","PO","BAUT","BAPWP","BAST","GR"],m=parseBastDetail(detail);
+  const completed=Math.max(0,Math.min(6,Math.round(pct/100*6)));
+  return {pct,names,map:m,completed,next:completed<6?names[completed]:"Completed",state:completed===0?"Belum":completed===6?"Completed":"Progress"};
+}
+function bastProgress(label,value,detail){
+  const b=bastStageInfo(value,detail);
+  return `<div class="bast-row-wrap"><div class="bast-row"><b>${esc(label)}</b><div class="bast-track"><span style="width:${b.pct}%"></span></div><strong>${formatPct(b.pct)}</strong></div><div class="bast-row-sub">${b.state==="Completed"?"Completed":"Tahap berikutnya: "+b.next}</div></div>`;
 }
 function healthDetailCard(s){
   const h=healthState(s),d=deadlineState(s),b=healthBreakdown(s);
@@ -951,6 +1055,10 @@ function healthDetailCard(s){
 }
 
 function integratedCards(s){
+  const of=onefluxSummary(s);
+  const ofCls=of.state==="Completed"?"good":of.state==="Complicated"?"bad":"warn";
+  const ofBar=of.state==="Complicated"?"bad":of.state==="Completed"?"done":"";
+  const blocker=of.blockers?.length?`<div class="process-blocker"><b>${of.nok} blocker</b><br>${esc(of.blockers.slice(0,2).join(" · "))}</div>`:"";
   return `
   <div class="track-card">
     <div class="track-head"><h4>PLN</h4>${pill(s.plnStatus)}</div>
@@ -965,21 +1073,23 @@ function integratedCards(s){
     </div>
     ${s.plnNote?`<div class="track-note">${esc(s.plnNote)}</div>`:""}
   </div>
-  <div class="track-card">
-    <div class="track-head"><h4>Oneflux</h4>${pill(s.onefluxStatus||(s.oneflux?"Selesai":"Belum"))}</div>
-    <div class="track-grid">
-      <div class="track-item"><small>Status</small><b>${esc(s.onefluxStatus||(s.oneflux?"Selesai":"Belum"))}</b></div>
-      <div class="track-item"><small>Issue</small><b>${esc(s.onefluxIssue||"-")}</b></div>
-    </div>
+
+  <div class="track-card process-card-click" data-action="open-oneflux">
+    <div class="track-head"><h4>Oneflux</h4><span class="status-pill ${ofCls}">${esc(of.state)}</span></div>
+    <div class="process-summary"><div class="process-big">${of.pct}<small>%</small></div><div class="process-copy"><b>${of.ok} / ${of.total}</b> checklist wajib selesai<br>${of.state==="Completed"?"Seluruh checklist selesai":"Tekan card untuk melihat checklist lengkap"}</div></div>
+    <div class="process-bar ${ofBar}"><span style="width:${of.pct}%"></span></div>
+    ${blocker}
     ${s.onefluxNote?`<div class="track-note">${esc(s.onefluxNote)}</div>`:""}
   </div>
-  <div class="track-card">
-    <div class="track-head"><h4>BAST / Document</h4><span class="track-sub">progress dokumen</span></div>
-    ${bastProgress("SITAC",s.bastSitac)}
-    ${bastProgress("CME",s.bastCme)}
-    ${bastProgress("IMB",s.bastImb)}
-    ${bastProgress("Addwork 1",s.bastAdd1)}
-    ${bastProgress("Addwork 2",s.bastAdd2)}
+
+  <div class="track-card process-card-click" data-action="open-bast">
+    <div class="track-head"><h4>BAST / Document</h4><span class="track-sub">6 dokumen wajib berurutan</span></div>
+    ${bastProgress("SITAC",s.bastSitac,s.bastSitacDetail)}
+    ${bastProgress("CME",s.bastCme,s.bastCmeDetail)}
+    ${bastProgress("IMB",s.bastImb,s.bastImbDetail)}
+    ${bastProgress("Addwork 1",s.bastAdd1,s.bastAdd1Detail)}
+    ${bastProgress("Addwork 2",s.bastAdd2,s.bastAdd2Detail)}
+    <div class="process-next">Urutan wajib: BOQ → PO → BAUT → BAPWP → BAST → GR</div>
   </div>`;
 }
 
@@ -994,7 +1104,7 @@ function openDetail(recordId){
   ];
   refs.detailGrid.innerHTML=fields.map(([k,v])=>`<div class="detail-box"><div class="detail-k">${esc(k)}</div><div class="detail-v">${esc(v||"-")}</div></div>`).join("");
   refs.journeyList.innerHTML=
-    journey("Binder",!!s.binder)+journey("Oneflux",s.onefluxStatus?low(s.onefluxStatus)==="selesai":!!s.oneflux)+journey("BAST Flag",!!s.bast);
+    journey("Binder",!!s.binder)+journey("Oneflux",onefluxSummary(s).state==="Completed")+journey("BAST Document",bastDocPercent(s)===100);
   refs.integratedDetail.innerHTML=healthDetailCard(s)+integratedCards(s);
   refs.detailNote.textContent=s.note||"Tidak ada keterangan.";
   refs.mapsBtn.disabled=!norm(s.coordinate)||norm(s.coordinate)==="-";refs.mapsBtn.style.opacity=refs.mapsBtn.disabled?".45":"1";
@@ -1052,8 +1162,10 @@ function importMasterCSV(text){
       plnStatus:get(r,"STATUS PLN"),plnRfi:truthy(get(r,"RFI")),plnConnect:get(r,"CONNECT"),plnHo:truthy(get(r,"HO")),
       plnDoc:truthy(get(r,"DOK PLN")),plnNote:get(r,"PLN NOTE"),plnPower:get(r,"DAYA PLN"),plnCustomerId:get(r,"ID PELANGGAN PLN"),
       onefluxStatus:get(r,"STATUS ONEFLUX"),onefluxIssue:get(r,"ONEFLUX ISSUE"),onefluxNote:get(r,"ONEFLUX NOTE"),
-      bastSitac:get(r,"BAST SITAC"),bastCme:get(r,"BAST CME"),bastImb:get(r,"BAST IMB"),
-      bastAdd1:get(r,"BAST ADDWORK 1"),bastAdd2:get(r,"BAST ADDWORK 2"),
+      bastSitac:get(r,"BAST SITAC %","BAST SITAC"),bastCme:get(r,"BAST CME %","BAST CME"),bastImb:get(r,"BAST IMB %","BAST IMB"),
+      bastAdd1:get(r,"BAST ADDWORK 1 %","BAST ADDWORK 1"),bastAdd2:get(r,"BAST ADDWORK 2 %","BAST ADDWORK 2"),
+      bastSitacDetail:get(r,"BAST SITAC DETAIL"),bastCmeDetail:get(r,"BAST CME DETAIL"),bastImbDetail:get(r,"BAST IMB DETAIL"),
+      bastAdd1Detail:get(r,"BAST ADDWORK 1 DETAIL"),bastAdd2Detail:get(r,"BAST ADDWORK 2 DETAIL"),onefluxChecklistEdits:get(r,"ONEFLUX CHECKLIST EDITS"),
       address:get(r,"ALAMAT SITE","ALAMAT"),coordinate:get(r,"KOORDINAT","LONG LAT")});
   });
   if(!out.length)throw new Error("Tidak ada record site yang terbaca.");
@@ -1157,8 +1269,8 @@ function serializePatchValue(v,type){return type==="bool"?(v?"TRUE":"FALSE"):Str
 const PATCH_DEFS={
   MASTER_STATUS:{prop:"status",type:"text",label:"Status Project"},
   MASTER_BINDER:{prop:"binder",type:"bool",label:"Binder"},
-  MASTER_ONEFLUX:{prop:"oneflux",type:"bool",label:"Oneflux Flag"},
-  MASTER_BAST:{prop:"bast",type:"bool",label:"BAST Flag"},
+  MASTER_ONEFLUX:{prop:"oneflux",type:"bool",label:"Oneflux"},
+  MASTER_BAST:{prop:"bast",type:"bool",label:"BAST Document"},
   MASTER_DEADLINE:{prop:"deadline",type:"text",label:"Deadline Project"},
   MASTER_NOTE:{prop:"note",type:"text",label:"Keterangan"},
   PLN_STATUS:{prop:"plnStatus",type:"text",label:"Status PLN"},
@@ -1172,9 +1284,24 @@ const PATCH_DEFS={
 };
 function patchComparable(v,type){return type==="bool"?(truthy(v)?"TRUE":"FALSE"):norm(v)}
 function applyPatchToSite(site,patch){
-  const d=PATCH_DEFS[patch.field];if(!d||!site)return false;
+  if(!site)return false;
+  if(String(patch.field||"").startsWith("OF_")){
+    const raw=String(site.onefluxChecklistEdits||"");
+    site.onefluxChecklistEdits=(raw?raw+"§":"")+patch.field+"="+patch.newValue;
+    return true;
+  }
+  const d=PATCH_DEFS[patch.field];if(!d)return false;
   site[d.prop]=d.type==="bool"?truthy(patch.newValue):patch.newValue;
   return true;
+}
+function currentPatchValue(site,field){
+  if(!site)return "";
+  if(String(field||"").startsWith("OF_")){
+    const code=field.slice(3),map=onefluxStateMap(site);
+    const v=map[code]||{status:"BELUM",note:""};
+    return encodeOnefluxValue(v.status,v.note);
+  }
+  const d=PATCH_DEFS[field];return d?site[d.prop]:"";
 }
 function findPatchSite(arr,p){
   let s=arr.find(x=>x.recordId===p.siteKey);
@@ -1187,7 +1314,9 @@ function reconcilePendingWithBase(arr){
   const before=pendingEdits.length;
   pendingEdits=pendingEdits.filter(p=>{
     const s=findPatchSite(arr,p),d=PATCH_DEFS[p.field];
-    if(!s||!d)return true;
+    if(!s)return true;
+    if(String(p.field||"").startsWith("OF_"))return norm(currentPatchValue(s,p.field))!==norm(p.newValue);
+    if(!d)return true;
     return patchComparable(s[d.prop],d.type)!==patchComparable(p.newValue,d.type);
   });
   if(pendingEdits.length!==before)savePendingEdits();
@@ -1209,7 +1338,7 @@ function applyEditLog(arr,remotePatches=[]){
   if(remotePatches.length&&pendingEdits.length){
     pendingEdits=pendingEdits.filter(p=>{
       const rp=latest.get((p.siteKey||p.projectId||p.siteName)+"||"+p.field);
-      return !(rp&&patchComparable(rp.newValue,PATCH_DEFS[p.field]?.type)===patchComparable(p.newValue,PATCH_DEFS[p.field]?.type));
+      return !(rp&&(String(p.field||"").startsWith("OF_")?norm(rp.newValue)===norm(p.newValue):patchComparable(rp.newValue,PATCH_DEFS[p.field]?.type)===patchComparable(p.newValue,PATCH_DEFS[p.field]?.type)));
     });
     savePendingEdits();
   }
@@ -1308,8 +1437,7 @@ function openGoogleEditor(){
           <select id="pcMStatus">${hardSelectOptions(["PROGRESS","BAST","DONE","HOLD","DROP BY DMT"],currentDetail.status||"PROGRESS")}</select>
         </div>
         <label class="pc-hard-check"><input id="pcMBinder" type="checkbox"${currentDetail.binder?" checked":""}> Binder selesai</label>
-        <label class="pc-hard-check"><input id="pcMOneflux" type="checkbox"${currentDetail.oneflux?" checked":""}> Oneflux flag selesai</label>
-        <label class="pc-hard-check"><input id="pcMBast" type="checkbox"${currentDetail.bast?" checked":""}> BAST flag selesai</label>
+                <label class="pc-hard-check"><input id="pcMBast" type="checkbox"${currentDetail.bast?" checked":""}> BAST flag selesai</label>
         <div class="pc-hard-field"><label>Deadline Project</label><input id="pcMDeadline" type="date" value="${attr(toDateInput(currentDetail.deadline))}"></div>
         <div class="pc-hard-field"><label>Keterangan</label><textarea id="pcMNote">${esc(currentDetail.note||"")}</textarea></div>
       </div>
@@ -1359,7 +1487,6 @@ async function saveGoogleEditor(){
   const patches=[];
   maybePatch(patches,"MASTER_STATUS",currentDetail.status,hardEditorEl("pcMStatus").value);
   maybePatch(patches,"MASTER_BINDER",currentDetail.binder,hardEditorEl("pcMBinder").checked);
-  maybePatch(patches,"MASTER_ONEFLUX",currentDetail.oneflux,hardEditorEl("pcMOneflux").checked);
   maybePatch(patches,"MASTER_BAST",currentDetail.bast,hardEditorEl("pcMBast").checked);
   maybePatch(patches,"MASTER_DEADLINE",toDateInput(currentDetail.deadline)||currentDetail.deadline,hardEditorEl("pcMDeadline").value);
   maybePatch(patches,"MASTER_NOTE",currentDetail.note,hardEditorEl("pcMNote").value.trim());
@@ -1404,6 +1531,93 @@ async function saveGoogleEditor(){
   }
 }
 
+function closeProcessDetail(){
+  document.getElementById("pcProcessDetail")?.remove();
+  document.documentElement.style.overflow="";
+  document.body.style.overflow="";
+}
+function openOnefluxChecklist(recordId){
+  const s=data.find(x=>x.recordId===recordId)||currentDetail;if(!s)return;
+  const sum=onefluxSummary(s),tpl=sum.template;
+  if(!tpl.length){toast("Checklist detail baru tersedia untuk PERKUATAN & COLLOCATION");return}
+  closeProcessDetail();
+  const overlay=document.createElement("div");overlay.id="pcProcessDetail";
+  let lastSection="";
+  const body=tpl.map((x,i)=>{
+    const v=sum.map[x.code]||{status:"BELUM",note:""};
+    const section=x.section!==lastSection?`<div class="pc-proc-section">${esc(x.section)}</div>`:"";
+    lastSection=x.section;
+    return `${section}<div class="pc-check-row" data-of-code="${attr(x.code)}">
+      <div class="pc-check-title">${esc(x.requirement)}${x.required?"":" · Optional"}</div>
+      <div class="pc-check-sub">${esc(x.subject)}</div>
+      <div class="pc-check-grid">
+        <select class="of-status">
+          <option value="BELUM"${v.status==="BELUM"?" selected":""}>Belum</option>
+          <option value="OK"${v.status==="OK"?" selected":""}>OK</option>
+          <option value="NOK"${v.status==="NOK"?" selected":""}>NOK / Blocker</option>
+        </select>
+        <input class="of-note" type="text" placeholder="Keterangan / issue..." value="${attr(v.note||"")}">
+      </div>
+    </div>`;
+  }).join("");
+  overlay.innerHTML=`<div class="pc-proc-wrap">
+    <div class="pc-proc-head"><div><h2>Oneflux · ${esc(s.sow)}</h2><p>${esc(s.name)} · ${sum.pct}% · ${esc(sum.state)}</p></div><button class="pc-proc-close" type="button">×</button></div>
+    <div class="pc-proc-card"><div class="process-summary"><div class="process-big">${sum.pct}<small>%</small></div><div class="process-copy">${sum.ok}/${sum.total} checklist wajib selesai<br>${sum.nok?sum.nok+" blocker aktif":"Tidak ada blocker"}</div></div><div class="process-bar ${sum.state==="Completed"?"done":sum.state==="Complicated"?"bad":""}"><span style="width:${sum.pct}%"></span></div></div>
+    ${body}
+    <div class="pc-proc-actions"><button class="btn pc-proc-cancel" type="button">Tutup</button><button class="btn blue pc-proc-save" type="button">Simpan Checklist</button></div>
+  </div>`;
+  document.body.appendChild(overlay);document.documentElement.style.overflow="hidden";document.body.style.overflow="hidden";
+  overlay.querySelector(".pc-proc-close").onclick=closeProcessDetail;
+  overlay.querySelector(".pc-proc-cancel").onclick=closeProcessDetail;
+  overlay.querySelector(".pc-proc-save").onclick=()=>saveOnefluxChecklist(s.recordId);
+}
+async function saveOnefluxChecklist(recordId){
+  const s=data.find(x=>x.recordId===recordId);if(!s)return;
+  const before=onefluxStateMap(s),patches=[];
+  document.querySelectorAll("#pcProcessDetail [data-of-code]").forEach(row=>{
+    const code=row.dataset.ofCode,status=row.querySelector(".of-status").value,note=row.querySelector(".of-note").value.trim();
+    const old=before[code]||{status:"BELUM",note:""};
+    const oldV=encodeOnefluxValue(old.status,old.note),newV=encodeOnefluxValue(status,note);
+    if(oldV!==newV)patches.push({siteKey:s.recordId,siteName:s.name||"",projectId:s.projectId||"",sow:s.sow||"",field:"OF_"+code,oldValue:oldV,newValue:newV,editor:editorName||"Editor",localTs:Date.now()});
+  });
+  if(!patches.length){toast("Tidak ada perubahan checklist");return}
+  pendingEdits.push(...patches);savePendingEdits();patches.forEach(p=>applyPatchToSite(s,p));saveData();renderAll();
+  for(const p of patches){submitPatchToForm(p);await new Promise(r=>setTimeout(r,180))}
+  closeProcessDetail();toast(patches.length+" checklist Oneflux tersimpan");
+  currentDetail=s;openDetail(s.recordId);
+  setTimeout(()=>fetchLiveMaster({manual:false}),7000);
+}
+function bastGroupCard(label,value,detail){
+  const b=bastStageInfo(value,detail),actual=b.map;
+  let chainOpen=true;
+  const rows=b.names.map((name,i)=>{
+    const isActual=(actual[name]||"BELUM")==="OK";
+    let state="Belum",cls="";
+    if(chainOpen&&isActual){state="Done";cls="ok"}
+    else if(chainOpen&&!isActual){state="Belum";cls="wait";chainOpen=false}
+    else if(!chainOpen&&isActual){state="Terkunci · data ada";cls="wait"}
+    else {state="Menunggu";cls="wait"}
+    return `<div class="pc-stage"><div class="pc-stage-no">${i+1}</div><div><div class="pc-stage-name">${name}</div><div class="pc-stage-note">${i===0?"Dokumen BOQ":i===1?"Purchase Order":i===2?"BAUT":i===3?"BAPWP":i===4?"BAST":"GR"}</div></div><span class="pc-stage-state ${cls}">${state}</span></div>`;
+  }).join("");
+  return `<div class="pc-proc-card"><div class="track-head"><h3>${esc(label)}</h3><span class="status-pill ${b.state==="Completed"?"good":"warn"}">${formatPct(b.pct)} · ${b.state}</span></div>${rows}${b.state!=="Completed"?`<div class="process-next">Tahap berikutnya: <b>${b.next}</b></div>`:""}</div>`;
+}
+function openBastDetail(recordId){
+  const s=data.find(x=>x.recordId===recordId)||currentDetail;if(!s)return;
+  closeProcessDetail();
+  const overlay=document.createElement("div");overlay.id="pcProcessDetail";
+  overlay.innerHTML=`<div class="pc-proc-wrap">
+    <div class="pc-proc-head"><div><h2>BAST / Document</h2><p>${esc(s.name)} · 6 dokumen wajib berurutan</p></div><button class="pc-proc-close" type="button">×</button></div>
+    <div class="pc-proc-card"><b>Urutan wajib</b><div class="process-next">BOQ → PO → BAUT → BAPWP → BAST → GR. Dokumen setelah tahap yang belum selesai tidak menambah persentase.</div></div>
+    ${bastGroupCard("SITAC",s.bastSitac,s.bastSitacDetail)}
+    ${bastGroupCard("CME",s.bastCme,s.bastCmeDetail)}
+    ${bastGroupCard("IMB",s.bastImb,s.bastImbDetail)}
+    ${bastGroupCard("Addwork 1",s.bastAdd1,s.bastAdd1Detail)}
+    ${bastGroupCard("Addwork 2",s.bastAdd2,s.bastAdd2Detail)}
+  </div>`;
+  document.body.appendChild(overlay);document.documentElement.style.overflow="hidden";document.body.style.overflow="hidden";
+  overlay.querySelector(".pc-proc-close").onclick=closeProcessDetail;
+}
+
 function bindEvents(){
   document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
   [refs.searchInput].forEach(el=>el.addEventListener("input",renderSites));
@@ -1417,6 +1631,11 @@ function bindEvents(){
 
   refs.closeDetailBtn.addEventListener("click",closeDetail);
   refs.detailModal.addEventListener("click",e=>{if(e.target===refs.detailModal)closeDetail()});
+  refs.integratedDetail.addEventListener("click",e=>{
+    const card=e.target.closest("[data-action]");if(!card||!currentDetail)return;
+    if(card.dataset.action==="open-oneflux")openOnefluxChecklist(currentDetail.recordId);
+    if(card.dataset.action==="open-bast")openBastDetail(currentDetail.recordId);
+  });
   refs.mapsBtn.addEventListener("click",()=>{if(!currentDetail)return;const url=mapsLink(currentDetail);if(url!=="-")window.open(url,"_blank","noopener")});
   refs.copyBtn.addEventListener("click",()=>{if(currentDetail)copyText(currentDetail.projectId||"","Project ID disalin")});
   refs.copySiteBtn.addEventListener("click",()=>{if(currentDetail)copyText(siteCopyText(currentDetail),"Data site disalin")});
@@ -1475,7 +1694,7 @@ function bindEvents(){
   refs.exportJsonBtn.addEventListener("click",()=>download("project-control-backup-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify({version:APP_VERSION,exportedAt:new Date().toISOString(),data},null,2),"application/json"));
   refs.exportCsvBtn.addEventListener("click",()=>{
     const headers=["NAME SITE","SOW","TENANT","REGIONAL","STATUS PROJECT","PROJECT ID","SITE ID","SITE ID DMT","ALAMAT SITE","KOORDINAT","HEALTH SCORE","HEALTH STATUS","DEADLINE ALERT","BAST DONE","ONEFLUX","BINDER","DEADLINE PROJECT","KETERANGAN","STATUS PLN","RFI","CONNECT","HO","DOK PLN","PLN NOTE","DAYA PLN","ID PELANGGAN PLN","STATUS ONEFLUX","ONEFLUX ISSUE","ONEFLUX NOTE","BAST SITAC","BAST CME","BAST IMB","BAST ADDWORK 1","BAST ADDWORK 2"];
-    const rows=data.map(s=>[s.name,s.sow,s.tenant,s.area,s.status,s.projectId,s.siteId,s.dmtId,s.address,s.coordinate,healthScore(s)+"%",healthState(s).label,deadlineState(s).label,s.bast,s.oneflux,s.binder,s.deadline,s.note,s.plnStatus,s.plnRfi,s.plnConnect,s.plnHo,s.plnDoc,s.plnNote,s.plnPower,s.plnCustomerId,s.onefluxStatus,s.onefluxIssue,s.onefluxNote,s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2]);
+    const rows=data.map(s=>[s.name,s.sow,s.tenant,s.area,s.status,s.projectId,s.siteId,s.dmtId,s.address,s.coordinate,healthScore(s)+"%",healthState(s).label,deadlineState(s).label,s.bast,s.oneflux,s.binder,s.deadline,s.note,s.plnStatus,s.plnRfi,s.plnConnect,s.plnHo,s.plnDoc,s.plnNote,s.plnPower,s.plnCustomerId,s.onefluxStatus,s.onefluxIssue,s.onefluxNote,s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2,s.onefluxChecklistEdits,s.bastSitacDetail,s.bastCmeDetail,s.bastImbDetail,s.bastAdd1Detail,s.bastAdd2Detail]);
     download("project-control-"+new Date().toISOString().slice(0,10)+".csv",[headers,...rows].map(r=>r.map(csvEscape).join(",")).join("\n"),"text/csv");
   });
   refs.resetBtn.addEventListener("click",()=>{if(!confirm("Reset cache lokal ke database bawaan?"))return;data=ensureRecordIds(seed());syncMode="cache";activeRegional="ALL";focusFilter="ALL";saveData();clearError();renderAll();toast("Database bawaan dimuat ulang")});
