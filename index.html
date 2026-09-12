@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v8 · Health & Deadline</title>
+<title>Project Control v9 · Field Copy Tools</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -80,17 +80,24 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 .focus-note{font-size:9px;color:var(--muted);margin-top:5px}
 @media(max-width:390px){.health-grid{grid-template-columns:repeat(2,1fr)}.health-breakdown{grid-template-columns:repeat(3,1fr)}}
 
+
+.detail-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.detail-actions .btn{width:100%;min-height:40px}
+.copy-card{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:11px;margin-top:10px}
+.copy-card h4{margin:0 0 8px;font-size:12px}.copy-card p{margin:4px 0;font-size:9px;color:#5d6a7d;line-height:1.45}
+@media(max-width:360px){.detail-actions{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="header-inner"><div class="brand"><small>Project Health & Deadline Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
+<header><div class="header-inner"><div class="brand"><small>Field Project Control Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
 <main>
 <div id="errorBanner" class="error-banner"></div>
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v8</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v9</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -232,7 +239,12 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     </div>
     <div id="integratedDetail" class="integrated-detail"></div>
     <div id="detailNote" class="note"></div>
-    <div class="actions"><button id="mapsBtn" class="btn blue" style="display:none">Open Maps</button><button id="copyBtn" class="btn">Copy Project ID</button></div>
+    <div class="detail-actions">
+      <button id="copyBtn" class="btn">Copy Project ID</button>
+      <button id="copySiteBtn" class="btn blue">Copy Data Site</button>
+      <button id="copyPlnBtn" class="btn dark">Copy Data PLN</button>
+      <button id="mapsBtn" class="btn">Open Maps</button>
+    </div>
   </div>
 </div>
 
@@ -243,11 +255,11 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v8_data";
-const LEGACY_STORAGE_KEY="project_control_v7_data";
+const STORAGE_KEY="project_control_v9_data";
+const LEGACY_STORAGE_KEY="project_control_v8_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="8.0";
+const APP_VERSION="9.0";
 const LIVE_SHEET="WEBAPP DATA";
 const DEFAULT_PUBLISHED_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQRV2r05O24mFkpUQAOPbJjtJgYztDCym3tnMjmkx0ybVyTPss-bmoX4BtOU8wYryuHgdWxCqTial3f/pub?gid=1893911107&single=true&output=csv";
 let data=[];
@@ -275,7 +287,7 @@ const refs={
   outstandingList:$("outstandingList"),reportList:$("reportList"),dataInfo:$("dataInfo"),syncInfo:$("syncInfo"),syncNowBtn:$("syncNowBtn"),publishedUrlInput:$("publishedUrlInput"),savePublishedBtn:$("savePublishedBtn"),csvInput:$("csvInput"),jsonInput:$("jsonInput"),
   exportJsonBtn:$("exportJsonBtn"),exportCsvBtn:$("exportCsvBtn"),resetBtn:$("resetBtn"),detailModal:$("detailModal"),
   detailName:$("detailName"),detailSub:$("detailSub"),detailGrid:$("detailGrid"),journeyList:$("journeyList"),integratedDetail:$("integratedDetail"),detailNote:$("detailNote"),
-  closeDetailBtn:$("closeDetailBtn"),mapsBtn:$("mapsBtn"),copyBtn:$("copyBtn"),toast:$("toast")
+  closeDetailBtn:$("closeDetailBtn"),mapsBtn:$("mapsBtn"),copyBtn:$("copyBtn"),copySiteBtn:$("copySiteBtn"),copyPlnBtn:$("copyPlnBtn"),toast:$("toast")
 };
 
 function seed(){
@@ -571,7 +583,7 @@ function renderReport(){
 }
 function renderSettings(){
   const areas=unique("area").join(", ")||"-",tenants=unique("tenant").join(", ")||"-";
-  refs.dataInfo.innerHTML=`<b>${data.length} record</b> aktif di aplikasi.<br>Regional: ${esc(areas)}<br>Tenant: ${esc(tenants)}<br>Sumber: ${syncMode==="live"?"Health + Deadline Live Sheet":"cache/local"} · App v${APP_VERSION}`;
+  refs.dataInfo.innerHTML=`<b>${data.length} record</b> aktif di aplikasi.<br>Regional: ${esc(areas)}<br>Tenant: ${esc(tenants)}<br>Sumber: ${syncMode==="live"?"Field Data Live Sheet":"cache/local"} · App v${APP_VERSION}`;
   if(refs.syncInfo)refs.syncInfo.innerHTML=`Tab: <b>${LIVE_SHEET}</b><br>Mode: <b>Published CSV</b><br>URL: <b>${publishedUrl?"tersimpan":"belum diisi"}</b><br>Sync terakhir: <b>${formatSyncTime(lastSync)}</b>`;
   if(refs.publishedUrlInput&&document.activeElement!==refs.publishedUrlInput)refs.publishedUrlInput.value=publishedUrl;
   refs.storageBadge.textContent=syncing?"SYNCING…":(syncMode==="live"?"LIVE ✓":(storageMode==="local"?"CACHE":"MEMORY"));
@@ -624,6 +636,7 @@ function integratedCards(s){
       <div class="track-item"><small>HO</small><b>${esc(yesNo(!!s.plnHo))}</b></div>
       <div class="track-item"><small>Dok PLN</small><b>${esc(yesNo(!!s.plnDoc))}</b></div>
       <div class="track-item"><small>Daya</small><b>${esc(s.plnPower||"-")}</b></div>
+      <div class="track-item"><small>ID Pelanggan</small><b>${esc(s.plnCustomerId||"-")}</b></div>
       <div class="track-item"><small>Status</small><b>${esc(s.plnStatus||"-")}</b></div>
     </div>
     ${s.plnNote?`<div class="track-note">${esc(s.plnNote)}</div>`:""}
@@ -651,14 +664,15 @@ function openDetail(recordId){
   currentDetail=s;refs.detailName.textContent=s.name||"(Tanpa Nama Site)";refs.detailSub.textContent=(s.projectId||"-")+" · "+(s.siteId||"-");
   const fields=[
     ["Regional",s.area],["Tenant",s.tenant],["SOW",s.sow],["Status",s.status],
-    ["Project ID",s.projectId],["Site ID",s.siteId],["DMT ID",s.dmtId],["Deadline",s.deadline]
+    ["Project ID",s.projectId],["Site ID",s.siteId],["DMT ID",s.dmtId],["Deadline",s.deadline],
+    ["Alamat Site",s.address],["Koordinat",s.coordinate]
   ];
   refs.detailGrid.innerHTML=fields.map(([k,v])=>`<div class="detail-box"><div class="detail-k">${esc(k)}</div><div class="detail-v">${esc(v||"-")}</div></div>`).join("");
   refs.journeyList.innerHTML=
     journey("Binder",!!s.binder)+journey("Oneflux",s.onefluxStatus?low(s.onefluxStatus)==="selesai":!!s.oneflux)+journey("BAST Flag",!!s.bast);
   refs.integratedDetail.innerHTML=healthDetailCard(s)+integratedCards(s);
   refs.detailNote.textContent=s.note||"Tidak ada keterangan.";
-  refs.mapsBtn.disabled=true;refs.mapsBtn.style.opacity=".45";
+  refs.mapsBtn.disabled=!norm(s.coordinate)||norm(s.coordinate)==="-";refs.mapsBtn.style.opacity=refs.mapsBtn.disabled?".45":"1";
   refs.detailModal.classList.add("show");
 }
 function journey(name,ok){return `<div class="journey-row"><span>${esc(name)}</span><span class="${ok?"ok":"pending"}">${ok?"Selesai":"Pending"}</span></div>`}
@@ -707,10 +721,11 @@ function importMasterCSV(text){
       projectId:pid,siteId:sid,dmtId:get(r,"SITE ID DMT"),
       deadline:get(r,"DEADLINE PROJECT"),note:get(r,"KETERANGAN"),
       plnStatus:get(r,"STATUS PLN"),plnRfi:truthy(get(r,"RFI")),plnConnect:get(r,"CONNECT"),plnHo:truthy(get(r,"HO")),
-      plnDoc:truthy(get(r,"DOK PLN")),plnNote:get(r,"PLN NOTE"),plnPower:get(r,"DAYA PLN"),
+      plnDoc:truthy(get(r,"DOK PLN")),plnNote:get(r,"PLN NOTE"),plnPower:get(r,"DAYA PLN"),plnCustomerId:get(r,"ID PELANGGAN PLN"),
       onefluxStatus:get(r,"STATUS ONEFLUX"),onefluxIssue:get(r,"ONEFLUX ISSUE"),onefluxNote:get(r,"ONEFLUX NOTE"),
       bastSitac:get(r,"BAST SITAC"),bastCme:get(r,"BAST CME"),bastImb:get(r,"BAST IMB"),
-      bastAdd1:get(r,"BAST ADDWORK 1"),bastAdd2:get(r,"BAST ADDWORK 2")});
+      bastAdd1:get(r,"BAST ADDWORK 1"),bastAdd2:get(r,"BAST ADDWORK 2"),
+      address:get(r,"ALAMAT SITE","ALAMAT"),coordinate:get(r,"KOORDINAT","LONG LAT")});
   });
   if(!out.length)throw new Error("Tidak ada record site yang terbaca.");
   return ensureRecordIds(out);
@@ -764,6 +779,45 @@ async function fetchLiveMaster({manual=false}={}){
 function csvEscape(v){const s=String(v??"");return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
 function download(name,text,type){const blob=new Blob([text],{type});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 
+function cleanCoordinate(value){
+  return norm(value).replace(/[°]/g,"").replace(/\s*,\s*/g,",").trim();
+}
+function mapsLink(s){
+  const c=cleanCoordinate(s?.coordinate);
+  return c&&c!=="-"?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c)}`:"-";
+}
+async function copyText(text,successMessage){
+  try{
+    if(navigator.clipboard&&window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+    }else{
+      const ta=document.createElement("textarea");
+      ta.value=text;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";
+      document.body.appendChild(ta);ta.select();
+      const ok=document.execCommand("copy");ta.remove();
+      if(!ok)throw new Error("copy failed");
+    }
+    toast(successMessage);
+  }catch(_){toast("Copy tidak didukung browser ini")}
+}
+function siteCopyText(s){
+  return [
+    "Nama Site :",s.name||"-","",
+    "Project ID :",s.projectId||"-","",
+    "Site ID :",s.siteId||"-","",
+    "Alamat Site :",s.address||"-","",
+    "Koordinat :",s.coordinate||"-","",
+    "Link Maps :",mapsLink(s)
+  ].join("\n");
+}
+function plnCopyText(s){
+  return [
+    "Nama Site :",s.name||"-","",
+    "Daya :",s.plnPower||"-","",
+    "ID Pelanggan :",s.plnCustomerId||"-"
+  ].join("\n");
+}
+
 function bindEvents(){
   document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
   [refs.searchInput].forEach(el=>el.addEventListener("input",renderSites));
@@ -777,8 +831,10 @@ function bindEvents(){
 
   refs.closeDetailBtn.addEventListener("click",closeDetail);
   refs.detailModal.addEventListener("click",e=>{if(e.target===refs.detailModal)closeDetail()});
-  refs.mapsBtn.addEventListener("click",()=>{});
-  refs.copyBtn.addEventListener("click",async()=>{if(!currentDetail)return;try{await navigator.clipboard.writeText(currentDetail.projectId||"");toast("Project ID disalin")}catch(_){toast("Copy tidak didukung browser ini")}});
+  refs.mapsBtn.addEventListener("click",()=>{if(!currentDetail)return;const url=mapsLink(currentDetail);if(url!=="-")window.open(url,"_blank","noopener")});
+  refs.copyBtn.addEventListener("click",()=>{if(currentDetail)copyText(currentDetail.projectId||"","Project ID disalin")});
+  refs.copySiteBtn.addEventListener("click",()=>{if(currentDetail)copyText(siteCopyText(currentDetail),"Data site disalin")});
+  refs.copyPlnBtn.addEventListener("click",()=>{if(currentDetail)copyText(plnCopyText(currentDetail),"Data PLN disalin")});
 
   refs.syncNowBtn?.addEventListener("click",()=>fetchLiveMaster({manual:true}));
   refs.savePublishedBtn?.addEventListener("click",()=>{
@@ -804,8 +860,8 @@ function bindEvents(){
   });
   refs.exportJsonBtn.addEventListener("click",()=>download("project-control-backup-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify({version:APP_VERSION,exportedAt:new Date().toISOString(),data},null,2),"application/json"));
   refs.exportCsvBtn.addEventListener("click",()=>{
-    const headers=["NAME SITE","SOW","TENANT","REGIONAL","STATUS PROJECT","PROJECT ID","SITE ID","SITE ID DMT","HEALTH SCORE","HEALTH STATUS","DEADLINE ALERT","BAST DONE","ONEFLUX","BINDER","DEADLINE PROJECT","KETERANGAN","STATUS PLN","RFI","CONNECT","HO","DOK PLN","PLN NOTE","DAYA PLN","STATUS ONEFLUX","ONEFLUX ISSUE","ONEFLUX NOTE","BAST SITAC","BAST CME","BAST IMB","BAST ADDWORK 1","BAST ADDWORK 2"];
-    const rows=data.map(s=>[s.name,s.sow,s.tenant,s.area,s.status,s.projectId,s.siteId,s.dmtId,healthScore(s),healthState(s).label,deadlineState(s).label,s.bast,s.oneflux,s.binder,s.deadline,s.note,s.plnStatus,s.plnRfi,s.plnConnect,s.plnHo,s.plnDoc,s.plnNote,s.plnPower,s.onefluxStatus,s.onefluxIssue,s.onefluxNote,s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2]);
+    const headers=["NAME SITE","SOW","TENANT","REGIONAL","STATUS PROJECT","PROJECT ID","SITE ID","SITE ID DMT","ALAMAT SITE","KOORDINAT","HEALTH SCORE","HEALTH STATUS","DEADLINE ALERT","BAST DONE","ONEFLUX","BINDER","DEADLINE PROJECT","KETERANGAN","STATUS PLN","RFI","CONNECT","HO","DOK PLN","PLN NOTE","DAYA PLN","ID PELANGGAN PLN","STATUS ONEFLUX","ONEFLUX ISSUE","ONEFLUX NOTE","BAST SITAC","BAST CME","BAST IMB","BAST ADDWORK 1","BAST ADDWORK 2"];
+    const rows=data.map(s=>[s.name,s.sow,s.tenant,s.area,s.status,s.projectId,s.siteId,s.dmtId,s.address,s.coordinate,healthScore(s),healthState(s).label,deadlineState(s).label,s.bast,s.oneflux,s.binder,s.deadline,s.note,s.plnStatus,s.plnRfi,s.plnConnect,s.plnHo,s.plnDoc,s.plnNote,s.plnPower,s.plnCustomerId,s.onefluxStatus,s.onefluxIssue,s.onefluxNote,s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2]);
     download("project-control-"+new Date().toISOString().slice(0,10)+".csv",[headers,...rows].map(r=>r.map(csvEscape).join(",")).join("\n"),"text/csv");
   });
   refs.resetBtn.addEventListener("click",()=>{if(!confirm("Reset cache lokal ke database bawaan?"))return;data=ensureRecordIds(seed());syncMode="cache";activeRegional="ALL";focusFilter="ALL";saveData();clearError();renderAll();toast("Database bawaan dimuat ulang")});
