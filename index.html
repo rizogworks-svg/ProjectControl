@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v9 · Field Copy Tools</title>
+<title>Project Control v10 · Field Productivity</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -87,17 +87,28 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 .copy-card h4{margin:0 0 8px;font-size:12px}.copy-card p{margin:4px 0;font-size:9px;color:#5d6a7d;line-height:1.45}
 @media(max-width:360px){.detail-actions{grid-template-columns:1fr}}
 
+
+.productivity-strip{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px}
+.favorite-btn{min-width:42px;font-size:16px;padding:7px 10px}
+.favorite-btn.on{background:#fff3cd;border-color:#f2cb5c;color:#8a6100}
+.template-help{font-size:8px;line-height:1.5;color:var(--muted);background:#f7f9fc;border:1px solid var(--line);border-radius:12px;padding:10px}
+.template-help code{font-size:8px;background:#eef2f7;padding:2px 4px;border-radius:4px}
+.field textarea{width:100%;min-height:160px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:11px;font:inherit;font-size:10px;line-height:1.5;background:#fff;color:var(--text)}
+.subsection-title{font-size:11px;font-weight:900;margin:8px 0 0}
+.wa-btn{background:#eefaf2;border-color:#bfe6ca;color:#19743a}
+.favorite-empty{font-size:9px;color:var(--muted);padding:8px 0}
+
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="header-inner"><div class="brand"><small>Field Project Control Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
+<header><div class="header-inner"><div class="brand"><small>Field Productivity Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
 <main>
 <div id="errorBanner" class="error-banner"></div>
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v9</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v10</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -144,6 +155,16 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
   <section class="section">
     <div class="section-head"><h3>Critical Sites</h3><span id="criticalCount">0 site</span></div>
     <div id="criticalList" class="list"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h3>Favorite Site</h3><span id="favoriteCount">0 site</span></div>
+    <div id="favoriteList" class="list"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h3>Terakhir Dibuka</h3><span id="recentViewedCount">0 site</span></div>
+    <div id="recentViewedList" class="list"></div>
   </section>
 
   <section class="section">
@@ -214,6 +235,19 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <button id="exportJsonBtn" class="btn dark">Export Backup JSON</button>
     <button id="exportCsvBtn" class="btn">Export CSV</button>
     <button id="resetBtn" class="btn">Reset ke Database Bawaan</button>
+
+    <div class="subsection-title">Template Copy & WhatsApp</div>
+    <div class="template-help">
+      Placeholder yang bisa dipakai:
+      <code>{NAMA_SITE}</code> <code>{PROJECT_ID}</code> <code>{SITE_ID}</code>
+      <code>{ALAMAT}</code> <code>{KOORDINAT}</code> <code>{LINK_MAPS}</code>
+      <code>{DAYA}</code> <code>{ID_PELANGGAN}</code>.
+    </div>
+    <div class="field"><label>Template Data Site</label><textarea id="siteTemplateInput"></textarea></div>
+    <div class="field"><label>Template Data PLN</label><textarea id="plnTemplateInput"></textarea></div>
+    <button id="saveTemplatesBtn" class="btn blue">Simpan Template</button>
+    <button id="resetTemplatesBtn" class="btn">Reset Template Default</button>
+
     <div class="info-box">Mode published-sheet: aplikasi membaca CSV publik dari tab WEBAPP DATA. Tidak memakai Apps Script. Jika koneksi gagal, cache terakhir di perangkat tetap dipakai.</div>
   </div>
 </section>
@@ -240,9 +274,12 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <div id="integratedDetail" class="integrated-detail"></div>
     <div id="detailNote" class="note"></div>
     <div class="detail-actions">
+      <button id="favoriteDetailBtn" class="btn favorite-btn">☆ Favorite</button>
       <button id="copyBtn" class="btn">Copy Project ID</button>
       <button id="copySiteBtn" class="btn blue">Copy Data Site</button>
       <button id="copyPlnBtn" class="btn dark">Copy Data PLN</button>
+      <button id="shareSiteWaBtn" class="btn wa-btn">Share Site WhatsApp</button>
+      <button id="sharePlnWaBtn" class="btn wa-btn">Share PLN WhatsApp</button>
       <button id="mapsBtn" class="btn">Open Maps</button>
     </div>
   </div>
@@ -255,11 +292,40 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v9_data";
-const LEGACY_STORAGE_KEY="project_control_v8_data";
+const STORAGE_KEY="project_control_v10_data";
+const LEGACY_STORAGE_KEY="project_control_v9_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="9.0";
+const APP_VERSION="10.0";
+const FAVORITES_KEY="project_control_v10_favorites";
+const RECENT_VIEW_KEY="project_control_v10_recent_view";
+const SITE_TEMPLATE_KEY="project_control_v10_site_template";
+const PLN_TEMPLATE_KEY="project_control_v10_pln_template";
+const DEFAULT_SITE_TEMPLATE=`Nama Site :
+{NAMA_SITE}
+
+Project ID :
+{PROJECT_ID}
+
+Site ID :
+{SITE_ID}
+
+Alamat Site :
+{ALAMAT}
+
+Koordinat :
+{KOORDINAT}
+
+Link Maps :
+{LINK_MAPS}`;
+const DEFAULT_PLN_TEMPLATE=`Nama Site :
+{NAMA_SITE}
+
+Daya :
+{DAYA}
+
+ID Pelanggan :
+{ID_PELANGGAN}`;
 const LIVE_SHEET="WEBAPP DATA";
 const DEFAULT_PUBLISHED_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQRV2r05O24mFkpUQAOPbJjtJgYztDCym3tnMjmkx0ybVyTPss-bmoX4BtOU8wYryuHgdWxCqTial3f/pub?gid=1893911107&single=true&output=csv";
 let data=[];
@@ -267,6 +333,10 @@ let activeRegional="ALL";
 let focusFilter="ALL";
 let outstandingMode="CRITICAL";
 let currentDetail=null;
+let favoriteIds=[];
+let recentViewedIds=[];
+let siteTemplate=DEFAULT_SITE_TEMPLATE;
+let plnTemplate=DEFAULT_PLN_TEMPLATE;
 let storageMode="memory";
 let syncMode="cache";
 let lastSync="";
@@ -281,13 +351,17 @@ const refs={
   healthHealthy:$("healthHealthy"),healthWatch:$("healthWatch"),healthCritical:$("healthCritical"),healthAvg:$("healthAvg"),
   deadlineOverdue:$("deadlineOverdue"),deadlineH3:$("deadlineH3"),deadlineH7:$("deadlineH7"),deadlineNone:$("deadlineNone"),
   criticalCount:$("criticalCount"),criticalList:$("criticalList"),
+  favoriteCount:$("favoriteCount"),favoriteList:$("favoriteList"),recentViewedCount:$("recentViewedCount"),recentViewedList:$("recentViewedList"),
   recentCount:$("recentCount"),recentList:$("recentList"),siteCount:$("siteCount"),searchInput:$("searchInput"),
   regionalChips:$("regionalChips"),focusChips:$("focusChips"),tenantFilter:$("tenantFilter"),sowFilter:$("sowFilter"),statusFilter:$("statusFilter"),
   conditionFilter:$("conditionFilter"),siteList:$("siteList"),outstandingCount:$("outstandingCount"),outstandingTabs:$("outstandingTabs"),
   outstandingList:$("outstandingList"),reportList:$("reportList"),dataInfo:$("dataInfo"),syncInfo:$("syncInfo"),syncNowBtn:$("syncNowBtn"),publishedUrlInput:$("publishedUrlInput"),savePublishedBtn:$("savePublishedBtn"),csvInput:$("csvInput"),jsonInput:$("jsonInput"),
   exportJsonBtn:$("exportJsonBtn"),exportCsvBtn:$("exportCsvBtn"),resetBtn:$("resetBtn"),detailModal:$("detailModal"),
   detailName:$("detailName"),detailSub:$("detailSub"),detailGrid:$("detailGrid"),journeyList:$("journeyList"),integratedDetail:$("integratedDetail"),detailNote:$("detailNote"),
-  closeDetailBtn:$("closeDetailBtn"),mapsBtn:$("mapsBtn"),copyBtn:$("copyBtn"),copySiteBtn:$("copySiteBtn"),copyPlnBtn:$("copyPlnBtn"),toast:$("toast")
+  closeDetailBtn:$("closeDetailBtn"),mapsBtn:$("mapsBtn"),copyBtn:$("copyBtn"),copySiteBtn:$("copySiteBtn"),copyPlnBtn:$("copyPlnBtn"),
+  favoriteDetailBtn:$("favoriteDetailBtn"),shareSiteWaBtn:$("shareSiteWaBtn"),sharePlnWaBtn:$("sharePlnWaBtn"),
+  siteTemplateInput:$("siteTemplateInput"),plnTemplateInput:$("plnTemplateInput"),saveTemplatesBtn:$("saveTemplatesBtn"),resetTemplatesBtn:$("resetTemplatesBtn"),
+  toast:$("toast")
 };
 
 function seed(){
@@ -450,6 +524,73 @@ function ensureRecordIds(arr){
   });
 }
 
+function loadProductivity(){
+  if(!storageAvailable())return;
+  try{
+    const fav=JSON.parse(localStorage.getItem(FAVORITES_KEY)||"[]");
+    const recent=JSON.parse(localStorage.getItem(RECENT_VIEW_KEY)||"[]");
+    favoriteIds=Array.isArray(fav)?fav:[];
+    recentViewedIds=Array.isArray(recent)?recent:[];
+    siteTemplate=localStorage.getItem(SITE_TEMPLATE_KEY)||DEFAULT_SITE_TEMPLATE;
+    plnTemplate=localStorage.getItem(PLN_TEMPLATE_KEY)||DEFAULT_PLN_TEMPLATE;
+  }catch(_){
+    favoriteIds=[];recentViewedIds=[];siteTemplate=DEFAULT_SITE_TEMPLATE;plnTemplate=DEFAULT_PLN_TEMPLATE;
+  }
+}
+function saveFavorites(){
+  if(storageAvailable())try{localStorage.setItem(FAVORITES_KEY,JSON.stringify(favoriteIds))}catch(_){}
+}
+function saveRecentViewed(){
+  if(storageAvailable())try{localStorage.setItem(RECENT_VIEW_KEY,JSON.stringify(recentViewedIds))}catch(_){}
+}
+function saveTemplates(){
+  if(storageAvailable())try{
+    localStorage.setItem(SITE_TEMPLATE_KEY,siteTemplate);
+    localStorage.setItem(PLN_TEMPLATE_KEY,plnTemplate);
+  }catch(_){}
+}
+function isFavorite(id){return favoriteIds.includes(id)}
+function toggleFavorite(id){
+  if(!id)return;
+  if(isFavorite(id))favoriteIds=favoriteIds.filter(x=>x!==id);
+  else favoriteIds=[id,...favoriteIds.filter(x=>x!==id)];
+  saveFavorites();renderAll();
+  if(currentDetail){
+    refs.favoriteDetailBtn.textContent=isFavorite(currentDetail.recordId)?"★ Favorited":"☆ Favorite";
+    refs.favoriteDetailBtn.classList.toggle("on",isFavorite(currentDetail.recordId));
+  }
+  toast(isFavorite(id)?"Site ditambahkan ke Favorite":"Site dihapus dari Favorite");
+}
+function rememberViewed(id){
+  if(!id)return;
+  recentViewedIds=[id,...recentViewedIds.filter(x=>x!==id)].slice(0,10);
+  saveRecentViewed();
+}
+function recordsFromIds(ids){
+  const map=new Map(data.map(s=>[s.recordId,s]));
+  return ids.map(id=>map.get(id)).filter(Boolean);
+}
+function fillTemplate(template,s){
+  const values={
+    "{NAMA_SITE}":s?.name||"-",
+    "{PROJECT_ID}":s?.projectId||"-",
+    "{SITE_ID}":s?.siteId||"-",
+    "{ALAMAT}":s?.address||"-",
+    "{KOORDINAT}":s?.coordinate||"-",
+    "{LINK_MAPS}":mapsLink(s),
+    "{DAYA}":s?.plnPower||"-",
+    "{ID_PELANGGAN}":s?.plnCustomerId||"-"
+  };
+  let out=String(template||"");
+  Object.entries(values).forEach(([k,v])=>{out=out.split(k).join(v)});
+  return out.trim();
+}
+function shareWhatsApp(text){
+  const value=norm(text);
+  if(!value){toast("Tidak ada data untuk dibagikan");return}
+  window.open("https://wa.me/?text="+encodeURIComponent(value),"_blank","noopener");
+}
+
 function card(s){
   const p=progressValue(s);
   return `<article class="card">
@@ -460,7 +601,10 @@ function card(s){
     <div class="meta"><span>${esc(s.area||"-")}</span><span>${esc(s.tenant||"-")}</span><span>${esc(s.sow||"-")}</span></div>
     <div class="signal-row">${healthPill(s)}${deadlinePill(s)}</div>
     <div class="progressbar"><span style="width:${p}%"></span></div><div class="progressline"><span>Progress indikatif</span><span>${p}%</span></div>
-    <div class="actions"><button class="btn detail-btn" data-record="${attr(s.recordId)}">Detail</button></div>
+    <div class="actions">
+      <button class="btn favorite-btn ${isFavorite(s.recordId)?"on":""}" data-favorite="${attr(s.recordId)}" aria-label="Favorite">${isFavorite(s.recordId)?"★":"☆"}</button>
+      <button class="btn detail-btn" data-record="${attr(s.recordId)}">Detail</button>
+    </div>
   </article>`;
 }
 function renderDashboard(){
@@ -496,6 +640,14 @@ function renderDashboard(){
     const count=data.filter(s=>s.area===a).length;
     return `<button class="region-card" data-region-home="${attr(a)}"><b>${count}</b><span>${esc(a)}</span></button>`;
   }).join("")||'<div class="empty">Regional belum tersedia.</div>';
+
+  const favorites=recordsFromIds(favoriteIds).slice(0,5);
+  refs.favoriteCount.textContent=favorites.length+" site";
+  refs.favoriteList.innerHTML=favorites.length?favorites.map(card).join(""):'<div class="favorite-empty">Belum ada Favorite Site. Tekan ☆ pada site yang ingin dipantau.</div>';
+
+  const viewed=recordsFromIds(recentViewedIds).slice(0,5);
+  refs.recentViewedCount.textContent=viewed.length+" site";
+  refs.recentViewedList.innerHTML=viewed.length?viewed.map(card).join(""):'<div class="favorite-empty">Belum ada site yang dibuka.</div>';
 
   const recent=[...data].sort((a,b)=>(b.sourceRow||0)-(a.sourceRow||0)).slice(0,5);
   refs.recentCount.textContent=recent.length+" site";
@@ -586,6 +738,8 @@ function renderSettings(){
   refs.dataInfo.innerHTML=`<b>${data.length} record</b> aktif di aplikasi.<br>Regional: ${esc(areas)}<br>Tenant: ${esc(tenants)}<br>Sumber: ${syncMode==="live"?"Field Data Live Sheet":"cache/local"} · App v${APP_VERSION}`;
   if(refs.syncInfo)refs.syncInfo.innerHTML=`Tab: <b>${LIVE_SHEET}</b><br>Mode: <b>Published CSV</b><br>URL: <b>${publishedUrl?"tersimpan":"belum diisi"}</b><br>Sync terakhir: <b>${formatSyncTime(lastSync)}</b>`;
   if(refs.publishedUrlInput&&document.activeElement!==refs.publishedUrlInput)refs.publishedUrlInput.value=publishedUrl;
+  if(refs.siteTemplateInput&&document.activeElement!==refs.siteTemplateInput)refs.siteTemplateInput.value=siteTemplate;
+  if(refs.plnTemplateInput&&document.activeElement!==refs.plnTemplateInput)refs.plnTemplateInput.value=plnTemplate;
   refs.storageBadge.textContent=syncing?"SYNCING…":(syncMode==="live"?"LIVE ✓":(storageMode==="local"?"CACHE":"MEMORY"));
 }
 function renderAll(){fillFilters();renderDashboard();renderSites();renderOutstanding();renderReport();renderSettings()}
@@ -661,6 +815,7 @@ function integratedCards(s){
 
 function openDetail(recordId){
   const s=data.find(x=>x.recordId===recordId);if(!s)return;
+  rememberViewed(recordId);
   currentDetail=s;refs.detailName.textContent=s.name||"(Tanpa Nama Site)";refs.detailSub.textContent=(s.projectId||"-")+" · "+(s.siteId||"-");
   const fields=[
     ["Regional",s.area],["Tenant",s.tenant],["SOW",s.sow],["Status",s.status],
@@ -673,6 +828,9 @@ function openDetail(recordId){
   refs.integratedDetail.innerHTML=healthDetailCard(s)+integratedCards(s);
   refs.detailNote.textContent=s.note||"Tidak ada keterangan.";
   refs.mapsBtn.disabled=!norm(s.coordinate)||norm(s.coordinate)==="-";refs.mapsBtn.style.opacity=refs.mapsBtn.disabled?".45":"1";
+  refs.favoriteDetailBtn.textContent=isFavorite(s.recordId)?"★ Favorited":"☆ Favorite";
+  refs.favoriteDetailBtn.classList.toggle("on",isFavorite(s.recordId));
+  renderDashboard();
   refs.detailModal.classList.add("show");
 }
 function journey(name,ok){return `<div class="journey-row"><span>${esc(name)}</span><span class="${ok?"ok":"pending"}">${ok?"Selesai":"Pending"}</span></div>`}
@@ -687,6 +845,7 @@ function openRegion(region){
   activeRegional=region;focusFilter="ALL";fillFilters();renderSites();switchView("siteView");
 }
 function handleListClick(e){
+  const favBtn=e.target.closest("[data-favorite]");if(favBtn){toggleFavorite(favBtn.dataset.favorite);return}
   const detailBtn=e.target.closest(".detail-btn");if(detailBtn)openDetail(detailBtn.dataset.record);
   const homeRegion=e.target.closest("[data-region-home]");if(homeRegion)openRegion(homeRegion.dataset.regionHome);
   const reportBtn=e.target.closest("[data-region-report]");if(reportBtn)openRegion(reportBtn.dataset.regionReport);
@@ -800,23 +959,8 @@ async function copyText(text,successMessage){
     toast(successMessage);
   }catch(_){toast("Copy tidak didukung browser ini")}
 }
-function siteCopyText(s){
-  return [
-    "Nama Site :",s.name||"-","",
-    "Project ID :",s.projectId||"-","",
-    "Site ID :",s.siteId||"-","",
-    "Alamat Site :",s.address||"-","",
-    "Koordinat :",s.coordinate||"-","",
-    "Link Maps :",mapsLink(s)
-  ].join("\n");
-}
-function plnCopyText(s){
-  return [
-    "Nama Site :",s.name||"-","",
-    "Daya :",s.plnPower||"-","",
-    "ID Pelanggan :",s.plnCustomerId||"-"
-  ].join("\n");
-}
+function siteCopyText(s){return fillTemplate(siteTemplate,s)}
+function plnCopyText(s){return fillTemplate(plnTemplate,s)}
 
 function bindEvents(){
   document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
@@ -827,7 +971,7 @@ function bindEvents(){
   refs.focusChips.addEventListener("click",e=>{const b=e.target.closest("[data-focus]");if(!b)return;focusFilter=b.dataset.focus;fillFilters();renderSites()});
   refs.outstandingTabs.addEventListener("click",e=>{const b=e.target.closest("[data-mode]");if(!b)return;outstandingMode=b.dataset.mode;renderOutstanding()});
 
-  [refs.siteList,refs.recentList,refs.criticalList,refs.homeRegions,refs.reportList,refs.outstandingList].forEach(el=>el.addEventListener("click",handleListClick));
+  [refs.siteList,refs.recentList,refs.favoriteList,refs.recentViewedList,refs.criticalList,refs.homeRegions,refs.reportList,refs.outstandingList].forEach(el=>el.addEventListener("click",handleListClick));
 
   refs.closeDetailBtn.addEventListener("click",closeDetail);
   refs.detailModal.addEventListener("click",e=>{if(e.target===refs.detailModal)closeDetail()});
@@ -835,6 +979,9 @@ function bindEvents(){
   refs.copyBtn.addEventListener("click",()=>{if(currentDetail)copyText(currentDetail.projectId||"","Project ID disalin")});
   refs.copySiteBtn.addEventListener("click",()=>{if(currentDetail)copyText(siteCopyText(currentDetail),"Data site disalin")});
   refs.copyPlnBtn.addEventListener("click",()=>{if(currentDetail)copyText(plnCopyText(currentDetail),"Data PLN disalin")});
+  refs.shareSiteWaBtn.addEventListener("click",()=>{if(currentDetail)shareWhatsApp(siteCopyText(currentDetail))});
+  refs.sharePlnWaBtn.addEventListener("click",()=>{if(currentDetail)shareWhatsApp(plnCopyText(currentDetail))});
+  refs.favoriteDetailBtn.addEventListener("click",()=>{if(currentDetail)toggleFavorite(currentDetail.recordId)});
 
   refs.syncNowBtn?.addEventListener("click",()=>fetchLiveMaster({manual:true}));
   refs.savePublishedBtn?.addEventListener("click",()=>{
@@ -844,6 +991,16 @@ function bindEvents(){
       if(storageAvailable())try{if(publishedUrl)localStorage.setItem(PUBLISHED_URL_KEY,publishedUrl);else localStorage.removeItem(PUBLISHED_URL_KEY)}catch(_){}
       renderSettings();toast(publishedUrl?"Published URL disimpan":"Published URL dihapus");
     }catch(err){toast(err.message)}
+  });
+
+  refs.saveTemplatesBtn?.addEventListener("click",()=>{
+    siteTemplate=refs.siteTemplateInput?.value?.trim()||DEFAULT_SITE_TEMPLATE;
+    plnTemplate=refs.plnTemplateInput?.value?.trim()||DEFAULT_PLN_TEMPLATE;
+    saveTemplates();renderSettings();toast("Template disimpan");
+  });
+  refs.resetTemplatesBtn?.addEventListener("click",()=>{
+    siteTemplate=DEFAULT_SITE_TEMPLATE;plnTemplate=DEFAULT_PLN_TEMPLATE;
+    saveTemplates();renderSettings();toast("Template dikembalikan ke default");
   });
 
   refs.csvInput.addEventListener("change",async e=>{
@@ -870,6 +1027,7 @@ function init(){
   try{
     data=ensureRecordIds(loadData());
     if(!data.length){data=ensureRecordIds(seed());showError("Cache lokal kosong. Database bawaan dipakai.");}
+    loadProductivity();
     bindEvents();renderAll();
     if(publishedUrl)fetchLiveMaster();
   }catch(err){
