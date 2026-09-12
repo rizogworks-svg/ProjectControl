@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v7 · Integrated Dashboard</title>
+<title>Project Control v8 · Health & Deadline</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -59,17 +59,38 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 .bast-track{height:7px;background:#edf1f5;border-radius:999px;overflow:hidden}.bast-track span{display:block;height:100%;background:var(--green);border-radius:999px}
 .track-note{margin-top:8px;padding:9px;background:#f7f9fc;border-radius:12px;font-size:9px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}
 
+
+.health-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.health-kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:11px;min-width:0}
+.health-kpi strong{display:block;font-size:20px;line-height:1.1}.health-kpi span{display:block;font-size:8px;color:var(--muted);margin-top:4px}
+.health-kpi.healthy strong{color:var(--green)}.health-kpi.watch strong{color:var(--amber)}.health-kpi.critical strong{color:var(--red)}
+.health-pill,.deadline-pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:5px 7px;font-size:8px;font-weight:800}
+.health-pill.healthy{background:var(--soft-green);color:var(--green)}
+.health-pill.watch{background:var(--soft-amber);color:#9a6200}
+.health-pill.critical{background:var(--soft-red);color:var(--red)}
+.deadline-pill.ok{background:#eef2f7;color:#627086}.deadline-pill.h7{background:#fff5dd;color:#996000}.deadline-pill.h3{background:#fff0df;color:#b45a00}.deadline-pill.overdue{background:var(--soft-red);color:var(--red)}
+.signal-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px}
+.health-summary{border:1px solid var(--line);border-radius:18px;padding:13px;background:linear-gradient(145deg,#f8fafc,#fff)}
+.health-summary-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.health-score{font-size:30px;font-weight:900;line-height:1}.health-score small{font-size:10px;color:var(--muted);font-weight:700}
+.health-breakdown{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:11px}
+.health-part{background:#f5f7fa;border-radius:10px;padding:8px 5px;text-align:center}.health-part b{display:block;font-size:11px}.health-part span{display:block;font-size:7px;color:var(--muted);margin-top:2px}
+.deadline-box{margin-top:10px;border-radius:12px;padding:10px;background:#f7f9fc;font-size:9px;line-height:1.45}
+.deadline-box.overdue{background:var(--soft-red);color:#982a2a}.deadline-box.h3{background:#fff0df;color:#955000}.deadline-box.h7{background:#fff6df;color:#805d00}
+.focus-note{font-size:9px;color:var(--muted);margin-top:5px}
+@media(max-width:390px){.health-grid{grid-template-columns:repeat(2,1fr)}.health-breakdown{grid-template-columns:repeat(3,1fr)}}
+
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="header-inner"><div class="brand"><small>Integrated Project Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
+<header><div class="header-inner"><div class="brand"><small>Project Health & Deadline Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
 <main>
 <div id="errorBanner" class="error-banner"></div>
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v5</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v8</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -94,6 +115,31 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
   </section>
 
   <section class="section">
+    <div class="section-head"><h3>Project Health</h3><span>skor gabungan</span></div>
+    <div class="health-grid">
+      <div class="health-kpi healthy"><strong id="healthHealthy">0</strong><span>Healthy</span></div>
+      <div class="health-kpi watch"><strong id="healthWatch">0</strong><span>Watch</span></div>
+      <div class="health-kpi critical"><strong id="healthCritical">0</strong><span>Critical</span></div>
+      <div class="health-kpi"><strong id="healthAvg">0</strong><span>Avg Score</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h3>Deadline Alert</h3><span>site aktif</span></div>
+    <div class="health-grid">
+      <div class="health-kpi critical"><strong id="deadlineOverdue">0</strong><span>Overdue</span></div>
+      <div class="health-kpi watch"><strong id="deadlineH3">0</strong><span>H-0 s/d H-3</span></div>
+      <div class="health-kpi watch"><strong id="deadlineH7">0</strong><span>H-4 s/d H-7</span></div>
+      <div class="health-kpi"><strong id="deadlineNone">0</strong><span>Tanpa Deadline</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h3>Critical Sites</h3><span id="criticalCount">0 site</span></div>
+    <div id="criticalList" class="list"></div>
+  </section>
+
+  <section class="section">
     <div class="section-head"><h3>Data Terbaru</h3><span id="recentCount">0 site</span></div>
     <div id="recentList" class="list"></div>
   </section>
@@ -106,6 +152,12 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
   <section class="section">
     <div class="section-head"><h3>Regional</h3><span>Filter utama</span></div>
     <div id="regionalChips" class="chips"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h3>Quick Focus</h3><span>health & deadline</span></div>
+    <div id="focusChips" class="chips"></div>
+    <div class="focus-note">Critical = health rendah, hold, atau deadline overdue.</div>
   </section>
 
   <div class="panel">
@@ -123,7 +175,11 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 <section id="outstandingView" class="view">
   <div class="section-head"><h3>Outstanding</h3><span id="outstandingCount">0 site</span></div>
   <div class="chips" id="outstandingTabs">
-    <button class="chip active" data-mode="PROGRESS">Progress</button>
+    <button class="chip active" data-mode="CRITICAL">Critical</button>
+    <button class="chip" data-mode="OVERDUE">Overdue</button>
+    <button class="chip" data-mode="H3">H-3</button>
+    <button class="chip" data-mode="H7">H-7</button>
+    <button class="chip" data-mode="PROGRESS">Progress</button>
     <button class="chip" data-mode="BAST">BAST</button>
     <button class="chip" data-mode="PLN">PLN</button>
     <button class="chip" data-mode="ONEFLUX">Oneflux</button>
@@ -187,15 +243,17 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v7_data";
+const STORAGE_KEY="project_control_v8_data";
+const LEGACY_STORAGE_KEY="project_control_v7_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="7.0";
+const APP_VERSION="8.0";
 const LIVE_SHEET="WEBAPP DATA";
 const DEFAULT_PUBLISHED_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQRV2r05O24mFkpUQAOPbJjtJgYztDCym3tnMjmkx0ybVyTPss-bmoX4BtOU8wYryuHgdWxCqTial3f/pub?gid=1893911107&single=true&output=csv";
 let data=[];
 let activeRegional="ALL";
-let outstandingMode="PROGRESS";
+let focusFilter="ALL";
+let outstandingMode="CRITICAL";
 let currentDetail=null;
 let storageMode="memory";
 let syncMode="cache";
@@ -208,8 +266,11 @@ const refs={
   errorBanner:$("errorBanner"),storageBadge:$("storageBadge"),dataCaption:$("dataCaption"),
   homeTotal:$("homeTotal"),homeDone:$("homeDone"),homeProgress:$("homeProgress"),homeBast:$("homeBast"),homeHold:$("homeHold"),
   homeRegions:$("homeRegions"),outProgress:$("outProgress"),outBast:$("outBast"),outOf:$("outOf"),outBinder:$("outBinder"),
+  healthHealthy:$("healthHealthy"),healthWatch:$("healthWatch"),healthCritical:$("healthCritical"),healthAvg:$("healthAvg"),
+  deadlineOverdue:$("deadlineOverdue"),deadlineH3:$("deadlineH3"),deadlineH7:$("deadlineH7"),deadlineNone:$("deadlineNone"),
+  criticalCount:$("criticalCount"),criticalList:$("criticalList"),
   recentCount:$("recentCount"),recentList:$("recentList"),siteCount:$("siteCount"),searchInput:$("searchInput"),
-  regionalChips:$("regionalChips"),tenantFilter:$("tenantFilter"),sowFilter:$("sowFilter"),statusFilter:$("statusFilter"),
+  regionalChips:$("regionalChips"),focusChips:$("focusChips"),tenantFilter:$("tenantFilter"),sowFilter:$("sowFilter"),statusFilter:$("statusFilter"),
   conditionFilter:$("conditionFilter"),siteList:$("siteList"),outstandingCount:$("outstandingCount"),outstandingTabs:$("outstandingTabs"),
   outstandingList:$("outstandingList"),reportList:$("reportList"),dataInfo:$("dataInfo"),syncInfo:$("syncInfo"),syncNowBtn:$("syncNowBtn"),publishedUrlInput:$("publishedUrlInput"),savePublishedBtn:$("savePublishedBtn"),csvInput:$("csvInput"),jsonInput:$("jsonInput"),
   exportJsonBtn:$("exportJsonBtn"),exportCsvBtn:$("exportCsvBtn"),resetBtn:$("resetBtn"),detailModal:$("detailModal"),
@@ -244,6 +305,97 @@ function progressValue(s){
 }
 function isDone(s){return low(s.status)==="done"}
 function isActive(s){return !isDone(s)&&!low(s.status).includes("drop")}
+
+function parseDeadline(value){
+  const s=norm(value);
+  if(!s||s==="-"||s==="0")return null;
+  if(/^\d+(?:\.\d+)?$/.test(s)){
+    const n=Number(s);
+    if(n>20000&&n<100000){
+      const base=Date.UTC(1899,11,30);
+      const d=new Date(base+Math.round(n)*86400000);
+      return new Date(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),12);
+    }
+  }
+  let m=s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);
+  if(m)return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]),12);
+  m=s.match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})$/);
+  if(m)return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12);
+  const d=new Date(s);
+  return Number.isNaN(d.getTime())?null:new Date(d.getFullYear(),d.getMonth(),d.getDate(),12);
+}
+function daysToDeadline(s){
+  const d=parseDeadline(s.deadline);if(!d)return null;
+  const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate(),12);
+  return Math.round((d-today)/86400000);
+}
+function deadlineState(s){
+  if(isDone(s)||low(s.status).includes("drop"))return {code:"CLOSED",label:"Closed",days:null,cls:"ok"};
+  const days=daysToDeadline(s);
+  if(days===null)return {code:"NONE",label:"Tanpa deadline",days:null,cls:"ok"};
+  if(days<0)return {code:"OVERDUE",label:`Overdue ${Math.abs(days)} hari`,days,cls:"overdue"};
+  if(days===0)return {code:"H3",label:"Deadline hari ini",days,cls:"h3"};
+  if(days<=3)return {code:"H3",label:`H-${days}`,days,cls:"h3"};
+  if(days<=7)return {code:"H7",label:`H-${days}`,days,cls:"h7"};
+  return {code:"OK",label:`H-${days}`,days,cls:"ok"};
+}
+function docRatio(s){
+  const vals=[s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2].map(norm).filter(Boolean);
+  if(vals.length){
+    let sum=0;
+    vals.forEach(v=>{const m=v.match(/(\d+)\s*\/\s*6/i);sum+=m?Math.max(0,Math.min(6,Number(m[1])))/6:(low(v).includes("done")?1:0)});
+    return sum/vals.length;
+  }
+  if(s.bast)return 1;
+  if(low(s.status).includes("bast"))return .6;
+  return 0;
+}
+function healthBreakdown(s){
+  const st=low(s.status);
+  let project=st==="done"?30:st.includes("bast")?24:st.includes("progress")?15:st.includes("hold")?5:st.includes("drop")?0:12;
+  const plnKnown=!!norm(s.plnStatus);
+  const pln=low(s.plnStatus)==="done"?15:(plnKnown?3:7);
+  const ofDone=s.onefluxStatus?low(s.onefluxStatus)==="selesai":!!s.oneflux;
+  const oneflux=ofDone?20:0;
+  const binder=s.binder?15:0;
+  const docs=Math.round(docRatio(s)*20);
+  return {project,pln,oneflux,binder,docs};
+}
+function healthScore(s){
+  const st=low(s.status);
+  if(st==="done")return 100;
+  if(st.includes("drop"))return 0;
+  const b=healthBreakdown(s);
+  let score=b.project+b.pln+b.oneflux+b.binder+b.docs;
+  const dl=deadlineState(s);
+  if(dl.code==="OVERDUE")score-=20;
+  else if(dl.code==="H3")score-=10;
+  else if(dl.code==="H7")score-=5;
+  if(st.includes("hold"))score=Math.min(score,45);
+  return Math.max(0,Math.min(100,Math.round(score)));
+}
+function healthState(s){
+  const score=healthScore(s),st=low(s.status),dl=deadlineState(s);
+  if(st.includes("drop")||st.includes("hold")||dl.code==="OVERDUE"||score<60)return {code:"CRITICAL",label:"Critical",score,cls:"critical"};
+  if(score<80||dl.code==="H3"||dl.code==="H7")return {code:"WATCH",label:"Watch",score,cls:"watch"};
+  return {code:"HEALTHY",label:"Healthy",score,cls:"healthy"};
+}
+function isCriticalSite(s){return isActive(s)&&healthState(s).code==="CRITICAL"}
+function criticalSort(a,b){
+  const da=deadlineState(a),db=deadlineState(b);
+  if(da.code==="OVERDUE"&&db.code!=="OVERDUE")return -1;
+  if(db.code==="OVERDUE"&&da.code!=="OVERDUE")return 1;
+  return healthScore(a)-healthScore(b)||(b.sourceRow||0)-(a.sourceRow||0);
+}
+function healthPill(s){
+  const h=healthState(s);
+  return `<span class="health-pill ${h.cls}">Health ${h.score} · ${h.label}</span>`;
+}
+function deadlinePill(s){
+  const d=deadlineState(s);
+  if(d.code==="CLOSED"||d.code==="NONE")return "";
+  return `<span class="deadline-pill ${d.cls}">${esc(d.label)}</span>`;
+}
 function showError(msg){refs.errorBanner.textContent=msg;refs.errorBanner.classList.add("show")}
 function clearError(){refs.errorBanner.textContent="";refs.errorBanner.classList.remove("show")}
 function toast(msg){refs.toast.textContent=msg;refs.toast.classList.add("show");setTimeout(()=>refs.toast.classList.remove("show"),1800)}
@@ -257,7 +409,11 @@ function loadData(){
   if(!storageAvailable()){storageMode="memory";return clone(fallback)}
   storageMode="local";
   try{
-    const raw=localStorage.getItem(STORAGE_KEY);
+    let raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw){
+      raw=localStorage.getItem(LEGACY_STORAGE_KEY);
+      if(raw)try{localStorage.setItem(STORAGE_KEY,raw)}catch(_){}
+    }
     if(!raw)return clone(fallback);
     const parsed=JSON.parse(raw);
     if(!Array.isArray(parsed)||!parsed.length)return clone(fallback);
@@ -290,6 +446,7 @@ function card(s){
       <span class="status ${statusClass(s.status)}">${esc(s.status||"PROGRESS")}</span>
     </div>
     <div class="meta"><span>${esc(s.area||"-")}</span><span>${esc(s.tenant||"-")}</span><span>${esc(s.sow||"-")}</span></div>
+    <div class="signal-row">${healthPill(s)}${deadlinePill(s)}</div>
     <div class="progressbar"><span style="width:${p}%"></span></div><div class="progressline"><span>Progress indikatif</span><span>${p}%</span></div>
     <div class="actions"><button class="btn detail-btn" data-record="${attr(s.recordId)}">Detail</button></div>
   </article>`;
@@ -305,6 +462,23 @@ function renderDashboard(){
   refs.outOf.textContent=data.filter(s=>isActive(s)&&((s.onefluxStatus&&low(s.onefluxStatus)!=="selesai")||(!s.onefluxStatus&&!s.oneflux))).length;
   refs.outBinder.textContent=data.filter(s=>isActive(s)&&!s.binder).length;
 
+  const healthRows=data.map(s=>healthState(s));
+  const healthy=healthRows.filter(x=>x.code==="HEALTHY").length;
+  const watch=healthRows.filter(x=>x.code==="WATCH").length;
+  const critical=healthRows.filter(x=>x.code==="CRITICAL").length;
+  const avg=data.length?Math.round(data.reduce((n,s)=>n+healthScore(s),0)/data.length):0;
+  refs.healthHealthy.textContent=healthy;refs.healthWatch.textContent=watch;refs.healthCritical.textContent=critical;refs.healthAvg.textContent=avg;
+
+  const active=data.filter(isActive),deadlines=active.map(s=>deadlineState(s));
+  refs.deadlineOverdue.textContent=deadlines.filter(x=>x.code==="OVERDUE").length;
+  refs.deadlineH3.textContent=deadlines.filter(x=>x.code==="H3").length;
+  refs.deadlineH7.textContent=deadlines.filter(x=>x.code==="H7").length;
+  refs.deadlineNone.textContent=deadlines.filter(x=>x.code==="NONE").length;
+
+  const criticalRows=data.filter(isCriticalSite).sort(criticalSort).slice(0,5);
+  refs.criticalCount.textContent=criticalRows.length+" prioritas";
+  refs.criticalList.innerHTML=criticalRows.length?criticalRows.map(card).join(""):'<div class="empty">Tidak ada site critical.</div>';
+
   const areas=unique("area");
   refs.homeRegions.innerHTML=areas.map(a=>{
     const count=data.filter(s=>s.area===a).length;
@@ -315,6 +489,22 @@ function renderDashboard(){
   refs.recentCount.textContent=recent.length+" site";
   refs.recentList.innerHTML=recent.length?recent.map(card).join(""):'<div class="empty">Database kosong.</div>';
 }
+function matchesFocus(s,mode){
+  if(mode==="ALL")return true;
+  const h=healthState(s),d=deadlineState(s);
+  if(mode==="CRITICAL")return isCriticalSite(s);
+  if(mode==="WATCH")return h.code==="WATCH";
+  if(mode==="HEALTHY")return h.code==="HEALTHY";
+  if(mode==="OVERDUE")return isActive(s)&&d.code==="OVERDUE";
+  if(mode==="H7")return isActive(s)&&(d.code==="H3"||d.code==="H7");
+  if(mode==="PLN")return isActive(s)&&low(s.plnStatus)!=="done";
+  if(mode==="ONEFLUX")return isActive(s)&&((s.onefluxStatus&&low(s.onefluxStatus)!=="selesai")||(!s.onefluxStatus&&!s.oneflux));
+  if(mode==="BINDER")return isActive(s)&&!s.binder;
+  if(mode==="BASTDOC")return isActive(s)&&docRatio(s)<1;
+  return true;
+}
+function focusCount(mode){return data.filter(s=>matchesFocus(s,mode)).length}
+
 function fillFilters(){
   const sets=[["tenantFilter","tenant"],["sowFilter","sow"],["statusFilter","status"]];
   sets.forEach(([id,field])=>{
@@ -325,6 +515,8 @@ function fillFilters(){
   const areas=unique("area");
   refs.regionalChips.innerHTML='<button class="chip '+(activeRegional==="ALL"?"active":"")+'" data-region="ALL">Semua ('+data.length+')</button>'+
     areas.map(a=>{const c=data.filter(s=>s.area===a).length;return `<button class="chip ${activeRegional===a?"active":""}" data-region="${attr(a)}">${esc(a)} (${c})</button>`}).join("");
+  const focusModes=[["ALL","Semua"],["CRITICAL","Critical"],["WATCH","Watch"],["HEALTHY","Healthy"],["OVERDUE","Overdue"],["H7","≤ H-7"],["PLN","PLN"],["ONEFLUX","Oneflux"],["BINDER","Binder"],["BASTDOC","BAST Doc"]];
+  refs.focusChips.innerHTML=focusModes.map(([m,label])=>`<button class="chip ${focusFilter===m?"active":""}" data-focus="${m}">${label} (${focusCount(m)})</button>`).join("");
 }
 function filteredSites(){
   const q=low(refs.searchInput.value),tenant=refs.tenantFilter.value,sow=refs.sowFilter.value,status=refs.statusFilter.value,condition=refs.conditionFilter.value;
@@ -332,14 +524,22 @@ function filteredSites(){
     const text=[s.name,s.projectId,s.siteId,s.dmtId,s.tenant,s.area,s.sow,s.status,s.note,s.plnStatus,s.plnNote,s.onefluxStatus,s.onefluxIssue,s.onefluxNote].map(low).join(" ");
     const regionOk=activeRegional==="ALL"||s.area===activeRegional;
     const conditionOk=!condition||(condition==="DONE"?isDone(s):!isDone(s));
-    return (!q||text.includes(q))&&regionOk&&(!tenant||s.tenant===tenant)&&(!sow||s.sow===sow)&&(!status||s.status===status)&&conditionOk;
-  }).sort((a,b)=>(b.sourceRow||0)-(a.sourceRow||0));
+    const focusOk=matchesFocus(s,focusFilter);
+    return (!q||text.includes(q))&&regionOk&&focusOk&&(!tenant||s.tenant===tenant)&&(!sow||s.sow===sow)&&(!status||s.status===status)&&conditionOk;
+  }).sort((a,b)=>{
+    if(focusFilter==="CRITICAL"||focusFilter==="OVERDUE"||focusFilter==="H7")return criticalSort(a,b);
+    return (b.sourceRow||0)-(a.sourceRow||0);
+  });
 }
 function renderSites(){
   const rows=filteredSites();refs.siteCount.textContent=rows.length+" site";
   refs.siteList.innerHTML=rows.length?rows.map(card).join(""):'<div class="empty">Tidak ada site yang cocok dengan filter.</div>';
 }
 function outstandingRows(){
+  if(outstandingMode==="CRITICAL")return data.filter(isCriticalSite);
+  if(outstandingMode==="OVERDUE")return data.filter(s=>isActive(s)&&deadlineState(s).code==="OVERDUE");
+  if(outstandingMode==="H3")return data.filter(s=>isActive(s)&&deadlineState(s).code==="H3");
+  if(outstandingMode==="H7")return data.filter(s=>isActive(s)&&deadlineState(s).code==="H7");
   if(outstandingMode==="PROGRESS")return data.filter(s=>low(s.status)==="progress");
   if(outstandingMode==="BAST")return data.filter(s=>low(s.status).includes("bast"));
   if(outstandingMode==="PLN")return data.filter(s=>isActive(s)&&low(s.plnStatus)!=="done");
@@ -350,7 +550,7 @@ function outstandingRows(){
 }
 function renderOutstanding(){
   refs.outstandingTabs.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("active",b.dataset.mode===outstandingMode));
-  const rows=outstandingRows().sort((a,b)=>(b.sourceRow||0)-(a.sourceRow||0));
+  const rows=outstandingRows().sort((a,b)=>["CRITICAL","OVERDUE","H3","H7"].includes(outstandingMode)?criticalSort(a,b):(b.sourceRow||0)-(a.sourceRow||0));
   refs.outstandingCount.textContent=rows.length+" site";refs.outstandingList.innerHTML=rows.length?rows.map(card).join(""):'<div class="empty">Tidak ada outstanding pada kategori ini.</div>';
 }
 function renderReport(){
@@ -358,16 +558,20 @@ function renderReport(){
   refs.reportList.innerHTML=areas.map(a=>{
     const rows=data.filter(s=>s.area===a),done=rows.filter(isDone).length,prog=rows.filter(s=>low(s.status)==="progress").length,bast=rows.filter(s=>low(s.status).includes("bast")).length;
     const pct=rows.length?Math.round(done/rows.length*100):0;
+    const avg=rows.length?Math.round(rows.reduce((n,s)=>n+healthScore(s),0)/rows.length):0;
+    const critical=rows.filter(isCriticalSite).length;
+    const overdue=rows.filter(s=>isActive(s)&&deadlineState(s).code==="OVERDUE").length;
     return `<div class="report-card">
       <div class="report-top"><div><h4>${esc(a)}</h4><div class="muted">${done} Done · ${prog} Progress · ${bast} BAST</div></div><b>${rows.length}</b></div>
-      <div class="bar"><span style="width:${pct}%"></span></div><div class="report-meta">${pct}% site berstatus DONE</div>
+      <div class="bar"><span style="width:${avg}%"></span></div>
+      <div class="report-meta">Health ${avg}/100 · ${critical} Critical · ${overdue} Overdue · ${pct}% DONE</div>
       <div class="actions"><button class="btn report-open-btn" data-region-report="${attr(a)}">Buka Site</button></div>
     </div>`;
   }).join("")||'<div class="empty">Belum ada data report.</div>';
 }
 function renderSettings(){
   const areas=unique("area").join(", ")||"-",tenants=unique("tenant").join(", ")||"-";
-  refs.dataInfo.innerHTML=`<b>${data.length} record</b> aktif di aplikasi.<br>Regional: ${esc(areas)}<br>Tenant: ${esc(tenants)}<br>Sumber: ${syncMode==="live"?"Integrated Published Sheet":"cache/local"} · App v${APP_VERSION}`;
+  refs.dataInfo.innerHTML=`<b>${data.length} record</b> aktif di aplikasi.<br>Regional: ${esc(areas)}<br>Tenant: ${esc(tenants)}<br>Sumber: ${syncMode==="live"?"Health + Deadline Live Sheet":"cache/local"} · App v${APP_VERSION}`;
   if(refs.syncInfo)refs.syncInfo.innerHTML=`Tab: <b>${LIVE_SHEET}</b><br>Mode: <b>Published CSV</b><br>URL: <b>${publishedUrl?"tersimpan":"belum diisi"}</b><br>Sync terakhir: <b>${formatSyncTime(lastSync)}</b>`;
   if(refs.publishedUrlInput&&document.activeElement!==refs.publishedUrlInput)refs.publishedUrlInput.value=publishedUrl;
   refs.storageBadge.textContent=syncing?"SYNCING…":(syncMode==="live"?"LIVE ✓":(storageMode==="local"?"CACHE":"MEMORY"));
@@ -391,6 +595,25 @@ function bastProgress(label,value){
   const v=norm(value),m=v.match(/(\d+)\s*\/\s*6/),n=m?Math.max(0,Math.min(6,Number(m[1]))):0,p=Math.round(n/6*100);
   return `<div class="bast-row"><b>${esc(label)}</b><div class="bast-track"><span style="width:${p}%"></span></div><span>${esc(v||"-")}</span></div>`;
 }
+function healthDetailCard(s){
+  const h=healthState(s),d=deadlineState(s),b=healthBreakdown(s);
+  const dText=d.code==="NONE"?"Deadline belum diisi":d.code==="CLOSED"?"Project closed":d.label+" · "+(s.deadline||"-");
+  return `<div class="health-summary">
+    <div class="health-summary-top">
+      <div><div class="eyebrow">Project Health</div><div class="health-score">${h.score}<small>/100</small></div></div>
+      <div>${healthPill(s)}<div style="height:6px"></div>${deadlinePill(s)}</div>
+    </div>
+    <div class="health-breakdown">
+      <div class="health-part"><b>${b.project}/30</b><span>Project</span></div>
+      <div class="health-part"><b>${b.pln}/15</b><span>PLN</span></div>
+      <div class="health-part"><b>${b.oneflux}/20</b><span>Oneflux</span></div>
+      <div class="health-part"><b>${b.binder}/15</b><span>Binder</span></div>
+      <div class="health-part"><b>${b.docs}/20</b><span>BAST Doc</span></div>
+    </div>
+    <div class="deadline-box ${d.cls}">${esc(dText)}</div>
+  </div>`;
+}
+
 function integratedCards(s){
   return `
   <div class="track-card">
@@ -433,7 +656,7 @@ function openDetail(recordId){
   refs.detailGrid.innerHTML=fields.map(([k,v])=>`<div class="detail-box"><div class="detail-k">${esc(k)}</div><div class="detail-v">${esc(v||"-")}</div></div>`).join("");
   refs.journeyList.innerHTML=
     journey("Binder",!!s.binder)+journey("Oneflux",s.onefluxStatus?low(s.onefluxStatus)==="selesai":!!s.oneflux)+journey("BAST Flag",!!s.bast);
-  refs.integratedDetail.innerHTML=integratedCards(s);
+  refs.integratedDetail.innerHTML=healthDetailCard(s)+integratedCards(s);
   refs.detailNote.textContent=s.note||"Tidak ada keterangan.";
   refs.mapsBtn.disabled=true;refs.mapsBtn.style.opacity=".45";
   refs.detailModal.classList.add("show");
@@ -447,7 +670,7 @@ function switchView(id){
   window.scrollTo({top:0,behavior:"auto"});
 }
 function openRegion(region){
-  activeRegional=region;fillFilters();renderSites();switchView("siteView");
+  activeRegional=region;focusFilter="ALL";fillFilters();renderSites();switchView("siteView");
 }
 function handleListClick(e){
   const detailBtn=e.target.closest(".detail-btn");if(detailBtn)openDetail(detailBtn.dataset.record);
@@ -528,7 +751,7 @@ async function fetchLiveMaster({manual=false}={}){
     data=imported;syncMode="live";lastSync=new Date().toISOString();
     saveData();
     if(storageAvailable())try{localStorage.setItem(LAST_SYNC_KEY,lastSync)}catch(_){}
-    activeRegional="ALL";clearError();renderAll();
+    activeRegional="ALL";focusFilter="ALL";clearError();renderAll();
     if(manual)toast(imported.length+" record tersinkron");
   }catch(err){
     syncMode="cache";
@@ -547,9 +770,10 @@ function bindEvents(){
   [refs.tenantFilter,refs.sowFilter,refs.statusFilter,refs.conditionFilter].forEach(el=>el.addEventListener("change",renderSites));
 
   refs.regionalChips.addEventListener("click",e=>{const b=e.target.closest("[data-region]");if(!b)return;activeRegional=b.dataset.region;fillFilters();renderSites()});
+  refs.focusChips.addEventListener("click",e=>{const b=e.target.closest("[data-focus]");if(!b)return;focusFilter=b.dataset.focus;fillFilters();renderSites()});
   refs.outstandingTabs.addEventListener("click",e=>{const b=e.target.closest("[data-mode]");if(!b)return;outstandingMode=b.dataset.mode;renderOutstanding()});
 
-  [refs.siteList,refs.recentList,refs.homeRegions,refs.reportList,refs.outstandingList].forEach(el=>el.addEventListener("click",handleListClick));
+  [refs.siteList,refs.recentList,refs.criticalList,refs.homeRegions,refs.reportList,refs.outstandingList].forEach(el=>el.addEventListener("click",handleListClick));
 
   refs.closeDetailBtn.addEventListener("click",closeDetail);
   refs.detailModal.addEventListener("click",e=>{if(e.target===refs.detailModal)closeDetail()});
@@ -568,23 +792,23 @@ function bindEvents(){
 
   refs.csvInput.addEventListener("change",async e=>{
     const file=e.target.files?.[0];if(!file)return;
-    try{const imported=importMasterCSV(await file.text());data=imported;syncMode="cache";saveData();activeRegional="ALL";clearError();renderAll();toast(imported.length+" record berhasil diimport")}
+    try{const imported=importMasterCSV(await file.text());data=imported;syncMode="cache";saveData();activeRegional="ALL";focusFilter="ALL";clearError();renderAll();toast(imported.length+" record berhasil diimport")}
     catch(err){showError("Import CSV gagal: "+err.message)}
     e.target.value="";
   });
   refs.jsonInput.addEventListener("change",async e=>{
     const file=e.target.files?.[0];if(!file)return;
-    try{const parsed=JSON.parse(await file.text());const arr=Array.isArray(parsed)?parsed:parsed.data;if(!Array.isArray(arr)||!arr.length)throw new Error("Backup tidak berisi array data.");data=ensureRecordIds(arr);saveData();activeRegional="ALL";clearError();renderAll();toast(data.length+" record direstore")}
+    try{const parsed=JSON.parse(await file.text());const arr=Array.isArray(parsed)?parsed:parsed.data;if(!Array.isArray(arr)||!arr.length)throw new Error("Backup tidak berisi array data.");data=ensureRecordIds(arr);saveData();activeRegional="ALL";focusFilter="ALL";clearError();renderAll();toast(data.length+" record direstore")}
     catch(err){showError("Restore JSON gagal: "+err.message)}
     e.target.value="";
   });
   refs.exportJsonBtn.addEventListener("click",()=>download("project-control-backup-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify({version:APP_VERSION,exportedAt:new Date().toISOString(),data},null,2),"application/json"));
   refs.exportCsvBtn.addEventListener("click",()=>{
-    const headers=["NAME SITE","SOW","TENANT","REGIONAL","STATUS PROJECT","PROJECT ID","SITE ID","SITE ID DMT","BAST DONE","ONEFLUX","BINDER","DEADLINE PROJECT","KETERANGAN","STATUS PLN","RFI","CONNECT","HO","DOK PLN","PLN NOTE","DAYA PLN","STATUS ONEFLUX","ONEFLUX ISSUE","ONEFLUX NOTE","BAST SITAC","BAST CME","BAST IMB","BAST ADDWORK 1","BAST ADDWORK 2"];
-    const rows=data.map(s=>[s.name,s.sow,s.tenant,s.area,s.status,s.projectId,s.siteId,s.dmtId,s.bast,s.oneflux,s.binder,s.deadline,s.note,s.plnStatus,s.plnRfi,s.plnConnect,s.plnHo,s.plnDoc,s.plnNote,s.plnPower,s.onefluxStatus,s.onefluxIssue,s.onefluxNote,s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2]);
+    const headers=["NAME SITE","SOW","TENANT","REGIONAL","STATUS PROJECT","PROJECT ID","SITE ID","SITE ID DMT","HEALTH SCORE","HEALTH STATUS","DEADLINE ALERT","BAST DONE","ONEFLUX","BINDER","DEADLINE PROJECT","KETERANGAN","STATUS PLN","RFI","CONNECT","HO","DOK PLN","PLN NOTE","DAYA PLN","STATUS ONEFLUX","ONEFLUX ISSUE","ONEFLUX NOTE","BAST SITAC","BAST CME","BAST IMB","BAST ADDWORK 1","BAST ADDWORK 2"];
+    const rows=data.map(s=>[s.name,s.sow,s.tenant,s.area,s.status,s.projectId,s.siteId,s.dmtId,healthScore(s),healthState(s).label,deadlineState(s).label,s.bast,s.oneflux,s.binder,s.deadline,s.note,s.plnStatus,s.plnRfi,s.plnConnect,s.plnHo,s.plnDoc,s.plnNote,s.plnPower,s.onefluxStatus,s.onefluxIssue,s.onefluxNote,s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2]);
     download("project-control-"+new Date().toISOString().slice(0,10)+".csv",[headers,...rows].map(r=>r.map(csvEscape).join(",")).join("\n"),"text/csv");
   });
-  refs.resetBtn.addEventListener("click",()=>{if(!confirm("Reset cache lokal ke database bawaan?"))return;data=ensureRecordIds(seed());syncMode="cache";activeRegional="ALL";saveData();clearError();renderAll();toast("Database bawaan dimuat ulang")});
+  refs.resetBtn.addEventListener("click",()=>{if(!confirm("Reset cache lokal ke database bawaan?"))return;data=ensureRecordIds(seed());syncMode="cache";activeRegional="ALL";focusFilter="ALL";saveData();clearError();renderAll();toast("Database bawaan dimuat ulang")});
 }
 function init(){
   try{
