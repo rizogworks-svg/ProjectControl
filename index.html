@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v12 · Editor Mode</title>
+<title>Project Control v13 · Zero Cost Editor</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -118,17 +118,16 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 @media(max-width:520px){.editor-grid{grid-template-columns:1fr}.editor-actions{grid-template-columns:1fr}}
 
 </style>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <div class="app">
-<header><div class="header-inner"><div class="brand"><small>Live Editor Project Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
+<header><div class="header-inner"><div class="brand"><small>Zero Cost Form Editor</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
 <main>
 <div id="errorBanner" class="error-banner"></div>
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v12</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v13</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -256,15 +255,16 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <button id="exportCsvBtn" class="btn">Export CSV</button>
     <button id="resetBtn" class="btn">Reset ke Database Bawaan</button>
 
-    <div class="subsection-title">Editor Mode — Google Sheet</div>
+    <div class="subsection-title">Zero Cost Editor — Google Form</div>
     <div class="editor-state">
-      <div><strong><span id="editorDot" class="editor-dot"></span><span id="editorStatus">Belum terhubung</span></strong><br><span id="editorEmail">Login Google diperlukan untuk edit.</span></div>
+      <div><strong><span id="editorDot" class="editor-dot"></span><span id="editorStatus">Belum dikonfigurasi</span></strong><br><span id="editorEmail">Tanpa Google Cloud · tanpa OAuth · tanpa server berbayar.</span></div>
     </div>
-    <div class="field"><label>Google OAuth Client ID</label><input id="oauthClientIdInput" type="text" inputmode="text" placeholder="xxxxxxxxxxxx-xxxxxxxx.apps.googleusercontent.com"></div>
-    <button id="saveOAuthClientBtn" class="btn">Simpan OAuth Client ID</button>
-    <button id="googleLoginBtn" class="btn blue">Login Google untuk Editor</button>
-    <button id="googleLogoutBtn" class="btn">Putuskan Sesi Editor</button>
-    <div class="editor-warning">Editor v12 menulis langsung ke <b>MASTER SITE</b> dan <b>PLN</b>. Nama Site, Project ID, Site ID, DMT ID, SOW, Tenant, dan Regional tetap read-only agar identitas site tidak rusak. Perubahan dicatat di tab <b>ACTIVITY LOG</b>.</div>
+    <div class="field"><label>Google Form Pre-filled Link</label><input id="formPrefillInput" type="url" inputmode="url" placeholder="https://docs.google.com/forms/d/e/.../viewform?usp=pp_url&entry..."></div>
+    <div class="field"><label>Published EDIT LOG CSV URL</label><input id="editLogUrlInput" type="url" inputmode="url" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?gid=...&output=csv"></div>
+    <div class="field"><label>Nama Editor</label><input id="editorNameInput" type="text" placeholder="Contoh: Rizog"></div>
+    <button id="saveFormConfigBtn" class="btn blue">Simpan Konfigurasi Editor</button>
+    <button id="clearPendingBtn" class="btn">Bersihkan Pending Lokal</button>
+    <div class="editor-warning">v13 memakai <b>Google Form → EDIT LOG</b>. Sel MASTER SITE/PLN asli tidak diubah langsung. WebApp membaca data dasar lalu menimpa tampilannya dengan edit terbaru dari EDIT LOG. Link Form hanya disimpan di browser perangkat ini, bukan di source GitHub.</div>
 
     <div class="subsection-title">Template Copy & WhatsApp</div>
     <div class="template-help">
@@ -278,10 +278,10 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <button id="saveTemplatesBtn" class="btn blue">Simpan Template</button>
     <button id="resetTemplatesBtn" class="btn">Reset Template Default</button>
 
-    <div class="info-box"><b>Sistem Project Health v12:</b><br>
+    <div class="info-box"><b>Sistem Project Health v13:</b><br>
       Project, PLN, Oneflux, Binder, dan BAST Doc masing-masing dihitung 0–100%. Health total = rata-rata 5 bagian. Deadline hanya alert dan tidak mengurangi persentase Health.
     </div>
-    <div class="info-box">Mode published-sheet: aplikasi membaca CSV publik dari tab WEBAPP DATA. Tidak memakai Apps Script. Jika koneksi gagal, cache terakhir di perangkat tetap dipakai.</div>
+    <div class="info-box">Mode zero-cost: WEBAPP DATA tetap menjadi data dasar; edit dari WebApp masuk ke Google Form/EDIT LOG lalu dioverlay saat sync. Tidak memakai Google Cloud, Apps Script, atau layanan berbayar.</div>
   </div>
 </section>
 </main>
@@ -307,7 +307,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <div id="integratedDetail" class="integrated-detail"></div>
     <div id="detailNote" class="note"></div>
     <div class="detail-actions">
-      <button id="editGoogleBtn" class="btn blue">Edit Google Sheet</button>
+      <button id="editGoogleBtn" class="btn blue">Edit Data</button>
       <button id="favoriteDetailBtn" class="btn favorite-btn">☆ Favorite</button>
       <button id="copyBtn" class="btn">Copy Project ID</button>
       <button id="copySiteBtn" class="btn blue">Copy Data Site</button>
@@ -353,19 +353,19 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
         <div class="editor-field"><label>ID Pelanggan PLN</label><input id="editPlnCustomerId" type="text"></div>
         <label class="editor-check"><input id="editPlnDoc" type="checkbox"> Dok PLN</label>
         <div class="editor-field"><label>Daya PLN</label><input id="editPlnPower" type="text" placeholder="10,600 Va"></div>
-        <div class="editor-field"><label>Nama Pelanggan</label><input id="editPlnCustomerName" type="text"></div>
         <div class="editor-field"><label>Keterangan PLN</label><textarea id="editPlnNote"></textarea></div>
       </section>
     </div>
 
-    <div id="editorRowInfo" class="info-box" style="margin-top:12px">Mencari row Google Sheet...</div>
+    <div id="editorRowInfo" class="info-box" style="margin-top:12px">Perubahan akan dikirim ke Google Form / EDIT LOG.</div>
     <div class="editor-actions">
       <button id="cancelEditorBtn" class="btn">Batal</button>
-      <button id="saveEditorBtn" class="btn blue">Simpan ke Google Sheet</button>
+      <button id="saveEditorBtn" class="btn blue">Kirim Perubahan</button>
     </div>
   </div>
 </div>
 
+<iframe name="pcFormSink" id="pcFormSink" style="display:none;width:0;height:0;border:0"></iframe>
 <div id="toast" class="toast"></div>
 
 <script id="seedData" type="application/json">[{"recordId":"25TS06B0042||NEW SITE||IDY001||TALANGSELEMAN PAYARAMAN","sourceRow":2,"name":"TALANGSELEMAN PAYARAMAN","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"DONE","projectId":"25TS06B0042","siteId":"IDY001","dmtId":"IDL-03-080","deadline":"-","note":"Done"},{"recordId":"25TS08B0044||NEW SITE||SGE123||PEMATANGGAJAH2","sourceRow":3,"name":"PEMATANGGAJAH2","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"BAST","projectId":"25TS08B0044","siteId":"SGE123","dmtId":"SNT-03-122","deadline":"","note":""},{"recordId":"25TS08B0193||NEW SITE||SGE104||PERUMAHANGRANDNEMURA","sourceRow":4,"name":"PERUMAHANGRANDNEMURA","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"DONE","projectId":"25TS08B0193","siteId":"SGE104","dmtId":"SNT-03-124","deadline":"","note":""},{"recordId":"25TS02B0095||NEW SITE||MKD024||BALEKERTO KALIANGKRIK\n (NIB1_2025_000463)","sourceRow":5,"name":"BALEKERTO KALIANGKRIK\n (NIB1_2025_000463)","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS02B0095","siteId":"MKD024","dmtId":"MKD-06-166","deadline":"","note":""},{"recordId":"25TS02B0093||NEW SITE||MKD020||BANJARSARI GRABAG\n (NIB1_2025_000459)","sourceRow":6,"name":"BANJARSARI GRABAG\n (NIB1_2025_000459)","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS02B0093","siteId":"MKD020","dmtId":"MKD-06-164","deadline":"","note":""},{"recordId":"25TS02B0126||NEW SITE||MKD029||SURODADI CANDIMULYO\n (NIB1_2025_000653)","sourceRow":7,"name":"SURODADI CANDIMULYO\n (NIB1_2025_000653)","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS02B0126","siteId":"MKD029","dmtId":"MKD-06-167","deadline":"","note":""},{"recordId":"24IS12C0096||PERKUATAN||14WNG0163||TAWANGREJO_WNG_MT","sourceRow":8,"name":"TAWANGREJO_WNG_MT","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"24IS12C0096","siteId":"14WNG0163","dmtId":"WNG-06-169","deadline":"","note":""},{"recordId":"24EN10C0006||PERKUATAN||MTB004||TSEL_SUNGAIBENGKAL","sourceRow":9,"name":"TSEL_SUNGAIBENGKAL","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"DONE","projectId":"24EN10C0006","siteId":"MTB004","dmtId":"MRT-03-046","deadline":"","note":""},{"recordId":"25IS03C0089||COLLOCATION||14GRO0182||PELEM_GROBOGAN_MT","sourceRow":10,"name":"PELEM_GROBOGAN_MT","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"25IS03C0089","siteId":"14GRO0182","dmtId":"PWD-06-119","deadline":"","note":""},{"recordId":"25IS03C0165||COLLOCATION||14KND0168||TRISOBO_KENDAL_MT","sourceRow":11,"name":"TRISOBO_KENDAL_MT","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"25IS03C0165","siteId":"14KND0168","dmtId":"KDL-06-041","deadline":"","note":""},{"recordId":"25IS03C0089||PERKUATAN||14GRO0182||PELEM_GROBOGAN_MT","sourceRow":12,"name":"PELEM_GROBOGAN_MT","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"25IS03C0089","siteId":"14GRO0182","dmtId":"PWD-06-119","deadline":"","note":""},{"recordId":"25TS04B0006||NEW SITE||SMG723||KAMPUS UNISULA","sourceRow":13,"name":"KAMPUS UNISULA","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"HOLD","projectId":"25TS04B0006","siteId":"SMG723","dmtId":"SMG-06-420","deadline":"","note":""},{"recordId":"25XL08C0426||COLLOCATION||SUM-SS-TLU-0005||PERAMBATAN","sourceRow":14,"name":"PERAMBATAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0426","siteId":"SUM-SS-TLU-0005","dmtId":"MRE-03-009","deadline":"","note":""},{"recordId":"25XL08C0373||COLLOCATION||SUM-SS-TLU-0007||PAGAR_BULAN","sourceRow":15,"name":"PAGAR_BULAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DROP BY DMT","projectId":"25XL08C0373","siteId":"SUM-SS-TLU-0007","dmtId":"","deadline":"","note":""},{"recordId":"25XL08C0300||COLLOCATION||SUM-SS-TLU-0010||TANAH_ABANG","sourceRow":16,"name":"TANAH_ABANG","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0300","siteId":"SUM-SS-TLU-0010","dmtId":"MRE-03-023","deadline":"","note":""},{"recordId":"25XL08C0703||COLLOCATION||JAW-YO-BTL-0032||SAWUNGAN_SANES","sourceRow":17,"name":"SAWUNGAN_SANES","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATENG","status":"BAST","projectId":"25XL08C0703","siteId":"JAW-YO-BTL-0032","dmtId":"BTL-06-081","deadline":"","note":""},{"recordId":"25XL08C0747||COLLOCATION||JAW-JI-TLG-0006||SENDANG_GEGER","sourceRow":18,"name":"SENDANG_GEGER","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"25XL08C0747","siteId":"JAW-JI-TLG-0006","dmtId":"TLG-07-138","deadline":"","note":""},{"recordId":"25XL08C0739||COLLOCATION||JAW-JI-TLG-0004||PUCANGLABAN","sourceRow":19,"name":"PUCANGLABAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"25XL08C0739","siteId":"JAW-JI-TLG-0004","dmtId":"TLG-07-077","deadline":"","note":""},{"recordId":"25XL08C0718||COLLOCATION||JAW-JI-TLG-0005||SENDANG_KEDOYO","sourceRow":20,"name":"SENDANG_KEDOYO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"25XL08C0718","siteId":"JAW-JI-TLG-0005","dmtId":"TLG-07-136","deadline":"","note":""},{"recordId":"25XL09C0014||COLLOCATION||JAW-YO-SMN-0049||HURIN_SAMBISARI","sourceRow":21,"name":"HURIN_SAMBISARI","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATENG","status":"BAST","projectId":"25XL09C0014","siteId":"JAW-YO-SMN-0049","dmtId":"SMN-06-166","deadline":"","note":""},{"recordId":"25XL08C0426||PERKUATAN||SUM-SS-TLU-0005||PERAMBATAN","sourceRow":22,"name":"PERAMBATAN","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0426","siteId":"SUM-SS-TLU-0005","dmtId":"MRE-03-009","deadline":"","note":""},{"recordId":"25XL08C0300||PERKUATAN||SUM-SS-TLU-0010||TANAH_ABANG","sourceRow":23,"name":"TANAH_ABANG","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0300","siteId":"SUM-SS-TLU-0010","dmtId":"MRE-03-023","deadline":"","note":""},{"recordId":"25XL08C0747||PERKUATAN||JAW-JI-TLG-0006||SENDANG_GEGER","sourceRow":24,"name":"SENDANG_GEGER","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"25XL08C0747","siteId":"JAW-JI-TLG-0006","dmtId":"TLG-07-138","deadline":"","note":""},{"recordId":"25XL08C0449||PERKUATAN||SUM-SS-KAG-0013||SUMBER_DERAS","sourceRow":25,"name":"SUMBER_DERAS","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0449","siteId":"SUM-SS-KAG-0013","dmtId":"KAG-03-026","deadline":"","note":""},{"recordId":"25XL10C0004||COLLOCATION||SUM-SS-PKB-0020||WANA_MUKTI","sourceRow":26,"name":"WANA_MUKTI","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0004","siteId":"SUM-SS-PKB-0020","dmtId":"PKB-03-026","deadline":"","note":""},{"recordId":"25XL10C0003||COLLOCATION||SUM-SS-PKB-0019||KARANG_SARI_BANYUASIN","sourceRow":27,"name":"KARANG_SARI_BANYUASIN","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0003","siteId":"SUM-SS-PKB-0019","dmtId":"PKB-03-007","deadline":"","note":""},{"recordId":"25TS10B0003||NEW SITE||BJN756||PASAR KOTA BANJARNEGARA RELOK","sourceRow":28,"name":"PASAR KOTA BANJARNEGARA RELOK","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS10B0003","siteId":"BJN756","dmtId":"BNR-06-105","deadline":"","note":""},{"recordId":"25TS10C0030||COLLOCATION||CMV040||NODAL_SALEM","sourceRow":29,"name":"NODAL_SALEM","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS10C0030","siteId":"CMV040","dmtId":"BBS-06-035","deadline":"","note":""},{"recordId":"25XL10C0238||COLLOCATION||SUM-LA-GNS-0019||SAKTI_BUANA","sourceRow":30,"name":"SAKTI_BUANA","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0238","siteId":"SUM-LA-GNS-0019","dmtId":"GNS-03-134","deadline":"","note":""},{"recordId":"25XL10C0342||COLLOCATION||JAW-JI-TLG-0017||KALIDAWIR_JOHO","sourceRow":31,"name":"KALIDAWIR_JOHO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"25XL10C0342","siteId":"JAW-JI-TLG-0017","dmtId":"TLG-07-042","deadline":"","note":""},{"recordId":"25XL10C0357||COLLOCATION||SUM-SS-BTA-0007||SION_ABU_HASSAN","sourceRow":32,"name":"SION_ABU_HASSAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0357","siteId":"SUM-SS-BTA-0007","dmtId":"BTA-03-019","deadline":"","note":""},{"recordId":"25XL10C0177||COLLOCATION||SUM-SS-PKB-0026||MATARAM_AIR_SALEH","sourceRow":33,"name":"MATARAM_AIR_SALEH","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0177","siteId":"SUM-SS-PKB-0026","dmtId":"PKB-03-160","deadline":"","note":""},{"recordId":"25XL10C0003||PERKUATAN||SUM-SS-PKB-0019||KARANG_SARI_BANYUASIN","sourceRow":34,"name":"KARANG_SARI_BANYUASIN","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0003","siteId":"SUM-SS-PKB-0019","dmtId":"PKB-03-007","deadline":"","note":""},{"recordId":"25TS10C0002||PERKUATAN||CMV006||HANAKAU","sourceRow":35,"name":"HANAKAU","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"BAST","projectId":"25TS10C0002","siteId":"CMV006","dmtId":"LIW-03-022","deadline":"10/12/2025","note":"Done"},{"recordId":"25XL11C0005||COLLOCATION||SUM-LA-KOT-0002||BATUTEGI","sourceRow":36,"name":"BATUTEGI","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"BAST","projectId":"25XL11C0005","siteId":"SUM-LA-KOT-0002","dmtId":"KOT-03-062","deadline":"18/12/2025","note":""},{"recordId":"25XL11C0016||COLLOCATION||SUM-BB-PGP-0007||GIRIMAYA_PINANG","sourceRow":37,"name":"GIRIMAYA_PINANG","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"BAST","projectId":"25XL11C0016","siteId":"SUM-BB-PGP-0007","dmtId":"PGP-03-036","deadline":"18/12/2025","note":""},{"recordId":"25TS12B0010||NEW SITE||BTL016||TAMANANDMT","sourceRow":38,"name":"TAMANANDMT","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS12B0010","siteId":"BTL016","dmtId":"BTL-06-252","deadline":"17/2/2026","note":""},{"recordId":"25TS12B0007||NEW SITE||TAG023||SENDANGRETO","sourceRow":39,"name":"SENDANGRETO","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATIM","status":"DONE","projectId":"25TS12B0007","siteId":"TAG023","dmtId":"TLG-07-157","deadline":"17/2/2026","note":""},{"recordId":"25XL12C0002||COLLOCATION||JAW-JT-SKT-2104||3G WIDURAN","sourceRow":40,"name":"3G WIDURAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"XLSMART","area":"JATENG","status":"PROGRESS","projectId":"25XL12C0002","siteId":"JAW-JT-SKT-2104","dmtId":"SKT-06-205","deadline":"23/12/2025","note":"HOLD\n- Site sedang sitac dari tanggal 9/12/2025"},{"recordId":"25IS12C0020||COLLOCATION||16TAG0186||MANGUNSARITULUNGAGUNG","sourceRow":41,"name":"MANGUNSARITULUNGAGUNG","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"ISAT","area":"JATIM","status":"DONE","projectId":"25IS12C0020","siteId":"16TAG0186","dmtId":"TLG-07-111","deadline":"6/1/2026","note":""},{"recordId":"25TS12B0131||NEW SITE||IDL-03-083||REKTORAT UNSRI","sourceRow":42,"name":"REKTORAT UNSRI","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"25TS12B0131","siteId":"IDL-03-083","dmtId":"OKI275","deadline":"13/1/2026","note":""},{"recordId":"25TS12Z0135||NEW SITE||IDL-03-084||TERMINAL UNSRI","sourceRow":43,"name":"TERMINAL UNSRI","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"25TS12Z0135","siteId":"IDL-03-084","dmtId":"OKI276","deadline":"13/1/2026","note":""},{"recordId":"26XL01C0064||COLLOCATION||JAW-JI-MJY-0022||TANJUNGREJO_MADIUN","sourceRow":44,"name":"TANJUNGREJO_MADIUN","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL01C0064","siteId":"JAW-JI-MJY-0022","dmtId":"MJY-07-027","deadline":"27/1/2026","note":""},{"recordId":"26XL01C0073||COLLOCATION||JAW-JI-KPN-0150||MALANG_NGADIRESO","sourceRow":45,"name":"MALANG_NGADIRESO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL01C0073","siteId":"JAW-JI-KPN-0150","dmtId":"KPN-07-241","deadline":"27/1/2026","note":""},{"recordId":"26TS01B0018||NEW SITE||BJO100||DUKUHANSANTREN1","sourceRow":46,"name":"DUKUHANSANTREN1","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATIM","status":"BAST","projectId":"26TS01B0018","siteId":"BJO100","dmtId":"BJN-07-169","deadline":"31/3/2026","note":""},{"recordId":"26TS01B0040||NEW SITE||KRA078||PLESUNGANGONDANGREJO","sourceRow":47,"name":"PLESUNGANGONDANGREJO","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"26TS01B0040","siteId":"KRA078","dmtId":"KRG-06-179","deadline":"31/3/2026","note":""},{"recordId":"26IS01C0006||COLLOCATION||16TGK0054||SENDANGRETO RELOC","sourceRow":48,"name":"SENDANGRETO RELOC","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATIM","status":"DONE","projectId":"26IS01C0006","siteId":"16TGK0054","dmtId":"TLG-07-157","deadline":"17/2/2026","note":""},{"recordId":"26TS02B0089||NEW SITE||IDY008||TANJUNGBATUTIMUR","sourceRow":49,"name":"TANJUNGBATUTIMUR","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"SUMBAGSEL","status":"DROP BY DMT","projectId":"26TS02B0089","siteId":"IDY008","dmtId":"IDL-03-087","deadline":"17/4/2026","note":""},{"recordId":"26TS02B0084||NEW SITE||RPT024||SUNGAIKIJANG","sourceRow":50,"name":"SUNGAIKIJANG","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26TS02B0084","siteId":"RPT024","dmtId":"RPT-03-022","deadline":"17/4/2026","note":""},{"recordId":"26TS02B0061||NEW SITE||KRA079||KRENDOWAHONOGONDANGREJO","sourceRow":51,"name":"KRENDOWAHONOGONDANGREJO","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"26TS02B0061","siteId":"KRA079","dmtId":"KRG-06-180","deadline":"16/4/2026","note":""},{"recordId":"26XL02C0027||COLLOCATION||JAW-YO-BTL-0145||TAMANANDMT","sourceRow":52,"name":"TAMANANDMT","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"JATENG","status":"PROGRESS","projectId":"26XL02C0027","siteId":"JAW-YO-BTL-0145","dmtId":"BTL-06-252","deadline":"4/5/2026","note":""},{"recordId":"26MR03C0038||COLLOCATION||EMR-28575||LUBUK LINGGAU UTARA","sourceRow":53,"name":"LUBUK LINGGAU UTARA","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0038","siteId":"EMR-28575","dmtId":"LLG-03-018","deadline":"21/5/2026","note":""},{"recordId":"26MR03C0041||COLLOCATION||EMR-29266||TSEL SEMBAWA","sourceRow":54,"name":"TSEL SEMBAWA","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0041","siteId":"EMR-29266","dmtId":"PKB-03-112","deadline":"26/3/2026","note":""},{"recordId":"26MR03C0037||COLLOCATION||EMR-29392||PERUMAHAANGRANDVILLAGSELARAIINDAH","sourceRow":55,"name":"PERUMAHAANGRANDVILLAGSELARAIINDAH","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0037","siteId":"EMR-29392","dmtId":"SKY-03-186","deadline":"26/3/2026","note":""},{"recordId":"26XL03C0027||COLLOCATION||SUM-SS-PKB-0054||KERANG PALEMBANG TANJUNG","sourceRow":56,"name":"KERANG PALEMBANG TANJUNG","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26XL03C0027","siteId":"SUM-SS-PKB-0054","dmtId":"PKB-03-198","deadline":"26/3/2026","note":""},{"recordId":"26MR03C0092||COLLOCATION||EMR-38218||NASUTION METRO","sourceRow":57,"name":"NASUTION METRO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0092","siteId":"EMR-38218","dmtId":"MET-03-007","deadline":"","note":""},{"recordId":"26MR03C0094||COLLOCATION||EMR-24127||BANJAREJO","sourceRow":58,"name":"BANJAREJO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0094","siteId":"EMR-24127","dmtId":"SDN-03-011","deadline":"","note":""},{"recordId":"26XL03C0150||COLLOCATION||JAW-JI-JBG-0055||SRIWIJAYA POKPHAND","sourceRow":59,"name":"SRIWIJAYA POKPHAND","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL03C0150","siteId":"JAW-JI-JBG-0055","dmtId":"JBG-07-039","deadline":"26/3/2026","note":""},{"recordId":"26XL03C0169||COLLOCATION||JAW-JI-JBG-0054||REJOSARI GADINGMANGU","sourceRow":60,"name":"REJOSARI GADINGMANGU","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL03C0169","siteId":"JAW-JI-JBG-0054","dmtId":"JBG-07-006","deadline":"26/3/2026","note":"Tutup lebaran idul fitri dari tanggal 18-30 Untuk Panel dan material alam.\n\n13 Hari\n\n\n26/3/2026 - 7/3/2026 = 13 Hari"},{"recordId":"26TS05C0003||COLLOCATION||MRD049||ULAKAGUNGULU","sourceRow":61,"name":"ULAKAGUNGULU","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26TS05C0003","siteId":"MRD049","dmtId":"MRD-03-016","deadline":"8/6/2026","note":""},{"recordId":"26XL04C0045||COLLOCATION||JAW-JI-JBG-0056||JOMBANG_BANJARDOWO","sourceRow":62,"name":"JOMBANG_BANJARDOWO","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"26XL04C0045","siteId":"JAW-JI-JBG-0056","dmtId":"JBG-07-093","deadline":"12/5/2026","note":""},{"recordId":"26TS05B0010||NEW SITE||LMJ161||PAGOWAN-DMT","sourceRow":63,"name":"PAGOWAN-DMT","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATIM","status":"PROGRESS","projectId":"26TS05B0010","siteId":"LMJ161","dmtId":"LMJ-07-160","deadline":"21/7/2026","note":""},{"recordId":"26XL03C0150||PERKUATAN||JAW-JI-JBG-0055||SRIWIJAYA POKPHAND","sourceRow":64,"name":"SRIWIJAYA POKPHAND","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"26XL03C0150","siteId":"JAW-JI-JBG-0055","dmtId":"JBG-07-039","deadline":"5/6/2026","note":""},{"recordId":"26TS05C0003||NEW SITE||MRD049||ULAKAGUNGULU","sourceRow":65,"name":"ULAKAGUNGULU","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26TS05C0003","siteId":"MRD049","dmtId":"MRD-03-016","deadline":"3/8/2026","note":""},{"recordId":"26TS05B0042||NEW SITE||LMJ002||LUMAJANG2","sourceRow":66,"name":"LUMAJANG2","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"JATIM","status":"DROP BY DMT","projectId":"26TS05B0042","siteId":"LMJ002","dmtId":"LMJ-07-162","deadline":"4/8/2026","note":""},{"recordId":"PML780||NEW SITE||PML780||LOSARI AMPELGADING / BANYUMUDAL MOGA","sourceRow":67,"name":"LOSARI AMPELGADING / BANYUMUDAL MOGA","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"","siteId":"PML780","dmtId":"","deadline":"","note":"522571890783"},{"recordId":"26TE06C0173||COLLOCATION||33PML_0057||KEBONDALEM_PEMALANG","sourceRow":68,"name":"KEBONDALEM_PEMALANG","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0173","siteId":"33PML_0057","dmtId":"PML-06-018","deadline":"","note":""},{"recordId":"26TE06C0147||COLLOCATION||33PML_0056||BOJONGBATA_PEMALANG","sourceRow":69,"name":"BOJONGBATA_PEMALANG","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0147","siteId":"33PML_0056","dmtId":"PML-06-001","deadline":"","note":""},{"recordId":"26TE06C0139||COLLOCATION||33PML_0058||TAMAN","sourceRow":70,"name":"TAMAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0139","siteId":"33PML_0058","dmtId":"PML-06-038","deadline":"","note":""},{"recordId":"26TE06R0004||COLLOCATION||33PML_0067||PESANTREN","sourceRow":71,"name":"PESANTREN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06R0004","siteId":"33PML_0067","dmtId":"PML-06-200","deadline":"","note":""},{"recordId":"26TE06C0180||COLLOCATION||33PML_0059||PELUTAN(P)","sourceRow":72,"name":"PELUTAN(P)","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0180","siteId":"33PML_0059","dmtId":"PML-06-057","deadline":"","note":""},{"recordId":"26TE06C0177||COLLOCATION||33PML_0055||PEMALANG","sourceRow":73,"name":"PEMALANG","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0177","siteId":"33PML_0055","dmtId":"PKL-06-019","deadline":"","note":""},{"recordId":"26TE06C0068||COLLOCATION||33PML_0036||KABUNAN_TAMAN","sourceRow":74,"name":"KABUNAN_TAMAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0068","siteId":"33PML_0036","dmtId":"PML-06-074","deadline":"","note":""},{"recordId":"26TE06C0185||COLLOCATION||33PML_0060||PECANGAKAN_COMAL_GF_SB","sourceRow":75,"name":"PECANGAKAN_COMAL_GF_SB","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0185","siteId":"33PML_0060","dmtId":"PML-06-072","deadline":"","note":""},{"recordId":"26IS06C0014||COLLOCATION||16PAS0271||GEMPENG_BANGIL_MT","sourceRow":76,"name":"GEMPENG_BANGIL_MT","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATIM","status":"PROGRESS","projectId":"26IS06C0014","siteId":"16PAS0271","dmtId":"PSR-07-199","deadline":"","note":""},{"recordId":"26TE06C0295||COLLOCATION||35GSK_0070||DMT_BUNGAHBUNGAH3","sourceRow":77,"name":"DMT_BUNGAHBUNGAH3","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0295","siteId":"35GSK_0070","dmtId":"GSK-07-056","deadline":"13/7/2026","note":""},{"recordId":"26TE06C0302||COLLOCATION||35GSK_0029||DMT_DAHANREJO","sourceRow":78,"name":"DMT_DAHANREJO","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0302","siteId":"35GSK_0029","dmtId":"GSK-07-032","deadline":"","note":""},{"recordId":"26TE06C0380||COLLOCATION||35GSK_0030||DMT_MULUNGDRIYOREJO5","sourceRow":79,"name":"DMT_MULUNGDRIYOREJO5","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0380","siteId":"35GSK_0030","dmtId":"GSK-07-054","deadline":"","note":""},{"recordId":"26TE06C0392||COLLOCATION||35GSK_0033||DMT_KEMUTERANGRESIK","sourceRow":80,"name":"DMT_KEMUTERANGRESIK","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"HOLD","projectId":"26TE06C0392","siteId":"35GSK_0033","dmtId":"GSK-07-065","deadline":"","note":""},{"recordId":"26TE06C0392||PERKUATAN||35GSK_0033||DMT_KEMUTERANGRESIK","sourceRow":81,"name":"DMT_KEMUTERANGRESIK","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"HOLD","projectId":"26TE06C0392","siteId":"35GSK_0033","dmtId":"GSK-07-065","deadline":"","note":""},{"recordId":"26TE06C0360||PERKUATAN||35GSK_0035||DMT_SUCI","sourceRow":82,"name":"DMT_SUCI","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0360","siteId":"35GSK_0035","dmtId":"GSK-07-087","deadline":"","note":""},{"recordId":"26TE06C0295||PERKUATAN||35GSK_0070||DMT_BUNGAHBUNGAH3","sourceRow":83,"name":"DMT_BUNGAHBUNGAH3","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0295","siteId":"35GSK_0070","dmtId":"GSK-07-056","deadline":"","note":""},{"recordId":"26IS06C0041||COLLOCATION||07PLG0384||FUAD PLG ex TANGGA_TAKAT","sourceRow":84,"name":"FUAD PLG ex TANGGA_TAKAT","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"ISAT","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26IS06C0041","siteId":"07PLG0384","dmtId":"PLG-03-037","deadline":"","note":""},{"recordId":"26XL07C0033||COLLOCATION||SUM-LA-BDL-0022||UNILA","sourceRow":85,"name":"UNILA","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26XL07C0033","siteId":"SUM-LA-BDL-0022","dmtId":"BDL-03-104","deadline":"","note":""},{"recordId":"26XL07C0049||COLLOCATION||SUM-LA-BDL-0189||PEMBANGUNAN BDL","sourceRow":86,"name":"PEMBANGUNAN BDL","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26XL07C0049","siteId":"SUM-LA-BDL-0189","dmtId":"BDL-03-064","deadline":"","note":""},{"recordId":"26TE06C0380||PERKUATAN||35GSK_0030||DMT_MULUNGDRIYOREJO5","sourceRow":87,"name":"DMT_MULUNGDRIYOREJO5","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0380","siteId":"35GSK_0030","dmtId":"GSK-07-054","deadline":"","note":""},{"recordId":"26TE07C0007||COLLOCATION||35SDA_0388||PASARBULANG","sourceRow":88,"name":"PASARBULANG","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE07C0007","siteId":"35SDA_0388","dmtId":"SDA-07-153","deadline":"","note":""},{"recordId":"26MR07C0099||COLLOCATION||EMR-24620||TSEL_PUTRARUMBIA / EMR-24620 Lampung Tengah","sourceRow":89,"name":"TSEL_PUTRARUMBIA / EMR-24620 Lampung Tengah","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR07C0099","siteId":"EMR-24620","dmtId":"GNS-03-104","deadline":"","note":""},{"recordId":"26MR07C0100||COLLOCATION||EMR-25946||TSEL_PASARPROYEK / EMR-25946 Lampung Tengah","sourceRow":90,"name":"TSEL_PASARPROYEK / EMR-25946 Lampung Tengah","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR07C0100","siteId":"EMR-25946","dmtId":"GNS-03-098","deadline":"","note":""},{"recordId":"26MR07C0101||COLLOCATION||EMR-27433||RENO BASUKI RUMBIA / EMR-27433 Lampung Tengah","sourceRow":91,"name":"RENO BASUKI RUMBIA / EMR-27433 Lampung Tengah","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR07C0101","siteId":"EMR-27433","dmtId":"GNS-03-025","deadline":"","note":""},{"recordId":"13TS12B1044||PBG||-||Kawasan Industri Candi3 ex Babankerep","sourceRow":92,"name":"Kawasan Industri Candi3 ex Babankerep","sow":"PBG","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"13TS12B1044","siteId":"","dmtId":"","deadline":"","note":""},{"recordId":"26MR08C0017||COLLOCATION||EMR-28089||DS_BRAJA_INDAH / EMR-28089 Lampung Timur","sourceRow":93,"name":"DS_BRAJA_INDAH / EMR-28089 Lampung Timur","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR08C0017","siteId":"EMR-28089","dmtId":"SDN-03-181","deadline":"","note":""},{"recordId":"26MR08C0031||COLLOCATION||EMR-26987||PASAR SEKAMPUNG / EMR-26987 Lampung Timur","sourceRow":94,"name":"PASAR SEKAMPUNG / EMR-26987 Lampung Timur","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR08C0031","siteId":"EMR-26987","dmtId":"SDN-03-032","deadline":"","note":""},{"recordId":"26TE08C0071||COLLOCATION||35PBL_0050||DMT_TRIWUNGUNGKIDULKADEMANGAN","sourceRow":95,"name":"DMT_TRIWUNGUNGKIDULKADEMANGAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0071","siteId":"35PBL_0050","dmtId":"KRS-07-028","deadline":"11/9/2026","note":""},{"recordId":"26TE08C0033||COLLOCATION||35PBL_0051||DMT_TERMINALBAYUANGGA","sourceRow":96,"name":"DMT_TERMINALBAYUANGGA","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0033","siteId":"35PBL_0051","dmtId":"PBL-07-016","deadline":"11/9/2026","note":""},{"recordId":"26TE08C0088||COLLOCATION||35PBL_0053||DMT_RSHIDAYATULLAH","sourceRow":97,"name":"DMT_RSHIDAYATULLAH","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0088","siteId":"35PBL_0053","dmtId":"PBL-07-020","deadline":"11/9/2026","note":""},{"recordId":"26TE08C0051||COLLOCATION||35PBL_0032||SEKARGADUNGBUGULKIDUL","sourceRow":98,"name":"SEKARGADUNGBUGULKIDUL","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0051","siteId":"35PBL_0032","dmtId":"PBL-07-013","deadline":"11/9/2026","note":""}]</script>
@@ -373,14 +373,15 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v12_data";
-const LEGACY_STORAGE_KEY="project_control_v11_data";
+const STORAGE_KEY="project_control_v13_data";
+const LEGACY_STORAGE_KEY="project_control_v12_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="12.0";
-const SPREADSHEET_ID="1ol0gwS9ociXRIidWhuRHNAvSOsa330fvz_ILmZImAX4";
-const OAUTH_CLIENT_ID_KEY="project_control_v12_oauth_client_id";
-const EDITOR_SCOPE="openid email profile https://www.googleapis.com/auth/spreadsheets";
+const APP_VERSION="13.0";
+const FORM_PREFILL_KEY="project_control_v13_form_prefill";
+const EDIT_LOG_URL_KEY="project_control_v13_edit_log_url";
+const EDITOR_NAME_KEY="project_control_v13_editor_name";
+const PENDING_EDITS_KEY="project_control_v13_pending_edits";
 const FAVORITES_KEY="project_control_v10_favorites";
 const RECENT_VIEW_KEY="project_control_v10_recent_view";
 const SITE_TEMPLATE_KEY="project_control_v10_site_template";
@@ -421,12 +422,12 @@ let favoriteIds=[];
 let recentViewedIds=[];
 let siteTemplate=DEFAULT_SITE_TEMPLATE;
 let plnTemplate=DEFAULT_PLN_TEMPLATE;
-let oauthClientId="";
-let googleAccessToken="";
-let googleTokenExpiresAt=0;
-let editorEmail="";
+let formPrefillLink="";
+let editLogUrl="";
+let editorName="";
+let formConfig=null;
+let pendingEdits=[];
 let editorContext=null;
-let pendingEditorAction=null;
 let storageMode="memory";
 let syncMode="cache";
 let lastSync="";
@@ -451,12 +452,12 @@ const refs={
   closeDetailBtn:$("closeDetailBtn"),mapsBtn:$("mapsBtn"),copyBtn:$("copyBtn"),copySiteBtn:$("copySiteBtn"),copyPlnBtn:$("copyPlnBtn"),
   favoriteDetailBtn:$("favoriteDetailBtn"),shareSiteWaBtn:$("shareSiteWaBtn"),sharePlnWaBtn:$("sharePlnWaBtn"),
   siteTemplateInput:$("siteTemplateInput"),plnTemplateInput:$("plnTemplateInput"),saveTemplatesBtn:$("saveTemplatesBtn"),resetTemplatesBtn:$("resetTemplatesBtn"),
-  oauthClientIdInput:$("oauthClientIdInput"),saveOAuthClientBtn:$("saveOAuthClientBtn"),googleLoginBtn:$("googleLoginBtn"),googleLogoutBtn:$("googleLogoutBtn"),
+  formPrefillInput:$("formPrefillInput"),editLogUrlInput:$("editLogUrlInput"),editorNameInput:$("editorNameInput"),saveFormConfigBtn:$("saveFormConfigBtn"),clearPendingBtn:$("clearPendingBtn"),
   editorDot:$("editorDot"),editorStatus:$("editorStatus"),editorEmail:$("editorEmail"),editGoogleBtn:$("editGoogleBtn"),
   editorModal:$("editorModal"),editorTitle:$("editorTitle"),editorSub:$("editorSub"),editorRowInfo:$("editorRowInfo"),
   closeEditorBtn:$("closeEditorBtn"),cancelEditorBtn:$("cancelEditorBtn"),saveEditorBtn:$("saveEditorBtn"),
   editMasterStatus:$("editMasterStatus"),editMasterBinder:$("editMasterBinder"),editMasterOneflux:$("editMasterOneflux"),editMasterBast:$("editMasterBast"),editMasterDeadline:$("editMasterDeadline"),editMasterNote:$("editMasterNote"),
-  editPlnStatus:$("editPlnStatus"),editPlnRfi:$("editPlnRfi"),editPlnConnect:$("editPlnConnect"),editPlnHo:$("editPlnHo"),editPlnCustomerId:$("editPlnCustomerId"),editPlnDoc:$("editPlnDoc"),editPlnPower:$("editPlnPower"),editPlnCustomerName:$("editPlnCustomerName"),editPlnNote:$("editPlnNote"),
+  editPlnStatus:$("editPlnStatus"),editPlnRfi:$("editPlnRfi"),editPlnConnect:$("editPlnConnect"),editPlnHo:$("editPlnHo"),editPlnCustomerId:$("editPlnCustomerId"),editPlnDoc:$("editPlnDoc"),editPlnPower:$("editPlnPower"),editPlnNote:$("editPlnNote"),
   toast:$("toast")
 };
 
@@ -647,7 +648,11 @@ function loadProductivity(){
     recentViewedIds=Array.isArray(recent)?recent:[];
     siteTemplate=localStorage.getItem(SITE_TEMPLATE_KEY)||DEFAULT_SITE_TEMPLATE;
     plnTemplate=localStorage.getItem(PLN_TEMPLATE_KEY)||DEFAULT_PLN_TEMPLATE;
-    oauthClientId=localStorage.getItem(OAUTH_CLIENT_ID_KEY)||"";
+    formPrefillLink=localStorage.getItem(FORM_PREFILL_KEY)||"";
+    editLogUrl=localStorage.getItem(EDIT_LOG_URL_KEY)||"";
+    editorName=localStorage.getItem(EDITOR_NAME_KEY)||"";
+    try{pendingEdits=JSON.parse(localStorage.getItem(PENDING_EDITS_KEY)||"[]");if(!Array.isArray(pendingEdits))pendingEdits=[]}catch(_){pendingEdits=[]}
+    formConfig=parseFormPrefillLink(formPrefillLink,false);
   }catch(_){
     favoriteIds=[];recentViewedIds=[];siteTemplate=DEFAULT_SITE_TEMPLATE;plnTemplate=DEFAULT_PLN_TEMPLATE;
   }
@@ -851,15 +856,17 @@ function renderReport(){
 function renderSettings(){
   const areas=unique("area").join(", ")||"-",tenants=unique("tenant").join(", ")||"-";
   refs.dataInfo.innerHTML=`<b>${data.length} record</b> aktif di aplikasi.<br>Regional: ${esc(areas)}<br>Tenant: ${esc(tenants)}<br>Sumber: ${syncMode==="live"?"Field Data Live Sheet":"cache/local"} · App v${APP_VERSION}`;
-  if(refs.syncInfo)refs.syncInfo.innerHTML=`Tab: <b>${LIVE_SHEET}</b><br>Mode: <b>Published CSV</b><br>URL: <b>${publishedUrl?"tersimpan":"belum diisi"}</b><br>Sync terakhir: <b>${formatSyncTime(lastSync)}</b>`;
+  if(refs.syncInfo)refs.syncInfo.innerHTML=`Tab: <b>${LIVE_SHEET}</b><br>Mode: <b>Published CSV</b><br>URL: <b>${publishedUrl?"tersimpan":"belum diisi"}</b><br>Sync terakhir: <b>${formatSyncTime(lastSync)}</b><br>EDIT LOG: <b>${editLogUrl?"aktif":"belum diisi"}</b>`;
   if(refs.publishedUrlInput&&document.activeElement!==refs.publishedUrlInput)refs.publishedUrlInput.value=publishedUrl;
   if(refs.siteTemplateInput&&document.activeElement!==refs.siteTemplateInput)refs.siteTemplateInput.value=siteTemplate;
   if(refs.plnTemplateInput&&document.activeElement!==refs.plnTemplateInput)refs.plnTemplateInput.value=plnTemplate;
-  if(refs.oauthClientIdInput&&document.activeElement!==refs.oauthClientIdInput)refs.oauthClientIdInput.value=oauthClientId;
-  const editorOn=hasEditorToken();
+  if(refs.formPrefillInput&&document.activeElement!==refs.formPrefillInput)refs.formPrefillInput.value=formPrefillLink;
+  if(refs.editLogUrlInput&&document.activeElement!==refs.editLogUrlInput)refs.editLogUrlInput.value=editLogUrl;
+  if(refs.editorNameInput&&document.activeElement!==refs.editorNameInput)refs.editorNameInput.value=editorName;
+  const editorOn=!!formConfig;
   if(refs.editorDot)refs.editorDot.classList.toggle("on",editorOn);
-  if(refs.editorStatus)refs.editorStatus.textContent=editorOn?"Editor terhubung":"Belum terhubung";
-  if(refs.editorEmail)refs.editorEmail.textContent=editorOn?(editorEmail||"Google Account aktif"):(oauthClientId?"OAuth Client ID siap · login diperlukan":"Masukkan OAuth Client ID terlebih dahulu");
+  if(refs.editorStatus)refs.editorStatus.textContent=editorOn?(editLogUrl?"Editor siap + EDIT LOG sync":"Form siap · EDIT LOG URL belum ada"):"Belum dikonfigurasi";
+  if(refs.editorEmail)refs.editorEmail.textContent=editorOn?`${editorName||"Editor"} · ${pendingEdits.length} pending lokal`:`Paste pre-filled link Google Form untuk mengaktifkan editor`;
   refs.storageBadge.textContent=syncing?"SYNCING…":(syncMode==="live"?"LIVE ✓":(storageMode==="local"?"CACHE":"MEMORY"));
 }
 function renderAll(){fillFilters();renderDashboard();renderSites();renderOutstanding();renderReport();renderSettings()}
@@ -1041,12 +1048,24 @@ async function fetchLiveMaster({manual=false}={}){
     if(!res.ok)throw new Error("HTTP "+res.status);
     const text=await res.text();
     if(/<html|<!doctype/i.test(text.slice(0,250)))throw new Error("URL bukan CSV publik. Pastikan Publish to web memakai WEBAPP DATA + format CSV.");
-    const imported=importMasterCSV(text);
+    let imported=importMasterCSV(text);
+    let remotePatches=[];
+    if(editLogUrl){
+      try{
+        const logUrl=normalizePublishedUrl(editLogUrl),logSep=logUrl.includes("?")?"&":"?";
+        const lr=await fetch(logUrl+logSep+"_="+Date.now(),{method:"GET",cache:"no-store",credentials:"omit",redirect:"follow"});
+        if(!lr.ok)throw new Error("HTTP "+lr.status);
+        const lt=await lr.text();
+        if(/<html|<!doctype/i.test(lt.slice(0,250)))throw new Error("URL EDIT LOG bukan CSV publik");
+        remotePatches=importEditLogCSV(lt);
+      }catch(logErr){console.warn("EDIT LOG sync gagal:",logErr);if(manual)toast("Data utama sync; EDIT LOG belum terbaca")}
+    }
+    imported=applyEditLog(imported,remotePatches);
     data=imported;syncMode="live";lastSync=new Date().toISOString();
     saveData();
     if(storageAvailable())try{localStorage.setItem(LAST_SYNC_KEY,lastSync)}catch(_){}
     activeRegional="ALL";focusFilter="ALL";clearError();renderAll();
-    if(manual)toast(imported.length+" record tersinkron");
+    if(manual)toast(imported.length+" record tersinkron"+(editLogUrl?" + EDIT LOG":""));
   }catch(err){
     syncMode="cache";
     showError("Sync Published Sheet gagal. Cache terakhir tetap dipakai. "+err.message);
@@ -1083,216 +1102,146 @@ function siteCopyText(s){return fillTemplate(siteTemplate,s)}
 function plnCopyText(s){return fillTemplate(plnTemplate,s)}
 
 
-function hasEditorToken(){return !!googleAccessToken && Date.now()<googleTokenExpiresAt-30000}
-function normalizeComparable(v){return typeof v==="boolean"?(v?"TRUE":"FALSE"):norm(v)}
-function boolComparable(v){return truthy(v)?"TRUE":"FALSE"}
-function getCell(row,index){return row&&row[index]!==undefined?row[index]:""}
-function toDateInput(value){
-  const s=norm(value);if(!s||s==="-"||s==="0")return "";
-  if(/^\d+(?:\.\d+)?$/.test(s)){
-    const n=Number(s);if(n>20000&&n<100000){
-      const d=new Date(Date.UTC(1899,11,30)+Math.round(n)*86400000);
-      return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${String(d.getUTCDate()).padStart(2,"0")}`;
-    }
-  }
-  let m=s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);
-  if(m)return `${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;
-  m=s.match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})$/);
-  if(m)return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
-  return "";
-}
-function sheetsHeaders(){
-  return {"Authorization":"Bearer "+googleAccessToken,"Content-Type":"application/json"};
-}
-async function googleJson(url,options={}){
-  const res=await fetch(url,{...options,headers:{...sheetsHeaders(),...(options.headers||{})}});
-  if(res.status===401){googleAccessToken="";googleTokenExpiresAt=0;renderSettings();throw new Error("Sesi Google berakhir. Login Editor lagi.")}
-  const text=await res.text();
-  let body={};try{body=text?JSON.parse(text):{}}catch(_){body={raw:text}}
-  if(!res.ok)throw new Error(body?.error?.message||("Google API HTTP "+res.status));
-  return body;
-}
-async function fetchGoogleUser(){
+function parseFormPrefillLink(value,throwOnError=true){
+  const raw=norm(value);if(!raw)return null;
   try{
-    const r=await fetch("https://www.googleapis.com/oauth2/v3/userinfo",{headers:{Authorization:"Bearer "+googleAccessToken}});
-    if(r.ok){const j=await r.json();editorEmail=j.email||j.name||"Google User"}
-  }catch(_){}
-  renderSettings();
+    const u=new URL(raw);
+    if(u.protocol!=="https:"||!/docs\.google\.com$/i.test(u.hostname)||!/\/forms\//i.test(u.pathname))throw new Error("Link harus berasal dari Google Forms");
+    const action=new URL(u.toString());
+    action.pathname=action.pathname.replace(/\/viewform\/?$/i,"/formResponse").replace(/\/prefill\/?$/i,"/formResponse");
+    action.search="";action.hash="";
+    const placeholders={PC_SITE_KEY:"siteKey",PC_SITE_NAME:"siteName",PC_PROJECT_ID:"projectId",PC_SOW:"sow",PC_FIELD:"field",PC_OLD:"oldValue",PC_NEW:"newValue",PC_EDITOR:"editor"};
+    const entries={};
+    for(const [k,v] of u.searchParams.entries())if(k.startsWith("entry.")&&placeholders[v])entries[placeholders[v]]=k;
+    const missing=Object.values(placeholders).filter(x=>!entries[x]);
+    if(missing.length)throw new Error("Placeholder pre-fill belum lengkap: "+missing.join(", "));
+    if(!/\/formResponse$/i.test(action.pathname))throw new Error("Format link Form tidak dikenali");
+    return {action:action.toString(),entries};
+  }catch(err){if(throwOnError)throw err;return null}
 }
-function loginGoogleEditor(after=null){
-  pendingEditorAction=after;
-  if(!oauthClientId){
-    toast("Simpan Google OAuth Client ID dulu di Settings");
-    switchView("settingsView");
-    return;
-  }
-  if(hasEditorToken()){if(after)after();return}
-  if(!window.google?.accounts?.oauth2){toast("Google Identity belum siap. Tunggu sebentar lalu coba lagi.");return}
-  try{
-    const client=google.accounts.oauth2.initTokenClient({
-      client_id:oauthClientId,
-      scope:EDITOR_SCOPE,
-      callback:async resp=>{
-        if(resp.error){toast("Login Google gagal: "+resp.error);return}
-        googleAccessToken=resp.access_token||"";
-        googleTokenExpiresAt=Date.now()+(Number(resp.expires_in||3600)*1000);
-        await fetchGoogleUser();
-        toast("Editor Google terhubung");
-        const fn=pendingEditorAction;pendingEditorAction=null;
-        if(fn)fn();
-      }
+function savePendingEdits(){if(storageAvailable())try{localStorage.setItem(PENDING_EDITS_KEY,JSON.stringify(pendingEdits))}catch(_){}}
+function serializePatchValue(v,type){return type==="bool"?(v?"TRUE":"FALSE"):String(v??"")}
+const PATCH_DEFS={
+  MASTER_STATUS:{prop:"status",type:"text",label:"Status Project"},
+  MASTER_BINDER:{prop:"binder",type:"bool",label:"Binder"},
+  MASTER_ONEFLUX:{prop:"oneflux",type:"bool",label:"Oneflux Flag"},
+  MASTER_BAST:{prop:"bast",type:"bool",label:"BAST Flag"},
+  MASTER_DEADLINE:{prop:"deadline",type:"text",label:"Deadline Project"},
+  MASTER_NOTE:{prop:"note",type:"text",label:"Keterangan"},
+  PLN_STATUS:{prop:"plnStatus",type:"text",label:"Status PLN"},
+  PLN_RFI:{prop:"plnRfi",type:"bool",label:"RFI"},
+  PLN_CONNECT:{prop:"plnConnect",type:"text",label:"Connect"},
+  PLN_HO:{prop:"plnHo",type:"bool",label:"HO"},
+  PLN_CUSTOMER_ID:{prop:"plnCustomerId",type:"text",label:"ID Pelanggan PLN"},
+  PLN_DOC:{prop:"plnDoc",type:"bool",label:"Dok PLN"},
+  PLN_POWER:{prop:"plnPower",type:"text",label:"Daya PLN"},
+  PLN_NOTE:{prop:"plnNote",type:"text",label:"Keterangan PLN"}
+};
+function patchComparable(v,type){return type==="bool"?(truthy(v)?"TRUE":"FALSE"):norm(v)}
+function applyPatchToSite(site,patch){
+  const d=PATCH_DEFS[patch.field];if(!d||!site)return false;
+  site[d.prop]=d.type==="bool"?truthy(patch.newValue):patch.newValue;
+  return true;
+}
+function findPatchSite(arr,p){
+  let s=arr.find(x=>x.recordId===p.siteKey);
+  if(!s&&p.projectId)s=arr.find(x=>norm(x.projectId)===norm(p.projectId)&&low(x.sow)===low(p.sow)&&(!p.siteName||low(x.name)===low(p.siteName)));
+  if(!s&&p.siteName)s=arr.find(x=>low(x.name)===low(p.siteName)&&low(x.sow)===low(p.sow));
+  return s||null;
+}
+function importEditLogCSV(text){
+  const rows=parseCSV(text);if(rows.length<2)return [];
+  const hi=rows.findIndex(r=>r.some(c=>headerKey(c)==="SITE KEY")&&r.some(c=>headerKey(c)==="FIELD")&&r.some(c=>headerKey(c)==="NEW VALUE"));
+  if(hi<0)throw new Error("Header EDIT LOG tidak cocok. Pastikan pertanyaan Form memakai SITE KEY, FIELD, NEW VALUE.");
+  const headers=rows[hi].map(headerKey),idx={};headers.forEach((h,i)=>{if(h&&idx[h]===undefined)idx[h]=i});
+  const get=(r,h)=>idx[h]===undefined?"":norm(r[idx[h]]);
+  return rows.slice(hi+1).map((r,i)=>({
+    order:i,siteKey:get(r,"SITE KEY"),siteName:get(r,"SITE NAME"),projectId:get(r,"PROJECT ID"),sow:get(r,"SOW"),field:get(r,"FIELD"),oldValue:get(r,"OLD VALUE"),newValue:get(r,"NEW VALUE"),editor:get(r,"EDITOR")
+  })).filter(p=>p.field&&p.newValue!==undefined&&(p.siteKey||p.projectId||p.siteName));
+}
+function latestPatchMap(patches){const m=new Map();patches.forEach(p=>m.set((p.siteKey||p.projectId||p.siteName)+"||"+p.field,p));return m}
+function applyEditLog(arr,remotePatches=[]){
+  const latest=latestPatchMap(remotePatches);
+  latest.forEach(p=>{const s=findPatchSite(arr,p);if(s)applyPatchToSite(s,p)});
+  if(remotePatches.length&&pendingEdits.length){
+    pendingEdits=pendingEdits.filter(p=>{
+      const rp=latest.get((p.siteKey||p.projectId||p.siteName)+"||"+p.field);
+      return !(rp&&patchComparable(rp.newValue,PATCH_DEFS[p.field]?.type)===patchComparable(p.newValue,PATCH_DEFS[p.field]?.type));
     });
-    client.requestAccessToken({prompt:"consent"});
-  }catch(err){toast("Login Google gagal: "+err.message)}
+    savePendingEdits();
+  }
+  pendingEdits.forEach(p=>{const s=findPatchSite(arr,p);if(s)applyPatchToSite(s,p)});
+  return arr;
 }
-function logoutGoogleEditor(){
-  googleAccessToken="";googleTokenExpiresAt=0;editorEmail="";pendingEditorAction=null;renderSettings();toast("Sesi Editor diputuskan");
+function buildPatch(field,oldValue,newValue){
+  return {siteKey:currentDetail.recordId,siteName:currentDetail.name||"",projectId:currentDetail.projectId||"",sow:currentDetail.sow||"",field,oldValue:String(oldValue??""),newValue:String(newValue??""),editor:editorName||"Editor",localTs:Date.now()};
 }
-async function sheetValues(range){
-  const url=`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}?majorDimension=ROWS`;
-  const j=await googleJson(url,{method:"GET"});
-  return j.values||[];
+function maybePatch(list,field,oldValue,newValue){
+  const d=PATCH_DEFS[field];if(!d)return;
+  if(patchComparable(oldValue,d.type)!==patchComparable(newValue,d.type))list.push(buildPatch(field,serializePatchValue(oldValue,d.type),serializePatchValue(newValue,d.type)));
 }
-function matchMasterRow(s,rows){
-  let i=rows.findIndex(r=>norm(getCell(r,11))===norm(s.projectId)&&low(getCell(r,2))===low(s.sow)&&(!norm(s.siteId)||norm(getCell(r,12))===norm(s.siteId)));
-  if(i<0)i=rows.findIndex(r=>norm(getCell(r,11))===norm(s.projectId)&&low(getCell(r,2))===low(s.sow)&&low(getCell(r,1))===low(s.name));
-  if(i<0)i=rows.findIndex(r=>low(getCell(r,1))===low(s.name)&&low(getCell(r,2))===low(s.sow));
-  return i<0?null:i+2;
+function submitPatchToForm(patch){
+  if(!formConfig)throw new Error("Google Form belum dikonfigurasi");
+  const form=document.createElement("form");form.method="POST";form.action=formConfig.action;form.target="pcFormSink";form.style.display="none";
+  const vals={siteKey:patch.siteKey,siteName:patch.siteName,projectId:patch.projectId,sow:patch.sow,field:patch.field,oldValue:patch.oldValue,newValue:patch.newValue,editor:patch.editor};
+  Object.entries(vals).forEach(([name,value])=>{const input=document.createElement("input");input.type="hidden";input.name=formConfig.entries[name];input.value=value;form.appendChild(input)});
+  [["fvv","1"],["pageHistory","0"],["submit","Submit"]].forEach(([n,v])=>{const i=document.createElement("input");i.type="hidden";i.name=n;i.value=v;form.appendChild(i)});
+  document.body.appendChild(form);form.submit();setTimeout(()=>form.remove(),500);
 }
-function matchPlnRow(s,rows){
-  let i=rows.findIndex(r=>low(getCell(r,1))===low(s.name)&&low(getCell(r,2))===low(s.sow)&&(!norm(s.tenant)||low(getCell(r,3))===low(s.tenant)));
-  if(i<0)i=rows.findIndex(r=>low(getCell(r,1))===low(s.name)&&low(getCell(r,2))===low(s.sow));
-  return i<0?null:i+2;
-}
-function masterFromRow(r){
-  return {bast:truthy(getCell(r,3)),oneflux:truthy(getCell(r,4)),binder:truthy(getCell(r,5)),status:norm(getCell(r,8)),deadline:norm(getCell(r,20)),note:norm(getCell(r,21))};
-}
-function plnFromRow(r){
-  return {status:norm(getCell(r,5)),rfi:truthy(getCell(r,6)),connect:norm(getCell(r,7)),ho:truthy(getCell(r,8)),customerId:norm(getCell(r,9)),doc:truthy(getCell(r,10)),note:norm(getCell(r,11)),power:norm(getCell(r,12)),customerName:norm(getCell(r,13))};
-}
-async function openGoogleEditor(){
+function openGoogleEditor(){
   if(!currentDetail)return;
-  if(!hasEditorToken()){loginGoogleEditor(openGoogleEditor);return}
-  refs.editorModal.classList.add("show");
-  refs.editorModal.classList.add("edit-busy");
+  if(!formConfig){toast("Konfigurasi Google Form dulu di Settings");switchView("settingsView");return}
+  editorContext={recordId:currentDetail.recordId};
   refs.editorTitle.textContent="Edit "+(currentDetail.name||"Site");
   refs.editorSub.textContent=(currentDetail.projectId||"-")+" · "+(currentDetail.sow||"-");
-  refs.editorRowInfo.textContent="Mencari row MASTER SITE & PLN...";
-  try{
-    const [masterRows,plnRows]=await Promise.all([sheetValues("'MASTER SITE'!A2:W"),sheetValues("PLN!A2:N")]);
-    const masterRow=matchMasterRow(currentDetail,masterRows);
-    const plnRow=matchPlnRow(currentDetail,plnRows);
-    if(!masterRow)throw new Error("Row MASTER SITE tidak ditemukan untuk site ini.");
-    const master=masterFromRow(masterRows[masterRow-2]||[]);
-    const pln=plnRow?plnFromRow(plnRows[plnRow-2]||[]):{status:"",rfi:false,connect:"",ho:false,customerId:"",doc:false,note:"",power:"",customerName:""};
-    editorContext={recordId:currentDetail.recordId,masterRow,plnRow,master,pln};
-
-    refs.editMasterStatus.value=master.status||"PROGRESS";
-    refs.editMasterBinder.checked=master.binder;
-    refs.editMasterOneflux.checked=master.oneflux;
-    refs.editMasterBast.checked=master.bast;
-    refs.editMasterDeadline.value=toDateInput(master.deadline);
-    refs.editMasterNote.value=master.note||"";
-
-    refs.editPlnStatus.value=pln.status||"";
-    refs.editPlnRfi.checked=pln.rfi;
-    refs.editPlnConnect.value=pln.connect||"";
-    refs.editPlnHo.checked=pln.ho;
-    refs.editPlnCustomerId.value=pln.customerId||"";
-    refs.editPlnDoc.checked=pln.doc;
-    refs.editPlnPower.value=pln.power||"";
-    refs.editPlnCustomerName.value=pln.customerName||"";
-    refs.editPlnNote.value=pln.note||"";
-
-    refs.editorRowInfo.innerHTML=`MASTER SITE row <b>${masterRow}</b> · PLN row <b>${plnRow||"tidak ditemukan"}</b>${plnRow?"":" · bagian PLN tidak akan disimpan"}`;
-    refs.editorModal.classList.remove("edit-busy");
-  }catch(err){
-    refs.editorRowInfo.textContent=err.message;
-    refs.editorModal.classList.remove("edit-busy");
-    toast("Editor gagal dimuat");
-  }
+  refs.editMasterStatus.value=currentDetail.status||"PROGRESS";
+  refs.editMasterBinder.checked=!!currentDetail.binder;
+  refs.editMasterOneflux.checked=!!currentDetail.oneflux;
+  refs.editMasterBast.checked=!!currentDetail.bast;
+  refs.editMasterDeadline.value=toDateInput(currentDetail.deadline);
+  refs.editMasterNote.value=currentDetail.note||"";
+  refs.editPlnStatus.value=currentDetail.plnStatus||"";
+  refs.editPlnRfi.checked=!!currentDetail.plnRfi;
+  refs.editPlnConnect.value=currentDetail.plnConnect||"";
+  refs.editPlnHo.checked=!!currentDetail.plnHo;
+  refs.editPlnCustomerId.value=currentDetail.plnCustomerId||"";
+  refs.editPlnDoc.checked=!!currentDetail.plnDoc;
+  refs.editPlnPower.value=currentDetail.plnPower||"";
+  refs.editPlnNote.value=currentDetail.plnNote||"";
+  refs.editorRowInfo.innerHTML=`Mode <b>Zero Cost</b> · perubahan dikirim ke Google Form sebagai EDIT LOG.${editLogUrl?" Setelah sync, log terbaru dioverlay otomatis.":" Tambahkan Published EDIT LOG CSV URL agar perubahan tersinkron lintas perangkat."}`;
+  refs.editorModal.classList.add("show");
 }
 function closeGoogleEditor(){refs.editorModal.classList.remove("show");refs.editorModal.classList.remove("edit-busy");editorContext=null}
-function addEdit(updates,logs,sheet,row,col,field,oldValue,newValue,isBool=false){
-  const oldCmp=isBool?boolComparable(oldValue):normalizeComparable(oldValue);
-  const newCmp=isBool?boolComparable(newValue):normalizeComparable(newValue);
-  if(oldCmp===newCmp)return;
-  updates.push({range:`'${sheet}'!${col}${row}`,values:[[newValue]]});
-  logs.push([new Date().toISOString(),editorEmail||"Google User",currentDetail?.name||"",currentDetail?.projectId||"",sheet,String(row),field,oldCmp,newCmp]);
-}
-async function batchWriteGoogle(updates){
-  const url=`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values:batchUpdate`;
-  return googleJson(url,{method:"POST",body:JSON.stringify({valueInputOption:"USER_ENTERED",data:updates})});
-}
-async function appendActivityLog(logRows){
-  if(!logRows.length)return;
-  const range=encodeURIComponent("'ACTIVITY LOG'!A:I");
-  const url=`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
-  return googleJson(url,{method:"POST",body:JSON.stringify({values:logRows})});
-}
 async function saveGoogleEditor(){
   if(!editorContext||!currentDetail)return;
-  if(!hasEditorToken()){loginGoogleEditor(saveGoogleEditor);return}
-  const updates=[],logs=[],m=editorContext.master,p=editorContext.pln,mr=editorContext.masterRow,pr=editorContext.plnRow;
-
-  const masterNew={
-    status:refs.editMasterStatus.value,
-    binder:refs.editMasterBinder.checked,
-    oneflux:refs.editMasterOneflux.checked,
-    bast:refs.editMasterBast.checked,
-    deadline:refs.editMasterDeadline.value,
-    note:refs.editMasterNote.value.trim()
-  };
-  addEdit(updates,logs,"MASTER SITE",mr,"I","STATUS PROJECT",m.status,masterNew.status);
-  addEdit(updates,logs,"MASTER SITE",mr,"F","BINDER",m.binder,masterNew.binder,true);
-  addEdit(updates,logs,"MASTER SITE",mr,"E","ONEFLUX",m.oneflux,masterNew.oneflux,true);
-  addEdit(updates,logs,"MASTER SITE",mr,"D","BAST DONE",m.bast,masterNew.bast,true);
-  addEdit(updates,logs,"MASTER SITE",mr,"U","DEADLINE PROJECT",toDateInput(m.deadline)||m.deadline,masterNew.deadline);
-  addEdit(updates,logs,"MASTER SITE",mr,"V","KETERANGAN",m.note,masterNew.note);
-
-  const plnNew={
-    status:refs.editPlnStatus.value,
-    rfi:refs.editPlnRfi.checked,
-    connect:refs.editPlnConnect.value,
-    ho:refs.editPlnHo.checked,
-    customerId:refs.editPlnCustomerId.value.trim(),
-    doc:refs.editPlnDoc.checked,
-    power:refs.editPlnPower.value.trim(),
-    customerName:refs.editPlnCustomerName.value.trim(),
-    note:refs.editPlnNote.value.trim()
-  };
-  if(pr){
-    addEdit(updates,logs,"PLN",pr,"F","STATUS PLN",p.status,plnNew.status);
-    addEdit(updates,logs,"PLN",pr,"G","RFI",p.rfi,plnNew.rfi,true);
-    addEdit(updates,logs,"PLN",pr,"H","CONNECT",p.connect,plnNew.connect);
-    addEdit(updates,logs,"PLN",pr,"I","HO",p.ho,plnNew.ho,true);
-    addEdit(updates,logs,"PLN",pr,"J","ID PELANGGAN PLN",p.customerId,plnNew.customerId);
-    addEdit(updates,logs,"PLN",pr,"K","DOK PLN",p.doc,plnNew.doc,true);
-    addEdit(updates,logs,"PLN",pr,"L","KETERANGAN",p.note,plnNew.note);
-    addEdit(updates,logs,"PLN",pr,"M","DAYA PLN",p.power,plnNew.power);
-    addEdit(updates,logs,"PLN",pr,"N","NAMA PELANGGAN",p.customerName,plnNew.customerName);
-  }
-  if(!updates.length){toast("Tidak ada perubahan");return}
-
-  refs.editorModal.classList.add("edit-busy");
-  refs.editorRowInfo.textContent="Menyimpan perubahan ke Google Sheet...";
+  if(!formConfig){toast("Google Form belum dikonfigurasi");return}
+  const patches=[];
+  maybePatch(patches,"MASTER_STATUS",currentDetail.status,refs.editMasterStatus.value);
+  maybePatch(patches,"MASTER_BINDER",currentDetail.binder,refs.editMasterBinder.checked);
+  maybePatch(patches,"MASTER_ONEFLUX",currentDetail.oneflux,refs.editMasterOneflux.checked);
+  maybePatch(patches,"MASTER_BAST",currentDetail.bast,refs.editMasterBast.checked);
+  maybePatch(patches,"MASTER_DEADLINE",toDateInput(currentDetail.deadline)||currentDetail.deadline,refs.editMasterDeadline.value);
+  maybePatch(patches,"MASTER_NOTE",currentDetail.note,refs.editMasterNote.value.trim());
+  maybePatch(patches,"PLN_STATUS",currentDetail.plnStatus,refs.editPlnStatus.value);
+  maybePatch(patches,"PLN_RFI",currentDetail.plnRfi,refs.editPlnRfi.checked);
+  maybePatch(patches,"PLN_CONNECT",currentDetail.plnConnect,refs.editPlnConnect.value);
+  maybePatch(patches,"PLN_HO",currentDetail.plnHo,refs.editPlnHo.checked);
+  maybePatch(patches,"PLN_CUSTOMER_ID",currentDetail.plnCustomerId,refs.editPlnCustomerId.value.trim());
+  maybePatch(patches,"PLN_DOC",currentDetail.plnDoc,refs.editPlnDoc.checked);
+  maybePatch(patches,"PLN_POWER",currentDetail.plnPower,refs.editPlnPower.value.trim());
+  maybePatch(patches,"PLN_NOTE",currentDetail.plnNote,refs.editPlnNote.value.trim());
+  if(!patches.length){toast("Tidak ada perubahan");return}
+  refs.editorModal.classList.add("edit-busy");refs.editorRowInfo.textContent="Mengirim "+patches.length+" perubahan ke Google Form...";
   try{
-    await batchWriteGoogle(updates);
-    try{await appendActivityLog(logs)}catch(logErr){console.warn("Activity log gagal:",logErr)}
+    for(const p of patches){submitPatchToForm(p);await new Promise(r=>setTimeout(r,280))}
+    pendingEdits.push(...patches);savePendingEdits();
     const s=data.find(x=>x.recordId===editorContext.recordId);
-    if(s){
-      Object.assign(s,{status:masterNew.status,binder:masterNew.binder,oneflux:masterNew.oneflux,bast:masterNew.bast,deadline:masterNew.deadline,note:masterNew.note});
-      if(pr)Object.assign(s,{plnStatus:plnNew.status,plnRfi:plnNew.rfi,plnConnect:plnNew.connect,plnHo:plnNew.ho,plnCustomerId:plnNew.customerId,plnDoc:plnNew.doc,plnPower:plnNew.power,plnNote:plnNew.note});
-      saveData();renderAll();
-    }
-    closeGoogleEditor();
-    toast(updates.length+" perubahan tersimpan ke Google Sheet");
+    if(s)patches.forEach(p=>applyPatchToSite(s,p));
+    saveData();renderAll();closeGoogleEditor();
+    toast(patches.length+" perubahan dikirim ke EDIT LOG");
     if(s)openDetail(s.recordId);
-  }catch(err){
-    refs.editorModal.classList.remove("edit-busy");
-    refs.editorRowInfo.textContent="Gagal: "+err.message;
-    toast("Save gagal: "+err.message);
-  }
+    if(editLogUrl)setTimeout(()=>fetchLiveMaster({manual:false}),3500);
+  }catch(err){refs.editorModal.classList.remove("edit-busy");refs.editorRowInfo.textContent="Gagal: "+err.message;toast("Kirim edit gagal: "+err.message)}
 }
 
 function bindEvents(){
@@ -1321,16 +1270,17 @@ function bindEvents(){
   refs.editorModal.addEventListener("click",e=>{if(e.target===refs.editorModal)closeGoogleEditor()});
   refs.saveEditorBtn.addEventListener("click",saveGoogleEditor);
 
-  refs.saveOAuthClientBtn?.addEventListener("click",()=>{
-    const v=norm(refs.oauthClientIdInput?.value);
-    if(v&&!/\.apps\.googleusercontent\.com$/i.test(v)){toast("Format OAuth Client ID tidak valid");return}
-    oauthClientId=v;
-    if(storageAvailable())try{if(v)localStorage.setItem(OAUTH_CLIENT_ID_KEY,v);else localStorage.removeItem(OAUTH_CLIENT_ID_KEY)}catch(_){}
-    googleAccessToken="";googleTokenExpiresAt=0;editorEmail="";
-    renderSettings();toast(v?"OAuth Client ID disimpan":"OAuth Client ID dihapus");
+  refs.saveFormConfigBtn?.addEventListener("click",()=>{
+    try{
+      const pre=norm(refs.formPrefillInput?.value),log=norm(refs.editLogUrlInput?.value),name=norm(refs.editorNameInput?.value)||"Editor";
+      const cfg=parseFormPrefillLink(pre,true);
+      if(log)normalizePublishedUrl(log);
+      formPrefillLink=pre;editLogUrl=log;editorName=name;formConfig=cfg;
+      if(storageAvailable())try{localStorage.setItem(FORM_PREFILL_KEY,pre);localStorage.setItem(EDIT_LOG_URL_KEY,log);localStorage.setItem(EDITOR_NAME_KEY,name)}catch(_){}
+      renderSettings();toast(log?"Editor Form + EDIT LOG siap":"Google Form siap; tambahkan EDIT LOG CSV untuk sync lintas perangkat");
+    }catch(err){toast("Konfigurasi gagal: "+err.message)}
   });
-  refs.googleLoginBtn?.addEventListener("click",()=>loginGoogleEditor());
-  refs.googleLogoutBtn?.addEventListener("click",logoutGoogleEditor);
+  refs.clearPendingBtn?.addEventListener("click",()=>{pendingEdits=[];savePendingEdits();renderSettings();toast("Pending lokal dibersihkan")});
 
   refs.syncNowBtn?.addEventListener("click",()=>fetchLiveMaster({manual:true}));
   refs.savePublishedBtn?.addEventListener("click",()=>{
