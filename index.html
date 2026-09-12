@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v13 · Zero Cost Editor</title>
+<title>Project Control v13.2 · Zero Cost Editor</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -127,7 +127,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v13</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v13.2</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -259,12 +259,11 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <div class="editor-state">
       <div><strong><span id="editorDot" class="editor-dot"></span><span id="editorStatus">Belum dikonfigurasi</span></strong><br><span id="editorEmail">Tanpa Google Cloud · tanpa OAuth · tanpa server berbayar.</span></div>
     </div>
-    <div class="field"><label>Google Form Pre-filled Link</label><input id="formPrefillInput" type="url" inputmode="url" placeholder="https://docs.google.com/forms/d/e/.../viewform?usp=pp_url&entry..."></div>
-    <div class="field"><label>Published EDIT LOG CSV URL</label><input id="editLogUrlInput" type="url" inputmode="url" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?gid=...&output=csv"></div>
+    <div class="field"><label>Google Form Pre-filled Link (sudah terpasang)</label><input id="formPrefillInput" type="url" inputmode="url" placeholder="https://docs.google.com/forms/d/e/.../viewform?usp=pp_url&entry..."></div>
     <div class="field"><label>Nama Editor</label><input id="editorNameInput" type="text" placeholder="Contoh: Rizog"></div>
     <button id="saveFormConfigBtn" class="btn blue">Simpan Konfigurasi Editor</button>
     <button id="clearPendingBtn" class="btn">Bersihkan Pending Lokal</button>
-    <div class="editor-warning">v13 memakai <b>Google Form → EDIT LOG</b>. Sel MASTER SITE/PLN asli tidak diubah langsung. WebApp membaca data dasar lalu menimpa tampilannya dengan edit terbaru dari EDIT LOG. Link Form hanya disimpan di browser perangkat ini, bukan di source GitHub.</div>
+    <div class="editor-warning">v13.1 memakai <b>Google Form → EDIT LOG → WEBAPP DATA</b>. MASTER SITE/PLN asli tetap aman. WEBAPP DATA sudah otomatis membaca edit terbaru dari EDIT LOG, jadi tidak perlu mem-publish EDIT LOG sebagai CSV terpisah.</div>
 
     <div class="subsection-title">Template Copy & WhatsApp</div>
     <div class="template-help">
@@ -278,10 +277,10 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <button id="saveTemplatesBtn" class="btn blue">Simpan Template</button>
     <button id="resetTemplatesBtn" class="btn">Reset Template Default</button>
 
-    <div class="info-box"><b>Sistem Project Health v13:</b><br>
+    <div class="info-box"><b>Sistem Project Health v13.2:</b><br>
       Project, PLN, Oneflux, Binder, dan BAST Doc masing-masing dihitung 0–100%. Health total = rata-rata 5 bagian. Deadline hanya alert dan tidak mengurangi persentase Health.
     </div>
-    <div class="info-box">Mode zero-cost: WEBAPP DATA tetap menjadi data dasar; edit dari WebApp masuk ke Google Form/EDIT LOG lalu dioverlay saat sync. Tidak memakai Google Cloud, Apps Script, atau layanan berbayar.</div>
+    <div class="info-box">Mode zero-cost: edit dari WebApp masuk ke Google Form/EDIT LOG, lalu WEBAPP DATA otomatis menampilkan nilai edit terbaru saat Sync. Tidak memakai Google Cloud, Apps Script, Make, atau layanan berbayar.</div>
   </div>
 </section>
 </main>
@@ -373,12 +372,13 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v13_data";
-const LEGACY_STORAGE_KEY="project_control_v12_data";
+const STORAGE_KEY="project_control_v13_2_data";
+const LEGACY_STORAGE_KEY="project_control_v13_1_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="13.0";
+const APP_VERSION="13.2";
 const FORM_PREFILL_KEY="project_control_v13_form_prefill";
+const DEFAULT_FORM_PREFILL_LINK='https://docs.google.com/forms/d/e/1FAIpQLSdbWBU4D_K01CLZ-ekGv3vBNXZDRTnfiNAUMY7gRMs1GJlIXw/viewform?usp=pp_url&entry.2083509010=PC_SITE_KEY&entry.2040458586=PC_SITE_NAME&entry.2031819333=PC_PROJECT_ID&entry.857121428=PC_SOW&entry.1904932691=PC_FIELD&entry.301212394=PC_OLD&entry.421562129=PC_NEW&entry.135893051=PC_EDITOR';
 const EDIT_LOG_URL_KEY="project_control_v13_edit_log_url";
 const EDITOR_NAME_KEY="project_control_v13_editor_name";
 const PENDING_EDITS_KEY="project_control_v13_pending_edits";
@@ -648,7 +648,7 @@ function loadProductivity(){
     recentViewedIds=Array.isArray(recent)?recent:[];
     siteTemplate=localStorage.getItem(SITE_TEMPLATE_KEY)||DEFAULT_SITE_TEMPLATE;
     plnTemplate=localStorage.getItem(PLN_TEMPLATE_KEY)||DEFAULT_PLN_TEMPLATE;
-    formPrefillLink=localStorage.getItem(FORM_PREFILL_KEY)||"";
+    formPrefillLink=localStorage.getItem(FORM_PREFILL_KEY)||DEFAULT_FORM_PREFILL_LINK;
     editLogUrl=localStorage.getItem(EDIT_LOG_URL_KEY)||"";
     editorName=localStorage.getItem(EDITOR_NAME_KEY)||"";
     try{pendingEdits=JSON.parse(localStorage.getItem(PENDING_EDITS_KEY)||"[]");if(!Array.isArray(pendingEdits))pendingEdits=[]}catch(_){pendingEdits=[]}
@@ -856,17 +856,16 @@ function renderReport(){
 function renderSettings(){
   const areas=unique("area").join(", ")||"-",tenants=unique("tenant").join(", ")||"-";
   refs.dataInfo.innerHTML=`<b>${data.length} record</b> aktif di aplikasi.<br>Regional: ${esc(areas)}<br>Tenant: ${esc(tenants)}<br>Sumber: ${syncMode==="live"?"Field Data Live Sheet":"cache/local"} · App v${APP_VERSION}`;
-  if(refs.syncInfo)refs.syncInfo.innerHTML=`Tab: <b>${LIVE_SHEET}</b><br>Mode: <b>Published CSV</b><br>URL: <b>${publishedUrl?"tersimpan":"belum diisi"}</b><br>Sync terakhir: <b>${formatSyncTime(lastSync)}</b><br>EDIT LOG: <b>${editLogUrl?"aktif":"belum diisi"}</b>`;
+  if(refs.syncInfo)refs.syncInfo.innerHTML=`Tab: <b>${LIVE_SHEET}</b><br>Mode: <b>Published CSV + EDIT LOG Overlay</b><br>URL: <b>${publishedUrl?"tersimpan":"belum diisi"}</b><br>Sync terakhir: <b>${formatSyncTime(lastSync)}</b><br>EDIT LOG overlay: <b>aktif</b>`;
   if(refs.publishedUrlInput&&document.activeElement!==refs.publishedUrlInput)refs.publishedUrlInput.value=publishedUrl;
   if(refs.siteTemplateInput&&document.activeElement!==refs.siteTemplateInput)refs.siteTemplateInput.value=siteTemplate;
   if(refs.plnTemplateInput&&document.activeElement!==refs.plnTemplateInput)refs.plnTemplateInput.value=plnTemplate;
   if(refs.formPrefillInput&&document.activeElement!==refs.formPrefillInput)refs.formPrefillInput.value=formPrefillLink;
-  if(refs.editLogUrlInput&&document.activeElement!==refs.editLogUrlInput)refs.editLogUrlInput.value=editLogUrl;
   if(refs.editorNameInput&&document.activeElement!==refs.editorNameInput)refs.editorNameInput.value=editorName;
   const editorOn=!!formConfig;
   if(refs.editorDot)refs.editorDot.classList.toggle("on",editorOn);
-  if(refs.editorStatus)refs.editorStatus.textContent=editorOn?(editLogUrl?"Editor siap + EDIT LOG sync":"Form siap · EDIT LOG URL belum ada"):"Belum dikonfigurasi";
-  if(refs.editorEmail)refs.editorEmail.textContent=editorOn?`${editorName||"Editor"} · ${pendingEdits.length} pending lokal`:`Paste pre-filled link Google Form untuk mengaktifkan editor`;
+  if(refs.editorStatus)refs.editorStatus.textContent=editorOn?"Editor Form siap":"Belum dikonfigurasi";
+  if(refs.editorEmail)refs.editorEmail.textContent=editorOn?`${editorName||"Editor"} · ${pendingEdits.length} pending lokal · overlay Sheet aktif`:`Google Form Project Control sudah terpasang`;
   refs.storageBadge.textContent=syncing?"SYNCING…":(syncMode==="live"?"LIVE ✓":(storageMode==="local"?"CACHE":"MEMORY"));
 }
 function renderAll(){fillFilters();renderDashboard();renderSites();renderOutstanding();renderReport();renderSettings()}
@@ -1049,23 +1048,13 @@ async function fetchLiveMaster({manual=false}={}){
     const text=await res.text();
     if(/<html|<!doctype/i.test(text.slice(0,250)))throw new Error("URL bukan CSV publik. Pastikan Publish to web memakai WEBAPP DATA + format CSV.");
     let imported=importMasterCSV(text);
-    let remotePatches=[];
-    if(editLogUrl){
-      try{
-        const logUrl=normalizePublishedUrl(editLogUrl),logSep=logUrl.includes("?")?"&":"?";
-        const lr=await fetch(logUrl+logSep+"_="+Date.now(),{method:"GET",cache:"no-store",credentials:"omit",redirect:"follow"});
-        if(!lr.ok)throw new Error("HTTP "+lr.status);
-        const lt=await lr.text();
-        if(/<html|<!doctype/i.test(lt.slice(0,250)))throw new Error("URL EDIT LOG bukan CSV publik");
-        remotePatches=importEditLogCSV(lt);
-      }catch(logErr){console.warn("EDIT LOG sync gagal:",logErr);if(manual)toast("Data utama sync; EDIT LOG belum terbaca")}
-    }
-    imported=applyEditLog(imported,remotePatches);
+    reconcilePendingWithBase(imported);
+    imported=applyEditLog(imported,[]);
     data=imported;syncMode="live";lastSync=new Date().toISOString();
     saveData();
     if(storageAvailable())try{localStorage.setItem(LAST_SYNC_KEY,lastSync)}catch(_){}
     activeRegional="ALL";focusFilter="ALL";clearError();renderAll();
-    if(manual)toast(imported.length+" record tersinkron"+(editLogUrl?" + EDIT LOG":""));
+    if(manual)toast(imported.length+" record tersinkron + EDIT LOG overlay");
   }catch(err){
     syncMode="cache";
     showError("Sync Published Sheet gagal. Cache terakhir tetap dipakai. "+err.message);
@@ -1149,6 +1138,16 @@ function findPatchSite(arr,p){
   if(!s&&p.siteName)s=arr.find(x=>low(x.name)===low(p.siteName)&&low(x.sow)===low(p.sow));
   return s||null;
 }
+function reconcilePendingWithBase(arr){
+  if(!pendingEdits.length)return;
+  const before=pendingEdits.length;
+  pendingEdits=pendingEdits.filter(p=>{
+    const s=findPatchSite(arr,p),d=PATCH_DEFS[p.field];
+    if(!s||!d)return true;
+    return patchComparable(s[d.prop],d.type)!==patchComparable(p.newValue,d.type);
+  });
+  if(pendingEdits.length!==before)savePendingEdits();
+}
 function importEditLogCSV(text){
   const rows=parseCSV(text);if(rows.length<2)return [];
   const hi=rows.findIndex(r=>r.some(c=>headerKey(c)==="SITE KEY")&&r.some(c=>headerKey(c)==="FIELD")&&r.some(c=>headerKey(c)==="NEW VALUE"));
@@ -1208,7 +1207,7 @@ function openGoogleEditor(){
   refs.editPlnDoc.checked=!!currentDetail.plnDoc;
   refs.editPlnPower.value=currentDetail.plnPower||"";
   refs.editPlnNote.value=currentDetail.plnNote||"";
-  refs.editorRowInfo.innerHTML=`Mode <b>Zero Cost</b> · perubahan dikirim ke Google Form sebagai EDIT LOG.${editLogUrl?" Setelah sync, log terbaru dioverlay otomatis.":" Tambahkan Published EDIT LOG CSV URL agar perubahan tersinkron lintas perangkat."}`;
+  refs.editorRowInfo.innerHTML=`Mode <b>Zero Cost</b> · perubahan dikirim ke Google Form sebagai EDIT LOG. Setelah beberapa detik, tekan Sync agar WEBAPP DATA mengambil edit terbaru.`;
   refs.editorModal.classList.add("show");
 }
 function closeGoogleEditor(){refs.editorModal.classList.remove("show");refs.editorModal.classList.remove("edit-busy");editorContext=null}
@@ -1272,12 +1271,11 @@ function bindEvents(){
 
   refs.saveFormConfigBtn?.addEventListener("click",()=>{
     try{
-      const pre=norm(refs.formPrefillInput?.value),log=norm(refs.editLogUrlInput?.value),name=norm(refs.editorNameInput?.value)||"Editor";
+      const pre=norm(refs.formPrefillInput?.value),name=norm(refs.editorNameInput?.value)||"Editor";
       const cfg=parseFormPrefillLink(pre,true);
-      if(log)normalizePublishedUrl(log);
-      formPrefillLink=pre;editLogUrl=log;editorName=name;formConfig=cfg;
-      if(storageAvailable())try{localStorage.setItem(FORM_PREFILL_KEY,pre);localStorage.setItem(EDIT_LOG_URL_KEY,log);localStorage.setItem(EDITOR_NAME_KEY,name)}catch(_){}
-      renderSettings();toast(log?"Editor Form + EDIT LOG siap":"Google Form siap; tambahkan EDIT LOG CSV untuk sync lintas perangkat");
+      formPrefillLink=pre;editLogUrl="";editorName=name;formConfig=cfg;
+      if(storageAvailable())try{localStorage.setItem(FORM_PREFILL_KEY,pre);localStorage.removeItem(EDIT_LOG_URL_KEY);localStorage.setItem(EDITOR_NAME_KEY,name)}catch(_){}
+      renderSettings();toast("Editor Form siap + WEBAPP DATA overlay aktif");
     }catch(err){toast("Konfigurasi gagal: "+err.message)}
   });
   refs.clearPendingBtn?.addEventListener("click",()=>{pendingEdits=[];savePendingEdits();renderSettings();toast("Pending lokal dibersihkan")});
