@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v13.5 · Editor Runtime Fix</title>
+<title>Project Control v13.6 · Form Submit Fix</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -152,7 +152,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v13.5</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v13.6</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -302,7 +302,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <button id="saveTemplatesBtn" class="btn blue">Simpan Template</button>
     <button id="resetTemplatesBtn" class="btn">Reset Template Default</button>
 
-    <div class="info-box"><b>Sistem Project Health v13.5:</b><br>
+    <div class="info-box"><b>Sistem Project Health v13.6:</b><br>
       Project, PLN, Oneflux, Binder, dan BAST Doc masing-masing dihitung 0–100%. Health total = rata-rata 5 bagian. Deadline hanya alert dan tidak mengurangi persentase Health.
     </div>
     <div class="info-box">Mode zero-cost: edit dari WebApp masuk ke Google Form/EDIT LOG, lalu WEBAPP DATA otomatis menampilkan nilai edit terbaru saat Sync. Tidak memakai Google Cloud, Apps Script, Make, atau layanan berbayar.</div>
@@ -397,11 +397,11 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v13_5_data";
-const LEGACY_STORAGE_KEY="project_control_v13_4_data";
+const STORAGE_KEY="project_control_v13_6_data";
+const LEGACY_STORAGE_KEY="project_control_v13_5_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="13.5";
+const APP_VERSION="13.6";
 const FORM_PREFILL_KEY="project_control_v13_form_prefill";
 const DEFAULT_FORM_PREFILL_LINK='https://docs.google.com/forms/d/e/1FAIpQLSdbWBU4D_K01CLZ-ekGv3vBNXZDRTnfiNAUMY7gRMs1GJlIXw/viewform?usp=pp_url&entry.2083509010=PC_SITE_KEY&entry.2040458586=PC_SITE_NAME&entry.2031819333=PC_PROJECT_ID&entry.857121428=PC_SOW&entry.1904932691=PC_FIELD&entry.301212394=PC_OLD&entry.421562129=PC_NEW&entry.135893051=PC_EDITOR';
 const EMBEDDED_FORM_CONFIG={
@@ -643,7 +643,7 @@ function deadlinePill(s){
 }
 function showError(msg){refs.errorBanner.textContent=msg;refs.errorBanner.classList.add("show")}
 function clearError(){refs.errorBanner.textContent="";refs.errorBanner.classList.remove("show")}
-function toast(msg){refs.toast.textContent=msg;refs.toast.classList.add("show");setTimeout(()=>refs.toast.classList.remove("show"),1800)}
+function toast(msg){refs.toast.textContent=msg;refs.toast.classList.add("show");setTimeout(()=>refs.toast.classList.remove("show"),3200)}
 
 function storageAvailable(){
   try{const k="__pc_test__";localStorage.setItem(k,"1");localStorage.removeItem(k);return true}catch(_){return false}
@@ -1225,13 +1225,59 @@ function maybePatch(list,field,oldValue,newValue){
 }
 function submitPatchToForm(patch){
   const cfg=EMBEDDED_FORM_CONFIG;
-  const form=document.createElement("form");form.method="POST";form.action=cfg.action;form.target="pcFormSink";form.style.display="none";form.acceptCharset="UTF-8";
-  const vals={siteKey:patch.siteKey,siteName:patch.siteName,projectId:patch.projectId,sow:patch.sow,field:patch.field,oldValue:patch.oldValue,newValue:patch.newValue,editor:patch.editor};
-  Object.entries(vals).forEach(([name,value])=>{const input=document.createElement("input");input.type="hidden";input.name=cfg.entries[name];input.value=value;form.appendChild(input)});
-  [["fvv","1"],["pageHistory","0"],["submit","Submit"]].forEach(([n,v])=>{const i=document.createElement("input");i.type="hidden";i.name=n;i.value=v;form.appendChild(i)});
-  document.body.appendChild(form);form.submit();setTimeout(()=>form.remove(),500);
-}
+  const frameName="pcFormSink_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+  const iframe=document.createElement("iframe");
+  iframe.name=frameName;
+  iframe.style.cssText="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:0;left:-9999px;top:-9999px";
+  iframe.setAttribute("aria-hidden","true");
 
+  const form=document.createElement("form");
+  form.method="POST";
+  form.action=cfg.action;
+  form.target=frameName;
+  form.acceptCharset="UTF-8";
+  form.style.display="none";
+
+  const vals={
+    siteKey:patch.siteKey,
+    siteName:patch.siteName,
+    projectId:patch.projectId,
+    sow:patch.sow,
+    field:patch.field,
+    oldValue:patch.oldValue,
+    newValue:patch.newValue,
+    editor:patch.editor
+  };
+  Object.entries(vals).forEach(([name,value])=>{
+    const input=document.createElement("input");
+    input.type="hidden";
+    input.name=cfg.entries[name];
+    input.value=value??"";
+    form.appendChild(input);
+  });
+
+  // Google Forms accepts entry fields directly. Keep only harmless metadata.
+  [["fvv","1"],["pageHistory","0"]].forEach(([n,v])=>{
+    const input=document.createElement("input");
+    input.type="hidden";
+    input.name=n;
+    input.value=v;
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(iframe);
+  document.body.appendChild(form);
+
+  // IMPORTANT: call the native submit method directly.
+  // A form control named "submit" can shadow form.submit().
+  HTMLFormElement.prototype.submit.call(form);
+
+  setTimeout(()=>{
+    try{form.remove()}catch(_){}
+    try{iframe.remove()}catch(_){}
+  },8000);
+  return true;
+}
 function hardEditorEl(id){return document.getElementById(id)}
 function hardSelectOptions(values,current){
   return values.map(v=>`<option value="${attr(v)}"${norm(current)===norm(v)?' selected':''}>${esc(v||"-")}</option>`).join("");
@@ -1284,7 +1330,7 @@ function openGoogleEditor(){
         <div class="pc-hard-field"><label>Keterangan PLN</label><textarea id="pcPNote">${esc(currentDetail.plnNote||"")}</textarea></div>
       </div>
 
-      <div id="pcHardInfo" class="pc-hard-info">Ubah field yang diperlukan lalu tekan Kirim Perubahan.</div>
+      <div id="pcHardInfo" class="pc-hard-info">Ubah field yang diperlukan lalu tekan Kirim Perubahan. Nilai akan langsung berubah di perangkat ini sambil dikirim ke EDIT LOG.</div>
       <div class="pc-hard-actions">
         <button id="pcHardCancel" class="btn" type="button">Batal</button>
         <button id="pcHardSave" class="btn blue" type="button">Kirim Perubahan</button>
@@ -1333,15 +1379,24 @@ async function saveGoogleEditor(){
   if(info)info.textContent="Mengirim "+patches.length+" perubahan ke Google Form...";
 
   try{
-    for(const p of patches){submitPatchToForm(p);await new Promise(r=>setTimeout(r,350))}
+    // Optimistic local save first: UI changes immediately and stays pending
+    // until WEBAPP DATA confirms the same value from EDIT LOG.
     pendingEdits.push(...patches);savePendingEdits();
     const s=data.find(x=>x.recordId===editorContext.recordId);
     if(s)patches.forEach(p=>applyPatchToSite(s,p));
     saveData();renderAll();
+
+    // Then send every changed field to its own hidden iframe,
+    // preventing one Google Form POST from cancelling another.
+    for(const p of patches){
+      submitPatchToForm(p);
+      await new Promise(r=>setTimeout(r,180));
+    }
+
     closeGoogleEditor();
-    toast(patches.length+" perubahan dikirim ke EDIT LOG");
+    toast(patches.length+" perubahan tersimpan & dikirim");
     if(s)openDetail(s.recordId);
-    setTimeout(()=>fetchLiveMaster({manual:false}),5000);
+    setTimeout(()=>fetchLiveMaster({manual:false}),7000);
   }catch(err){
     overlay?.classList.remove("pc-busy");
     if(info)info.textContent="Gagal: "+err.message;
