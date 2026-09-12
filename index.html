@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v13.3 · Editor Fix</title>
+<title>Project Control v13.4 · Hard Editor Fix</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -122,6 +122,26 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 #editorModal .sheet{max-height:96vh;margin:0 auto;border-radius:24px 24px 0 0}
 #editGoogleBtn{font-weight:900}
 .editor-ready-badge{display:inline-flex;align-items:center;gap:6px;font-size:8px;font-weight:800;padding:5px 8px;border-radius:999px;background:#eaf8f0;color:#177245;margin-bottom:8px}
+
+#pcHardEditor{position:fixed!important;inset:0!important;z-index:999999!important;background:#f4f7fb!important;display:block!important;overflow:auto!important;-webkit-overflow-scrolling:touch}
+#pcHardEditor .pc-hard-wrap{width:min(720px,100%);margin:0 auto;padding:14px 14px 36px;box-sizing:border-box}
+#pcHardEditor .pc-hard-head{position:sticky;top:0;z-index:2;background:#f4f7fb;padding:8px 0 12px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+#pcHardEditor .pc-hard-head h2{margin:0;font-size:20px}
+#pcHardEditor .pc-hard-head p{margin:4px 0 0;font-size:10px;color:var(--muted)}
+#pcHardEditor .pc-hard-close{border:1px solid var(--line);background:#fff;border-radius:12px;width:40px;height:40px;font-size:20px}
+#pcHardEditor .pc-hard-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px}
+#pcHardEditor .pc-hard-card h3{margin:0 0 12px;font-size:14px}
+#pcHardEditor .pc-hard-field{margin-bottom:12px}
+#pcHardEditor .pc-hard-field label{display:block;font-size:9px;font-weight:800;color:var(--muted);margin-bottom:5px}
+#pcHardEditor input[type="text"],#pcHardEditor input[type="date"],#pcHardEditor select,#pcHardEditor textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;font-size:11px;background:#fff;color:var(--text)}
+#pcHardEditor textarea{min-height:100px;resize:vertical}
+#pcHardEditor .pc-hard-check{display:flex;align-items:center;gap:9px;padding:9px 0;font-size:11px;font-weight:800}
+#pcHardEditor .pc-hard-check input{width:19px;height:19px}
+#pcHardEditor .pc-hard-info{font-size:9px;line-height:1.5;background:#eaf8f0;border:1px solid #bfe6ca;color:#176b3a;border-radius:12px;padding:10px;margin-bottom:12px}
+#pcHardEditor .pc-hard-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:sticky;bottom:0;background:#f4f7fb;padding:10px 0}
+#pcHardEditor .pc-hard-actions button{min-height:48px}
+#pcHardEditor.pc-busy{pointer-events:none;opacity:.65}
+
 </style>
 </head>
 <body>
@@ -132,7 +152,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v13.3</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v13.4</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -282,7 +302,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <button id="saveTemplatesBtn" class="btn blue">Simpan Template</button>
     <button id="resetTemplatesBtn" class="btn">Reset Template Default</button>
 
-    <div class="info-box"><b>Sistem Project Health v13.3:</b><br>
+    <div class="info-box"><b>Sistem Project Health v13.4:</b><br>
       Project, PLN, Oneflux, Binder, dan BAST Doc masing-masing dihitung 0–100%. Health total = rata-rata 5 bagian. Deadline hanya alert dan tidak mengurangi persentase Health.
     </div>
     <div class="info-box">Mode zero-cost: edit dari WebApp masuk ke Google Form/EDIT LOG, lalu WEBAPP DATA otomatis menampilkan nilai edit terbaru saat Sync. Tidak memakai Google Cloud, Apps Script, Make, atau layanan berbayar.</div>
@@ -311,7 +331,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <div id="integratedDetail" class="integrated-detail"></div>
     <div id="detailNote" class="note"></div>
     <div class="detail-actions">
-      <button id="editGoogleBtn" class="btn blue">Edit Data</button>
+      <button id="editGoogleBtn" class="btn blue" type="button">✎ Edit Data Site</button>
       <button id="favoriteDetailBtn" class="btn favorite-btn">☆ Favorite</button>
       <button id="copyBtn" class="btn">Copy Project ID</button>
       <button id="copySiteBtn" class="btn blue">Copy Data Site</button>
@@ -377,11 +397,11 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v13_3_data";
-const LEGACY_STORAGE_KEY="project_control_v13_2_data";
+const STORAGE_KEY="project_control_v13_4_data";
+const LEGACY_STORAGE_KEY="project_control_v13_3_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="13.3";
+const APP_VERSION="13.4";
 const FORM_PREFILL_KEY="project_control_v13_form_prefill";
 const DEFAULT_FORM_PREFILL_LINK='https://docs.google.com/forms/d/e/1FAIpQLSdbWBU4D_K01CLZ-ekGv3vBNXZDRTnfiNAUMY7gRMs1GJlIXw/viewform?usp=pp_url&entry.2083509010=PC_SITE_KEY&entry.2040458586=PC_SITE_NAME&entry.2031819333=PC_PROJECT_ID&entry.857121428=PC_SOW&entry.1904932691=PC_FIELD&entry.301212394=PC_OLD&entry.421562129=PC_NEW&entry.135893051=PC_EDITOR';
 const EMBEDDED_FORM_CONFIG={
@@ -1205,61 +1225,117 @@ function submitPatchToForm(patch){
   [["fvv","1"],["pageHistory","0"],["submit","Submit"]].forEach(([n,v])=>{const i=document.createElement("input");i.type="hidden";i.name=n;i.value=v;form.appendChild(i)});
   document.body.appendChild(form);form.submit();setTimeout(()=>form.remove(),500);
 }
+
+function hardEditorEl(id){return document.getElementById(id)}
+function hardSelectOptions(values,current){
+  return values.map(v=>`<option value="${attr(v)}"${norm(current)===norm(v)?' selected':''}>${esc(v||"-")}</option>`).join("");
+}
 function openGoogleEditor(){
   if(!currentDetail){toast("Buka detail site dulu");return}
-  formConfig=EMBEDDED_FORM_CONFIG;
+  document.getElementById("pcHardEditor")?.remove();
   editorContext={recordId:currentDetail.recordId};
-  refs.detailModal.classList.remove("show");
-  refs.editorTitle.textContent="Edit "+(currentDetail.name||"Site");
-  refs.editorSub.textContent=(currentDetail.projectId||"-")+" · "+(currentDetail.sow||"-");
-  refs.editMasterStatus.value=currentDetail.status||"PROGRESS";
-  refs.editMasterBinder.checked=!!currentDetail.binder;
-  refs.editMasterOneflux.checked=!!currentDetail.oneflux;
-  refs.editMasterBast.checked=!!currentDetail.bast;
-  refs.editMasterDeadline.value=toDateInput(currentDetail.deadline);
-  refs.editMasterNote.value=currentDetail.note||"";
-  refs.editPlnStatus.value=currentDetail.plnStatus||"";
-  refs.editPlnRfi.checked=!!currentDetail.plnRfi;
-  refs.editPlnConnect.value=currentDetail.plnConnect||"";
-  refs.editPlnHo.checked=!!currentDetail.plnHo;
-  refs.editPlnCustomerId.value=currentDetail.plnCustomerId||"";
-  refs.editPlnDoc.checked=!!currentDetail.plnDoc;
-  refs.editPlnPower.value=currentDetail.plnPower||"";
-  refs.editPlnNote.value=currentDetail.plnNote||"";
-  refs.editorRowInfo.innerHTML=`<span class="editor-ready-badge">● EDITOR SIAP</span><br>Ubah data lalu tekan <b>Kirim Perubahan</b>. Data dikirim ke Google Form → EDIT LOG → WEBAPP DATA.`;
-  refs.editorModal.classList.add("show");
+
+  const overlay=document.createElement("div");
+  overlay.id="pcHardEditor";
+  overlay.innerHTML=`
+    <div class="pc-hard-wrap">
+      <div class="pc-hard-head">
+        <div>
+          <h2>Edit Data Site</h2>
+          <p>${esc(currentDetail.name||"Site")} · ${esc(currentDetail.projectId||"-")} · ${esc(currentDetail.sow||"-")}</p>
+        </div>
+        <button id="pcHardClose" class="pc-hard-close" type="button">×</button>
+      </div>
+
+      <div class="pc-hard-info">EDITOR SIAP · perubahan akan dikirim ke Google Form → EDIT LOG → WEBAPP DATA.</div>
+
+      <div class="pc-hard-card">
+        <h3>MASTER SITE</h3>
+        <div class="pc-hard-field"><label>Status Project</label>
+          <select id="pcMStatus">${hardSelectOptions(["PROGRESS","BAST","DONE","HOLD","DROP BY DMT"],currentDetail.status||"PROGRESS")}</select>
+        </div>
+        <label class="pc-hard-check"><input id="pcMBinder" type="checkbox"${currentDetail.binder?" checked":""}> Binder selesai</label>
+        <label class="pc-hard-check"><input id="pcMOneflux" type="checkbox"${currentDetail.oneflux?" checked":""}> Oneflux flag selesai</label>
+        <label class="pc-hard-check"><input id="pcMBast" type="checkbox"${currentDetail.bast?" checked":""}> BAST flag selesai</label>
+        <div class="pc-hard-field"><label>Deadline Project</label><input id="pcMDeadline" type="date" value="${attr(toDateInput(currentDetail.deadline))}"></div>
+        <div class="pc-hard-field"><label>Keterangan</label><textarea id="pcMNote">${esc(currentDetail.note||"")}</textarea></div>
+      </div>
+
+      <div class="pc-hard-card">
+        <h3>PLN</h3>
+        <div class="pc-hard-field"><label>Status PLN</label>
+          <select id="pcPStatus">${hardSelectOptions(["","PROGRESS","BAST","DONE","HOLD","DROP BY DMT"],currentDetail.plnStatus||"")}</select>
+        </div>
+        <label class="pc-hard-check"><input id="pcPRfi" type="checkbox"${currentDetail.plnRfi?" checked":""}> RFI</label>
+        <div class="pc-hard-field"><label>Connect</label>
+          <select id="pcPConnect">${hardSelectOptions(["","PERMANEN","MG","Belum Connect"],currentDetail.plnConnect||"")}</select>
+        </div>
+        <label class="pc-hard-check"><input id="pcPHo" type="checkbox"${currentDetail.plnHo?" checked":""}> HO</label>
+        <div class="pc-hard-field"><label>ID Pelanggan PLN</label><input id="pcPCustomer" type="text" value="${attr(currentDetail.plnCustomerId||"")}"></div>
+        <label class="pc-hard-check"><input id="pcPDoc" type="checkbox"${currentDetail.plnDoc?" checked":""}> Dok PLN</label>
+        <div class="pc-hard-field"><label>Daya PLN</label><input id="pcPPower" type="text" value="${attr(currentDetail.plnPower||"")}"></div>
+        <div class="pc-hard-field"><label>Keterangan PLN</label><textarea id="pcPNote">${esc(currentDetail.plnNote||"")}</textarea></div>
+      </div>
+
+      <div id="pcHardInfo" class="pc-hard-info">Ubah field yang diperlukan lalu tekan Kirim Perubahan.</div>
+      <div class="pc-hard-actions">
+        <button id="pcHardCancel" class="btn" type="button">Batal</button>
+        <button id="pcHardSave" class="btn blue" type="button">Kirim Perubahan</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.documentElement.style.overflow="hidden";
+  document.body.style.overflow="hidden";
+
+  hardEditorEl("pcHardClose").onclick=closeGoogleEditor;
+  hardEditorEl("pcHardCancel").onclick=closeGoogleEditor;
+  hardEditorEl("pcHardSave").onclick=saveGoogleEditor;
 }
-function closeGoogleEditor(){refs.editorModal.classList.remove("show");refs.editorModal.classList.remove("edit-busy");editorContext=null}
+function closeGoogleEditor(){
+  document.getElementById("pcHardEditor")?.remove();
+  document.documentElement.style.overflow="";
+  document.body.style.overflow="";
+  editorContext=null;
+}
 async function saveGoogleEditor(){
-  if(!editorContext||!currentDetail)return;
-  formConfig=EMBEDDED_FORM_CONFIG;
+  if(!editorContext||!currentDetail){toast("Data site tidak tersedia");return}
   const patches=[];
-  maybePatch(patches,"MASTER_STATUS",currentDetail.status,refs.editMasterStatus.value);
-  maybePatch(patches,"MASTER_BINDER",currentDetail.binder,refs.editMasterBinder.checked);
-  maybePatch(patches,"MASTER_ONEFLUX",currentDetail.oneflux,refs.editMasterOneflux.checked);
-  maybePatch(patches,"MASTER_BAST",currentDetail.bast,refs.editMasterBast.checked);
-  maybePatch(patches,"MASTER_DEADLINE",toDateInput(currentDetail.deadline)||currentDetail.deadline,refs.editMasterDeadline.value);
-  maybePatch(patches,"MASTER_NOTE",currentDetail.note,refs.editMasterNote.value.trim());
-  maybePatch(patches,"PLN_STATUS",currentDetail.plnStatus,refs.editPlnStatus.value);
-  maybePatch(patches,"PLN_RFI",currentDetail.plnRfi,refs.editPlnRfi.checked);
-  maybePatch(patches,"PLN_CONNECT",currentDetail.plnConnect,refs.editPlnConnect.value);
-  maybePatch(patches,"PLN_HO",currentDetail.plnHo,refs.editPlnHo.checked);
-  maybePatch(patches,"PLN_CUSTOMER_ID",currentDetail.plnCustomerId,refs.editPlnCustomerId.value.trim());
-  maybePatch(patches,"PLN_DOC",currentDetail.plnDoc,refs.editPlnDoc.checked);
-  maybePatch(patches,"PLN_POWER",currentDetail.plnPower,refs.editPlnPower.value.trim());
-  maybePatch(patches,"PLN_NOTE",currentDetail.plnNote,refs.editPlnNote.value.trim());
+  maybePatch(patches,"MASTER_STATUS",currentDetail.status,hardEditorEl("pcMStatus").value);
+  maybePatch(patches,"MASTER_BINDER",currentDetail.binder,hardEditorEl("pcMBinder").checked);
+  maybePatch(patches,"MASTER_ONEFLUX",currentDetail.oneflux,hardEditorEl("pcMOneflux").checked);
+  maybePatch(patches,"MASTER_BAST",currentDetail.bast,hardEditorEl("pcMBast").checked);
+  maybePatch(patches,"MASTER_DEADLINE",toDateInput(currentDetail.deadline)||currentDetail.deadline,hardEditorEl("pcMDeadline").value);
+  maybePatch(patches,"MASTER_NOTE",currentDetail.note,hardEditorEl("pcMNote").value.trim());
+  maybePatch(patches,"PLN_STATUS",currentDetail.plnStatus,hardEditorEl("pcPStatus").value);
+  maybePatch(patches,"PLN_RFI",currentDetail.plnRfi,hardEditorEl("pcPRfi").checked);
+  maybePatch(patches,"PLN_CONNECT",currentDetail.plnConnect,hardEditorEl("pcPConnect").value);
+  maybePatch(patches,"PLN_HO",currentDetail.plnHo,hardEditorEl("pcPHo").checked);
+  maybePatch(patches,"PLN_CUSTOMER_ID",currentDetail.plnCustomerId,hardEditorEl("pcPCustomer").value.trim());
+  maybePatch(patches,"PLN_DOC",currentDetail.plnDoc,hardEditorEl("pcPDoc").checked);
+  maybePatch(patches,"PLN_POWER",currentDetail.plnPower,hardEditorEl("pcPPower").value.trim());
+  maybePatch(patches,"PLN_NOTE",currentDetail.plnNote,hardEditorEl("pcPNote").value.trim());
+
   if(!patches.length){toast("Tidak ada perubahan");return}
-  refs.editorModal.classList.add("edit-busy");refs.editorRowInfo.textContent="Mengirim "+patches.length+" perubahan ke Google Form...";
+
+  const overlay=hardEditorEl("pcHardEditor"),info=hardEditorEl("pcHardInfo");
+  overlay?.classList.add("pc-busy");
+  if(info)info.textContent="Mengirim "+patches.length+" perubahan ke Google Form...";
+
   try{
-    for(const p of patches){submitPatchToForm(p);await new Promise(r=>setTimeout(r,280))}
+    for(const p of patches){submitPatchToForm(p);await new Promise(r=>setTimeout(r,350))}
     pendingEdits.push(...patches);savePendingEdits();
     const s=data.find(x=>x.recordId===editorContext.recordId);
     if(s)patches.forEach(p=>applyPatchToSite(s,p));
-    saveData();renderAll();closeGoogleEditor();
+    saveData();renderAll();
+    closeGoogleEditor();
     toast(patches.length+" perubahan dikirim ke EDIT LOG");
     if(s)openDetail(s.recordId);
-    setTimeout(()=>fetchLiveMaster({manual:false}),4500);
-  }catch(err){refs.editorModal.classList.remove("edit-busy");refs.editorRowInfo.textContent="Gagal: "+err.message;toast("Kirim edit gagal: "+err.message)}
+    setTimeout(()=>fetchLiveMaster({manual:false}),5000);
+  }catch(err){
+    overlay?.classList.remove("pc-busy");
+    if(info)info.textContent="Gagal: "+err.message;
+    toast("Kirim edit gagal: "+err.message);
+  }
 }
 
 function bindEvents(){
@@ -1282,11 +1358,11 @@ function bindEvents(){
   refs.shareSiteWaBtn.addEventListener("click",()=>{if(currentDetail)shareWhatsApp(siteCopyText(currentDetail))});
   refs.sharePlnWaBtn.addEventListener("click",()=>{if(currentDetail)shareWhatsApp(plnCopyText(currentDetail))});
   refs.favoriteDetailBtn.addEventListener("click",()=>{if(currentDetail)toggleFavorite(currentDetail.recordId)});
-  refs.editGoogleBtn.addEventListener("click",openGoogleEditor);
-  refs.closeEditorBtn.addEventListener("click",closeGoogleEditor);
-  refs.cancelEditorBtn.addEventListener("click",closeGoogleEditor);
-  refs.editorModal.addEventListener("click",e=>{if(e.target===refs.editorModal)closeGoogleEditor()});
-  refs.saveEditorBtn.addEventListener("click",saveGoogleEditor);
+  refs.editGoogleBtn.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();openGoogleEditor()});
+  document.addEventListener("click",e=>{
+    const b=e.target.closest("#editGoogleBtn");
+    if(b){e.preventDefault();e.stopPropagation();openGoogleEditor()}
+  },true);
 
   refs.saveFormConfigBtn?.addEventListener("click",()=>{
     try{
