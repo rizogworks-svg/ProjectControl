@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1220">
-<title>Project Control v14.1 · BAST by SOW</title>
+<meta name="theme-color" content="#1f2023">
+<title>Project Control v18.2.1 · Mobile Overflow Fix</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -81,11 +81,20 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 @media(max-width:390px){.health-grid{grid-template-columns:repeat(2,1fr)}.health-breakdown{grid-template-columns:repeat(3,1fr)}}
 
 
-.detail-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
-.detail-actions .btn{width:100%;min-height:40px}
+.detail-actions{display:flex;justify-content:center;margin-top:14px}
+.detail-actions .btn{width:min(260px,100%);min-height:42px}
+.detail-head-actions{display:flex;align-items:center;gap:7px}
+.detail-icon-btn{width:35px;height:35px;border:1px solid var(--line);background:#f4f6f9;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:var(--text);padding:0}
+.detail-icon-btn.favorite.on{background:#fff3cd;border-color:#f2cb5c;color:#8a6100}
+.detail-v-row{display:flex;align-items:center;justify-content:space-between;gap:7px}
+.detail-inline-btn{flex:0 0 auto;width:28px;height:28px;border:0;background:#eaf0f7;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:#44546a;padding:0}
+.detail-inline-btn:disabled{opacity:.38}
+.share-choice-wrap{display:grid;gap:9px;margin-top:14px}
+.share-choice{width:100%;min-height:48px;border:1px solid #bfe6ca;background:#eefaf2;color:#19743a;border-radius:14px;font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;gap:8px}
+.share-choice .share-ico{font-size:16px}
 .copy-card{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:11px;margin-top:10px}
 .copy-card h4{margin:0 0 8px;font-size:12px}.copy-card p{margin:4px 0;font-size:9px;color:#5d6a7d;line-height:1.45}
-@media(max-width:360px){.detail-actions{grid-template-columns:1fr}}
+@media(max-width:360px){.detail-actions .btn{width:100%}}
 
 
 .productivity-strip{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px}
@@ -184,17 +193,2383 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 .pc-stage-state.wait{background:var(--soft-amber);color:#956000}
 .pc-stage-state.bad{background:var(--soft-red);color:var(--red)}
 
+
+/* =========================================================
+   PROJECT CONTROL v15 — SAGE / GOLD THEME
+   Inspired by the user-provided UI reference.
+   ========================================================= */
+:root{
+  --bg:#dfe8e5;
+  --card:#f9fbfa;
+  --text:#263532;
+  --muted:#71807c;
+  --line:#d1ddd9;
+
+  --navy:#3b5b56;
+  --blue:#456a64;
+  --green:#3f7463;
+  --amber:#c99917;
+  --gold:#d6a51b;
+  --gold-2:#e1b639;
+  --red:#b94a48;
+  --purple:#637a74;
+
+  --soft-blue:#e3ece9;
+  --soft-green:#e0ece6;
+  --soft-amber:#f4e7ba;
+  --soft-red:#f5e3e0;
+  --surface-soft:#edf3f1;
+  --shadow:0 12px 30px rgba(42,72,66,.10);
+}
+
+html,body{background:var(--bg)}
+header{
+  background:rgba(223,232,229,.94);
+  border-bottom-color:rgba(59,91,86,.10);
+}
+.sync-badge{
+  background:#edf3f1;
+  color:var(--navy);
+  border:1px solid var(--line);
+}
+.hero{
+  background:linear-gradient(145deg,#34534e,#466b65);
+  box-shadow:0 14px 32px rgba(42,72,66,.18);
+}
+.hero .eyebrow{color:#c9d8d4}
+.hero p{color:#d8e3e0}
+.hero-tag{
+  background:var(--gold);
+  color:#fff;
+  font-weight:900;
+}
+.hero-mini{background:rgba(255,255,255,.10)}
+.hero-mini span{color:#d7e2df}
+
+.region-card,.kpi,.panel,.card,.report-card,.track-card,.health-kpi,
+.editor-section,.pc-proc-card,#pcHardEditor .pc-hard-card{
+  background:var(--card);
+  border-color:var(--line);
+  box-shadow:0 5px 15px rgba(51,83,77,.035);
+}
+.region-card.active{
+  border-color:var(--gold);
+  box-shadow:0 0 0 2px rgba(214,165,27,.13);
+}
+.search,.chip,.field select,.field input,.field textarea,
+.editor-field input,.editor-field select,.editor-field textarea{
+  background:var(--card);
+  border-color:var(--line);
+}
+.chip{color:#5f716d}
+.chip.active{
+  background:var(--navy);
+  border-color:var(--navy);
+  color:#fff;
+}
+.meta span,.detail-box,.track-item,.health-part,.deadline-box,
+.template-help,.editor-state,.copy-card{
+  background:var(--surface-soft);
+}
+.progressbar,.bar,.process-bar,.bast-track{background:#e6eeeb}
+.progressbar span,.bar span,.process-bar span{background:var(--gold)}
+.bast-track span{background:var(--navy)}
+
+.btn{
+  background:#edf2f0;
+  color:#49615c;
+  border:1px solid #d8e2df;
+}
+.btn.dark{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.blue{
+  background:var(--gold);
+  color:#fff;
+  border-color:var(--gold);
+}
+.btn.blue:active{background:#c49110}
+.wa-btn,.share-choice{
+  background:#e7f0ec;
+  border-color:#c6d9d2;
+  color:#315f52;
+}
+.share-choice:active{background:#dae8e2}
+
+nav{
+  background:rgba(249,251,250,.97);
+  border-top-color:var(--line);
+  box-shadow:0 -8px 22px rgba(46,78,72,.06);
+}
+nav button{color:#899691}
+nav button.active{color:var(--gold)}
+nav button.active .ico{color:var(--gold)}
+
+.modal{background:rgba(34,51,48,.55)}
+.sheet{background:var(--card)}
+.grab{background:#cbd7d3}
+.close-btn,.detail-icon-btn{
+  background:#edf2f0;
+  border-color:var(--line);
+  color:var(--navy);
+}
+.detail-icon-btn.favorite.on{
+  background:#f5e8b8;
+  border-color:#dfbd55;
+  color:#8f6810;
+}
+.note{
+  background:#f7efcf;
+  border-color:#ead58c;
+  color:#705e29;
+}
+.toast{
+  background:var(--navy);
+  box-shadow:0 8px 22px rgba(42,72,66,.24);
+}
+
+.status-pill{background:#e9efed;color:#58706b}
+.status-pill.good,.done{background:var(--soft-green);color:#356552}
+.status-pill.warn,.bast{background:var(--soft-amber);color:#87660b}
+.progress-status{background:#e5eeeb;color:var(--navy)}
+.hold,.status-pill.bad{background:var(--soft-red);color:var(--red)}
+
+.health-summary{
+  background:linear-gradient(145deg,#edf3f1,var(--card));
+  border-color:var(--line);
+}
+.info-box{
+  background:#edf3f1;
+  border-color:#c6d5d1;
+  color:#536762;
+}
+.editor-warning{
+  background:#f5ebc7;
+  border-color:#e7cf7d;
+  color:#765d18;
+}
+.editor-ready-badge,#pcHardEditor .pc-hard-info{
+  background:#e3eee9;
+  border-color:#c1d8cf;
+  color:#315f50;
+}
+
+#pcHardEditor,#pcProcessDetail{
+  background:var(--bg)!important;
+}
+#pcHardEditor .pc-hard-head,#pcHardEditor .pc-hard-actions,
+#pcProcessDetail .pc-proc-head,.pc-proc-actions{
+  background:var(--bg);
+}
+#pcHardEditor .pc-hard-close,#pcProcessDetail .pc-proc-close{
+  background:var(--card);
+  border-color:var(--line);
+}
+.pc-check-row{
+  background:#f4f8f6;
+  border-color:#dce6e2;
+}
+.pc-proc-section{color:var(--navy)}
+.pc-stage-no,.pc-stage-state{background:#e7eeeb;color:#58706b}
+
+/* Gold is reserved for primary actions and active state. */
+input:focus,select:focus,textarea:focus{
+  border-color:#c9a338!important;
+  box-shadow:0 0 0 3px rgba(214,165,27,.10);
+  outline:none;
+}
+
+
+/* =========================================================
+   PROJECT CONTROL v16 — MOBILE TRAVEL INSPIRED UI
+   Visual-only redesign inspired by the provided reference.
+   Layout/logic/data remain intact.
+   ========================================================= */
+:root{
+  --bg:#dfe7e4;
+  --card:#fbfcfb;
+  --surface:#edf3f1;
+  --surface-2:#f4f7f6;
+  --text:#243532;
+  --muted:#73827d;
+  --line:#d4dfdb;
+  --navy:#37534f;
+  --navy-2:#45645f;
+  --gold:#d2a11c;
+  --gold-2:#e0b13a;
+  --red:#b8524a;
+  --green:#2e6e57;
+  --soft-red:#f5e3e0;
+  --soft-green:#e4efe9;
+  --soft-gold:#f5e8b7;
+  --shadow:0 16px 38px rgba(53,83,76,.10);
+}
+
+html,body{
+  background:
+    radial-gradient(circle at -22% 3%, rgba(210,161,28,.95) 0 18%, transparent 19%),
+    linear-gradient(180deg, #dfe7e4 0%, #e5ece9 100%);
+  color:var(--text);
+}
+
+.app{
+  max-width:460px;
+  min-height:100vh;
+  padding-bottom:110px;
+  position:relative;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:40;
+  background:transparent;
+  border-bottom:none;
+  backdrop-filter:none;
+}
+.header-inner{
+  margin:14px 14px 0;
+  padding:14px 16px;
+  border-radius:26px;
+  background:rgba(251,252,251,.85);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(212,223,219,.95);
+  box-shadow:0 10px 24px rgba(53,83,76,.07);
+}
+.brand small{
+  color:#7c8b86;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.brand h1{
+  font-size:24px;
+  color:var(--navy);
+  letter-spacing:.01em;
+}
+.sync-badge{
+  background:#edf3f1;
+  color:var(--navy);
+  border:1px solid var(--line);
+  padding:8px 11px;
+  font-size:9px;
+  letter-spacing:.05em;
+}
+
+main{
+  padding:14px 14px 26px;
+}
+.view.active{
+  animation:fadeUp .18s ease-out;
+}
+@keyframes fadeUp{
+  from{opacity:.72;transform:translateY(8px)}
+  to{opacity:1;transform:none}
+}
+
+.hero{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(160deg,#36524e 0%, #4a6a65 100%);
+  color:#fff;
+  border-radius:32px;
+  padding:20px 18px 18px;
+  box-shadow:0 20px 42px rgba(53,83,76,.18);
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:auto -28px -42px auto;
+  width:124px;
+  height:124px;
+  border-radius:50%;
+  background:rgba(255,255,255,.06);
+}
+.hero .eyebrow{
+  color:#d2dfdc;
+  font-size:10px;
+  letter-spacing:.12em;
+}
+.hero h2{
+  font-size:38px;
+  margin:6px 0 2px;
+}
+.hero p{
+  font-size:11px;
+  color:#d7e4e0;
+}
+.hero-tag{
+  background:var(--gold);
+  color:#fff;
+  font-weight:900;
+  padding:8px 11px;
+  box-shadow:0 8px 18px rgba(210,161,28,.25);
+}
+.hero-grid{
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:16px;
+}
+.hero-mini{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:12px;
+}
+.hero-mini b{font-size:19px}
+.hero-mini span{
+  font-size:9px;
+  color:#dce8e4;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+
+.section{
+  margin-top:18px;
+}
+.section-head{
+  margin-bottom:10px;
+  padding:0 2px;
+}
+.section-head h3{
+  font-size:14px;
+  color:var(--navy);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.section-head span{
+  font-size:10px;
+  color:#7a8884;
+}
+
+.region-grid,
+.kpi-grid,
+.health-grid,
+.health-breakdown,
+.editor-grid,
+.track-grid{
+  gap:10px;
+}
+
+.region-grid{
+  grid-template-columns:repeat(2,1fr);
+}
+.region-card,
+.kpi,
+.health-kpi,
+.report-card,
+.track-card,
+.card,
+.panel,
+.info-box,
+.editor-section,
+.pc-proc-card,
+#pcHardEditor .pc-hard-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:0 10px 24px rgba(53,83,76,.04);
+}
+.region-card{
+  padding:14px 14px 13px;
+}
+.region-card b{
+  font-size:23px;
+  color:var(--navy);
+}
+.region-card span{
+  font-size:10px;
+  color:#76847f;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.region-card.active{
+  border-color:#ddbe65;
+  box-shadow:0 0 0 3px rgba(210,161,28,.12);
+}
+
+.kpi,
+.health-kpi{
+  padding:14px;
+}
+.kpi strong,
+.health-kpi strong{
+  font-size:24px;
+  color:var(--navy);
+}
+.kpi div,
+.health-kpi span{
+  color:#788680;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+.search{
+  min-height:54px;
+  background:rgba(251,252,251,.92);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:0 16px;
+  box-shadow:0 8px 18px rgba(53,83,76,.03);
+}
+.search span{
+  color:#6e7d78;
+  font-size:16px;
+}
+.search input{
+  padding:14px 0;
+  font-size:12px;
+}
+
+.chips{
+  gap:8px;
+  padding:8px 0 2px;
+}
+.chip{
+  min-height:40px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:#5f706b;
+  border-radius:999px;
+  padding:10px 14px;
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.chip.active{
+  background:var(--navy);
+  color:#fff;
+  border-color:var(--navy);
+  box-shadow:0 8px 16px rgba(53,83,76,.16);
+}
+
+.panel{
+  padding:14px;
+  background:rgba(251,252,251,.92);
+}
+.filters{
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.field label,
+.editor-field label,
+#pcHardEditor .pc-hard-field label{
+  font-size:9px;
+  color:#74827d;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  font-weight:800;
+}
+.field select,.field input,.field textarea,
+.editor-field input,.editor-field select,.editor-field textarea,
+#pcHardEditor input[type="text"],#pcHardEditor input[type="date"],#pcHardEditor select,#pcHardEditor textarea{
+  min-height:44px;
+  border-radius:16px;
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+.field textarea,
+.editor-field textarea,
+#pcHardEditor textarea{
+  min-height:88px;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#d1a22f!important;
+  box-shadow:0 0 0 3px rgba(210,161,28,.12)!important;
+}
+
+.list{
+  gap:12px;
+}
+.card{
+  padding:14px 14px 13px;
+  border-radius:28px;
+}
+.card-top{
+  gap:12px;
+}
+.site-name{
+  font-size:15px;
+  line-height:1.3;
+  color:var(--navy);
+}
+.site-sub{
+  font-size:10px;
+  color:#7c8a86;
+}
+.status{
+  font-size:8px;
+  padding:7px 10px;
+  letter-spacing:.06em;
+}
+.done,.status-pill.good{background:var(--soft-green);color:var(--green)}
+.bast,.status-pill.warn{background:var(--soft-gold);color:#8a690e}
+.hold,.status-pill.bad{background:var(--soft-red);color:var(--red)}
+.progress-status{background:#e5efec;color:var(--navy)}
+
+.meta{
+  gap:7px;
+  margin-top:11px;
+}
+.meta span{
+  font-size:8px;
+  padding:6px 9px;
+  background:var(--surface);
+  color:#60716c;
+  border-radius:999px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.signal-row{
+  margin-top:10px;
+  gap:7px;
+}
+.health-pill,
+.deadline-pill,
+.status-pill{
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.03em;
+}
+.progressbar,.bar,.process-bar{
+  height:8px;
+  background:#e4ece9;
+  border-radius:999px;
+  margin-top:12px;
+}
+.progressbar span,.bar span,.process-bar span{
+  background:linear-gradient(90deg,var(--gold),var(--gold-2));
+  border-radius:999px;
+}
+.bast-track{
+  background:#e4ece9;
+}
+.bast-track span{
+  background:linear-gradient(90deg,#45645f,#37534f);
+}
+.progressline,.report-meta,.track-sub,.track-note,.deadline-box,.muted,.copy-card p,.focus-note{
+  color:#75837e;
+  font-size:9px;
+}
+
+.actions{
+  margin-top:12px;
+  gap:8px;
+}
+.btn{
+  min-height:42px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:10px 14px;
+  background:var(--surface);
+  color:var(--navy);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.btn.blue{
+  background:linear-gradient(90deg,var(--gold),var(--gold-2));
+  border-color:#d6ab38;
+  color:#fff;
+  box-shadow:0 10px 20px rgba(210,161,28,.22);
+}
+.btn.dark{
+  background:linear-gradient(135deg,#385550,#476862);
+  border-color:#385550;
+  color:#fff;
+}
+.btn.red{
+  background:var(--soft-red);
+  color:var(--red);
+  border-color:#edcfca;
+}
+.favorite-btn{
+  min-width:44px;
+  width:44px;
+  padding:0;
+  font-size:17px;
+  border-radius:50%;
+}
+.favorite-btn.on,
+.detail-icon-btn.favorite.on{
+  background:#f7ecbf;
+  border-color:#e2c05f;
+  color:#906b12;
+}
+.detail-btn{
+  flex:1;
+}
+
+.track-card,
+.report-card{
+  padding:15px;
+}
+.track-item,.health-part,.detail-box,.deadline-box,.template-help,.editor-state,.copy-card,.pc-check-row{
+  background:var(--surface-2);
+  border-radius:18px;
+  border:1px solid #e2eae7;
+}
+.track-item small,.detail-k{
+  font-size:8px;
+  color:#7b8883;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.track-item b,.detail-v{
+  font-size:11px;
+  color:var(--navy);
+}
+
+.report-top h4,
+.track-head h4,
+.copy-card h4{
+  color:var(--navy);
+}
+
+.health-summary{
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:linear-gradient(180deg,#f8fbfa 0%, #f1f6f4 100%);
+  box-shadow:0 12px 26px rgba(53,83,76,.05);
+}
+.health-score{
+  color:var(--navy);
+}
+.health-part{
+  padding:9px 6px;
+}
+.health-part span{
+  color:#7d8a86;
+}
+
+.empty,.favorite-empty{
+  padding:24px 10px;
+  text-align:center;
+  color:#788681;
+  font-size:11px;
+  background:rgba(251,252,251,.6);
+  border:1px dashed var(--line);
+  border-radius:22px;
+}
+
+nav{
+  left:50%;
+  bottom:10px;
+  transform:translateX(-50%);
+  width:calc(100% - 20px);
+  max-width:440px;
+  padding:8px 7px calc(8px + env(safe-area-inset-bottom));
+  border:1px solid rgba(212,223,219,.96);
+  border-radius:28px;
+  background:rgba(251,252,251,.95);
+  box-shadow:0 16px 32px rgba(53,83,76,.10);
+  backdrop-filter:blur(18px);
+  overflow:hidden;
+}
+nav::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+}
+nav button{
+  position:relative;
+  z-index:1;
+  border-radius:20px;
+  min-height:54px;
+  color:#87948f;
+  font-size:8px;
+}
+nav button .ico{
+  font-size:18px;
+  margin-bottom:3px;
+}
+nav button.active{
+  color:var(--navy);
+  background:rgba(210,161,28,.13);
+}
+nav button.active .ico{
+  color:var(--gold);
+}
+
+.modal{
+  background:rgba(31,46,42,.42);
+}
+.sheet{
+  width:min(460px,100%);
+  max-height:92vh;
+  margin:auto;
+  background:var(--card);
+  border-radius:30px 30px 0 0;
+  padding:12px 16px 28px;
+  box-shadow:0 -6px 24px rgba(53,83,76,.12);
+}
+.grab{
+  width:56px;
+  height:6px;
+  background:#c9d5d1;
+  margin:0 auto 14px;
+}
+.sheet-head h2{
+  color:var(--navy);
+  font-size:19px;
+}
+.close-btn,.detail-icon-btn{
+  width:38px;
+  height:38px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  border-radius:14px;
+  color:var(--navy);
+}
+.detail-grid{
+  gap:10px;
+  margin-top:14px;
+}
+.detail-box{
+  padding:11px;
+}
+.detail-inline-btn{
+  width:30px;
+  height:30px;
+  border-radius:10px;
+  background:#e9f0ed;
+  color:var(--navy);
+}
+.note{
+  margin-top:12px;
+  background:#f7efcc;
+  border:1px solid #e9d58c;
+  border-radius:18px;
+  color:#6f5b24;
+  font-size:10px;
+}
+.journey-row{
+  font-size:10px;
+  border-bottom:1px solid #e4ece9;
+}
+.wa-btn,.share-choice{
+  border-radius:18px;
+  min-height:50px;
+  background:#e7f0ec;
+  border:1px solid #cadbd4;
+  color:#315e52;
+  font-weight:900;
+}
+
+.toast{
+  bottom:106px;
+  background:var(--navy);
+  color:#fff;
+  border-radius:999px;
+  box-shadow:0 14px 28px rgba(53,83,76,.25);
+  padding:10px 14px;
+}
+
+.info-box,.editor-state,.template-help,.copy-card,.editor-warning,.editor-ready-badge,#pcHardEditor .pc-hard-info{
+  border-radius:20px;
+}
+.editor-warning{
+  background:#f6edc9;
+  border-color:#e8d287;
+  color:#755e1c;
+}
+.editor-state{
+  background:#f5f8f7;
+}
+.editor-ready-badge{
+  background:#e4eee9;
+  color:#305e51;
+}
+
+#editorModal{padding-top:0;align-items:flex-end}
+#editorModal .sheet{
+  width:min(460px,100%);
+  max-height:94vh;
+}
+#pcHardEditor,#pcProcessDetail{
+  background:linear-gradient(180deg,#dfe7e4 0%, #e9efed 100%)!important;
+}
+#pcHardEditor .pc-hard-wrap,
+#pcProcessDetail .pc-proc-wrap{
+  width:min(460px,100%);
+  padding:14px 14px 38px;
+}
+#pcHardEditor .pc-hard-head,
+#pcProcessDetail .pc-proc-head,
+#pcHardEditor .pc-hard-actions,
+.pc-proc-actions{
+  background:transparent;
+}
+#pcHardEditor .pc-hard-close,
+#pcProcessDetail .pc-proc-close{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  color:var(--navy);
+}
+.pc-proc-section{
+  color:var(--navy);
+}
+.pc-stage-no,.pc-stage-state{
+  background:#e5ece9;
+  color:#5c6f6a;
+}
+.process-big,
+.report-top b{
+  color:var(--navy);
+}
+
+@media(max-width:360px){
+  .hero-grid,
+  .filters,
+  .detail-grid{
+    grid-template-columns:1fr;
+  }
+  .health-breakdown{
+    grid-template-columns:repeat(3,1fr);
+  }
+  .region-grid{
+    grid-template-columns:1fr;
+  }
+  .section-head{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:4px;
+  }
+}
+
+
+/* =========================================================
+   v16.1 OVERFLOW FIX
+   Fix right-side clipping on mobile for long site names
+   and flex/grid content.
+   ========================================================= */
+html,body{
+  overflow-x:hidden !important;
+}
+
+.app, main, .view, .section, .list, .panel, .card, .report-card, .track-card,
+.health-summary, .hero, .sheet, nav, .region-grid, .kpi-grid, .health-grid,
+.integrated-detail, .track-grid, .editor-grid, .filters, .detail-grid{
+  max-width:100%;
+}
+
+.card, .report-card, .track-card, .health-summary, .hero, .sheet, nav, .panel{
+  overflow:hidden;
+}
+
+.card-top > div:first-child,
+.report-top > div:first-child,
+.sheet-head > div:first-child,
+.track-head > div:first-child,
+.health-summary-top > div:first-child{
+  min-width:0;
+  flex:1 1 auto;
+}
+
+.card-top, .report-top, .track-head, .section-head{
+  min-width:0;
+}
+
+.site-name,
+.site-sub,
+.detail-v,
+.track-item b,
+.track-note,
+.note,
+.copy-card p,
+.muted,
+.report-meta,
+.deadline-box,
+.process-copy,
+.process-next{
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+.site-name{
+  line-height:1.25;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:44px minmax(0,1fr);
+  align-items:center;
+  width:100%;
+}
+
+.actions .btn,
+.detail-btn{
+  min-width:0;
+  width:100%;
+}
+
+.status{
+  flex:0 0 auto;
+  max-width:100%;
+}
+
+.meta,
+.signal-row,
+.progressline,
+.productivity-strip{
+  min-width:0;
+  flex-wrap:wrap;
+}
+
+.progressline{
+  gap:8px;
+}
+
+.detail-v-row{
+  min-width:0;
+}
+
+.detail-v-row .detail-v{
+  min-width:0;
+  flex:1 1 auto;
+}
+
+@media(max-width:380px){
+  .card-top{
+    align-items:flex-start;
+  }
+  .status{
+    margin-top:2px;
+  }
+}
+
+
+/* =========================================================
+   PROJECT CONTROL v17 — MOBILE DASHBOARD GRAY
+   Inspired by the provided desktop dashboard reference,
+   adapted into a mobile-first single-column experience.
+   ========================================================= */
+:root{
+  --bg:#efefef;
+  --bg-2:#e9e9ea;
+  --card:#ffffff;
+  --surface:#f5f5f6;
+  --surface-2:#f1f1f2;
+  --text:#1f2023;
+  --muted:#7d7e84;
+  --line:#e4e4e7;
+  --navy:#222326;
+  --navy-2:#2f3136;
+  --gold:#6a6a70;
+  --gold-2:#89898e;
+  --red:#b45757;
+  --green:#2f7d51;
+  --soft-red:#f6e8e8;
+  --soft-green:#e9f3ed;
+  --soft-gold:#ededf0;
+  --shadow:0 12px 28px rgba(23,24,27,.06);
+}
+
+html,body{
+  background:linear-gradient(180deg,var(--bg-2) 0%, var(--bg) 100%) !important;
+  color:var(--text);
+  overflow-x:hidden !important;
+}
+
+.app{
+  max-width:470px;
+  min-height:100vh;
+  padding-bottom:110px;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:linear-gradient(180deg, rgba(239,239,239,.97) 0%, rgba(239,239,239,.80) 100%);
+  backdrop-filter:blur(12px);
+  border-bottom:none;
+}
+.header-inner{
+  margin:0;
+  padding:16px 16px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+  border-radius:0;
+}
+.brand small{
+  display:block;
+  color:#8a8b90;
+  font-size:10px;
+  margin-bottom:4px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.brand h1{
+  margin:0;
+  font-size:28px;
+  font-weight:800;
+  color:var(--text);
+  letter-spacing:-.02em;
+}
+.header-avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#34363a,#1f2023);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:900;
+  box-shadow:0 8px 18px rgba(23,24,27,.15);
+  flex:0 0 auto;
+}
+.header-tools{
+  padding:0 16px 12px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  align-items:center;
+}
+.header-search-shell{
+  min-height:44px;
+  border-radius:999px;
+  background:rgba(255,255,255,.92);
+  border:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  padding:0 15px;
+  color:#8b8c92;
+  font-size:12px;
+  box-shadow:0 8px 18px rgba(23,24,27,.04);
+}
+.sync-badge{
+  min-height:44px;
+  padding:0 14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid var(--line);
+  color:#5a5b60;
+  font-size:10px;
+  font-weight:800;
+  box-shadow:0 8px 18px rgba(23,24,27,.04);
+}
+
+main{
+  padding:10px 16px 26px;
+}
+.view.active{
+  animation:v17Fade .16s ease-out;
+}
+@keyframes v17Fade{
+  from{opacity:.78;transform:translateY(8px)}
+  to{opacity:1;transform:none}
+}
+
+.hero,
+.card,
+.kpi,
+.region-card,
+.panel,
+.report-card,
+.track-card,
+.health-kpi,
+.health-summary,
+.info-box,
+.editor-section,
+.pc-proc-card,
+#pcHardEditor .pc-hard-card,
+.sheet{
+  background:var(--card);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+
+.hero{
+  background:linear-gradient(145deg,#1f2023,#31343a);
+  color:#fff;
+  border-radius:28px;
+  padding:18px 16px;
+  box-shadow:0 16px 34px rgba(23,24,27,.16);
+  overflow:hidden;
+  position:relative;
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  width:130px;
+  height:130px;
+  right:-36px;
+  top:-38px;
+  border-radius:28px;
+  background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
+  transform:rotate(18deg);
+}
+.hero .eyebrow{
+  color:#d0d1d6;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.hero h2{
+  margin:5px 0 2px;
+  font-size:36px;
+  letter-spacing:-.02em;
+}
+.hero p{
+  margin:0;
+  color:#d9dadd;
+  font-size:11px;
+}
+.hero-tag{
+  background:#4a4d53;
+  color:#fff;
+  padding:8px 10px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.hero-grid{
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:16px;
+}
+.hero-mini{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  padding:12px;
+}
+.hero-mini b{
+  display:block;
+  font-size:19px;
+}
+.hero-mini span{
+  font-size:9px;
+  color:#d2d3d8;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+.section{
+  margin-top:18px;
+}
+.section-head{
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:8px;
+}
+.section-head h3{
+  margin:0;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:.10em;
+  color:#2a2b2f;
+}
+.section-head span{
+  font-size:10px;
+  color:#8a8b90;
+}
+
+.region-grid,
+.kpi-grid,
+.health-grid{
+  gap:10px;
+}
+.region-grid{
+  grid-template-columns:repeat(2,1fr);
+}
+.kpi-grid,
+.health-grid{
+  grid-template-columns:repeat(2,1fr);
+}
+.region-card,
+.kpi,
+.health-kpi{
+  border-radius:24px;
+  padding:14px;
+}
+.region-card b,
+.kpi strong,
+.health-kpi strong{
+  display:block;
+  font-size:24px;
+  line-height:1;
+  color:var(--text);
+}
+.region-card span,
+.kpi div,
+.health-kpi span{
+  margin-top:7px;
+  color:#87888d;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.region-card.active{
+  border-color:#c3c4ca;
+  box-shadow:0 0 0 3px rgba(78,80,88,.08);
+}
+
+.search{
+  min-height:50px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:0 14px;
+  box-shadow:0 6px 16px rgba(23,24,27,.03);
+}
+.search span{
+  color:#8d8e94;
+}
+.search input{
+  border:0;
+  background:transparent;
+  outline:none;
+  font-size:12px;
+  width:100%;
+  padding:13px 0;
+}
+
+.chips{
+  gap:8px;
+  padding:8px 0 2px;
+}
+.chip{
+  min-height:40px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:#5d5e64;
+  padding:9px 13px;
+  font-size:10px;
+  font-weight:800;
+}
+.chip.active{
+  background:#595b61;
+  border-color:#595b61;
+  color:#fff;
+  box-shadow:0 8px 16px rgba(23,24,27,.10);
+}
+
+.panel{
+  border-radius:24px;
+  padding:14px;
+}
+.filters{
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.field label,
+.editor-field label,
+#pcHardEditor .pc-hard-field label{
+  color:#8b8c92;
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  font-weight:800;
+}
+.field select,.field input,.field textarea,
+.editor-field input,.editor-field select,.editor-field textarea,
+#pcHardEditor input[type="text"],#pcHardEditor input[type="date"],#pcHardEditor select,#pcHardEditor textarea{
+  min-height:44px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:10px 12px;
+  font-size:11px;
+  color:var(--text);
+}
+.field textarea,
+.editor-field textarea,
+#pcHardEditor textarea{
+  min-height:88px;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#9d9ea5 !important;
+  box-shadow:0 0 0 3px rgba(90,92,99,.10) !important;
+  outline:none;
+}
+
+.list{
+  display:grid;
+  gap:12px;
+}
+.card{
+  border-radius:28px;
+  padding:14px;
+  overflow:hidden;
+}
+.card-top{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+.card-top > div:first-child{
+  min-width:0;
+  flex:1 1 auto;
+}
+.site-name{
+  font-size:15px;
+  font-weight:800;
+  line-height:1.25;
+  color:#2b2c30;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+.site-sub{
+  margin-top:5px;
+  font-size:10px;
+  color:#86878d;
+}
+.status{
+  flex:0 0 auto;
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+.done,.status-pill.good{
+  background:var(--soft-green);
+  color:var(--green);
+}
+.bast,.status-pill.warn{
+  background:#efeff2;
+  color:#5d5e65;
+}
+.hold,.status-pill.bad{
+  background:var(--soft-red);
+  color:var(--red);
+}
+.progress-status{
+  background:#ececef;
+  color:#4f5158;
+}
+.meta{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:11px;
+}
+.meta span{
+  background:var(--surface);
+  color:#686a71;
+  font-size:8px;
+  padding:6px 9px;
+  border-radius:999px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.signal-row{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.health-pill,
+.deadline-pill,
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:8px;
+  font-weight:900;
+}
+.health-pill.healthy{background:var(--soft-green);color:var(--green)}
+.health-pill.watch{background:#f1f1f4;color:#63656b}
+.health-pill.critical{background:var(--soft-red);color:var(--red)}
+.deadline-pill.ok{background:#eff0f2;color:#666871}
+.deadline-pill.h7,.deadline-pill.h3{background:#f1f1f4;color:#5e6066}
+.deadline-pill.overdue{background:var(--soft-red);color:var(--red)}
+
+.progressbar,.bar,.process-bar{
+  height:8px;
+  background:#ededf0;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:12px;
+}
+.progressbar span,.bar span,.process-bar span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#202226,#666973);
+  border-radius:999px;
+}
+.bast-track{
+  height:8px;
+  background:#ededf0;
+  border-radius:999px;
+  overflow:hidden;
+}
+.bast-track span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#36383d,#70727a);
+  border-radius:999px;
+}
+.progressline,.report-meta,.track-sub,.track-note,.deadline-box,.muted,.copy-card p,.focus-note,.process-copy,.process-next,.summary-line span{
+  color:#81828a;
+  font-size:9px;
+  overflow-wrap:anywhere;
+}
+.actions{
+  display:grid;
+  grid-template-columns:44px minmax(0,1fr);
+  gap:8px;
+  align-items:center;
+  margin-top:12px;
+  width:100%;
+}
+.btn{
+  min-height:42px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:#404248;
+  font-size:10px;
+  font-weight:900;
+  padding:10px 14px;
+}
+.btn.dark{
+  background:#25272c;
+  border-color:#25272c;
+  color:#fff;
+}
+.btn.blue{
+  background:#5f6169;
+  border-color:#5f6169;
+  color:#fff;
+}
+.btn.red{
+  background:var(--soft-red);
+  border-color:#ebd1d1;
+  color:var(--red);
+}
+.favorite-btn{
+  min-width:44px;
+  width:44px;
+  padding:0;
+  font-size:17px;
+  border-radius:50%;
+}
+.favorite-btn.on,
+.detail-icon-btn.favorite.on{
+  background:#ececf0;
+  border-color:#d7d8de;
+  color:#55575d;
+}
+.detail-btn{
+  width:100%;
+  min-width:0;
+}
+
+.report-card,
+.track-card,
+.health-summary{
+  border-radius:28px;
+  padding:15px;
+}
+.track-grid,.editor-grid{
+  gap:10px;
+}
+.track-item,.health-part,.detail-box,.deadline-box,.template-help,.editor-state,.copy-card,.pc-check-row{
+  background:var(--surface);
+  border:1px solid #ebebee;
+  border-radius:18px;
+}
+.track-item{padding:10px}
+.track-item small,.detail-k{
+  display:block;
+  font-size:8px;
+  color:#8b8c92;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.track-item b,.detail-v{
+  display:block;
+  margin-top:4px;
+  font-size:11px;
+  color:#303136;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+.health-summary{
+  background:linear-gradient(180deg,#ffffff 0%, #f7f7f8 100%);
+}
+.health-score{
+  color:#232428;
+}
+.health-part{
+  padding:9px 6px;
+  text-align:center;
+}
+.health-part span{
+  display:block;
+  margin-top:2px;
+  color:#8b8c92;
+  font-size:7px;
+}
+.deadline-box{
+  padding:10px;
+}
+.deadline-box.overdue{
+  background:var(--soft-red);
+  color:var(--red);
+}
+.deadline-box.h3,.deadline-box.h7{
+  background:#f0f0f3;
+  color:#666871;
+}
+
+.empty,.favorite-empty{
+  text-align:center;
+  padding:24px 10px;
+  color:#8a8b90;
+  font-size:11px;
+  border:1px dashed #d9dade;
+  border-radius:22px;
+  background:rgba(255,255,255,.55);
+}
+
+nav{
+  position:fixed;
+  left:50%;
+  bottom:10px;
+  transform:translateX(-50%);
+  width:calc(100% - 20px);
+  max-width:450px;
+  padding:8px 7px calc(8px + env(safe-area-inset-bottom));
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:4px;
+  background:rgba(255,255,255,.96);
+  border:1px solid var(--line);
+  border-radius:28px;
+  box-shadow:0 18px 34px rgba(23,24,27,.10);
+  backdrop-filter:blur(18px);
+  overflow:hidden;
+}
+nav button{
+  border:0;
+  background:transparent;
+  border-radius:22px;
+  min-height:54px;
+  color:#8b8c92;
+  font-size:8px;
+  font-weight:800;
+}
+nav button .ico{
+  display:block;
+  font-size:18px;
+  margin-bottom:3px;
+}
+nav button.active{
+  background:#efeff2;
+  color:#313338;
+}
+nav button.active .ico{
+  color:#232428;
+}
+
+.modal{
+  background:rgba(29,30,34,.42);
+}
+.sheet{
+  width:min(470px,100%);
+  max-height:92vh;
+  margin:auto;
+  border-radius:30px 30px 0 0;
+  padding:12px 16px 28px;
+}
+.grab{
+  width:56px;
+  height:6px;
+  border-radius:999px;
+  background:#d7d7dc;
+  margin:0 auto 14px;
+}
+.sheet-head h2{
+  color:#25262a;
+  font-size:19px;
+}
+.close-btn,.detail-icon-btn{
+  width:38px;
+  height:38px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  border-radius:14px;
+  color:#36383d;
+}
+.detail-head-actions{
+  display:flex;
+  gap:7px;
+  align-items:center;
+}
+.detail-grid{
+  gap:10px;
+  margin-top:14px;
+}
+.detail-box{
+  padding:11px;
+}
+.detail-v-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  min-width:0;
+}
+.detail-v-row .detail-v{
+  min-width:0;
+  flex:1 1 auto;
+}
+.detail-inline-btn{
+  width:30px;
+  height:30px;
+  flex:0 0 auto;
+  border:0;
+  border-radius:10px;
+  background:#eaebee;
+  color:#42444a;
+}
+.note{
+  margin-top:12px;
+  background:#f4f4f6;
+  border:1px solid #e7e7ea;
+  color:#5c5d63;
+  border-radius:18px;
+  padding:10px;
+  font-size:10px;
+}
+.journey-row{
+  font-size:10px;
+  border-bottom:1px solid #e8e8eb;
+}
+.ok{color:var(--green);font-weight:800}
+.pending{color:#666871;font-weight:800}
+.share-choice-wrap{
+  display:grid;
+  gap:9px;
+  margin-top:14px;
+}
+.wa-btn,.share-choice{
+  width:100%;
+  min-height:50px;
+  border-radius:18px;
+  border:1px solid #d9dadd;
+  background:#f4f4f6;
+  color:#3e4046;
+  font-weight:900;
+  font-size:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.copy-card{
+  margin-top:10px;
+  padding:11px;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:106px;
+  transform:translateX(-50%) translateY(14px);
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+  background:#24262a;
+  color:#fff;
+  padding:10px 14px;
+  border-radius:999px;
+  font-size:9px;
+  z-index:200;
+  box-shadow:0 14px 28px rgba(23,24,27,.22);
+}
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+.info-box,.editor-state,.template-help,.copy-card,.editor-warning,.editor-ready-badge,#pcHardEditor .pc-hard-info{
+  border-radius:20px;
+}
+.editor-state{
+  background:#f6f6f7;
+}
+.editor-warning{
+  background:#f3f3f5;
+  border-color:#e2e2e6;
+  color:#666871;
+}
+.editor-ready-badge{
+  background:#efeff2;
+  color:#50525a;
+}
+.wa-btn{color:#3d4047;border-color:#dadbe0;background:#f1f2f4}
+
+#editorModal{padding-top:0;align-items:flex-end}
+#editorModal .sheet{
+  width:min(470px,100%);
+  max-height:94vh;
+}
+#pcHardEditor,#pcProcessDetail{
+  background:linear-gradient(180deg,#ececed 0%, #f4f4f5 100%) !important;
+}
+#pcHardEditor .pc-hard-wrap,
+#pcProcessDetail .pc-proc-wrap{
+  width:min(470px,100%);
+  padding:14px 14px 40px;
+}
+#pcHardEditor .pc-hard-head,
+#pcProcessDetail .pc-proc-head,
+#pcHardEditor .pc-hard-actions,
+.pc-proc-actions{
+  background:transparent;
+}
+#pcHardEditor .pc-hard-close,
+#pcProcessDetail .pc-proc-close{
+  background:#fff;
+  border:1px solid var(--line);
+  color:#303136;
+  border-radius:14px;
+}
+#pcHardEditor .pc-hard-actions button{min-height:48px}
+.pc-proc-section{
+  color:#414349;
+}
+.pc-stage-no,.pc-stage-state{
+  background:#efeff2;
+  color:#666871;
+}
+
+@media(max-width:380px){
+  .filters,.detail-grid{grid-template-columns:1fr}
+  .section-head{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:4px;
+  }
+}
+
+
+/* =========================================================
+   v17.1 FIX — REPORT 'Buka Site' button
+   The global .actions grid made the single report button
+   collapse into a narrow column. Override it specifically
+   for report cards.
+   ========================================================= */
+.report-card .actions{
+  display:flex !important;
+  grid-template-columns:none !important;
+  width:auto !important;
+  gap:10px;
+  align-items:center;
+  justify-content:flex-start;
+  margin-top:14px;
+}
+.report-card .report-open-btn{
+  width:auto !important;
+  min-width:112px;
+  min-height:48px;
+  padding:0 18px;
+  border-radius:18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  white-space:nowrap;
+  font-size:11px;
+  background:#f2f2f4;
+  border:1px solid #dddddf;
+  color:#35373c;
+  box-shadow:0 6px 14px rgba(23,24,27,.04);
+}
+.report-card .report-open-btn:active{
+  transform:scale(.985);
+}
+
+
+/* =========================================================
+   v17.2 FIX — DETAIL MODAL SCROLL
+   v16.1 had a global `.sheet { overflow:hidden }` overflow fix.
+   That unintentionally disabled vertical scrolling inside every
+   Detail Site bottom sheet. Restore native mobile sheet scrolling.
+   ========================================================= */
+.modal{
+  height:100dvh !important;
+  max-height:100dvh !important;
+  overflow:hidden !important;
+  align-items:flex-end !important;
+}
+
+.modal.show{
+  display:flex !important;
+}
+
+.modal > .sheet,
+#detailModal > .sheet,
+#shareModal > .sheet,
+#editorModal > .sheet{
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior:contain !important;
+  touch-action:pan-y !important;
+  max-height:calc(100dvh - 18px) !important;
+  height:auto !important;
+  flex:0 1 auto !important;
+  padding-bottom:calc(32px + env(safe-area-inset-bottom)) !important;
+}
+
+#detailModal > .sheet{
+  min-height:0 !important;
+}
+
+#detailModal .sheet-head{
+  position:sticky;
+  top:-12px;
+  z-index:8;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(12px);
+  padding-top:12px;
+  padding-bottom:10px;
+  margin-bottom:2px;
+}
+
+#detailModal .grab{
+  position:sticky;
+  top:0;
+  z-index:9;
+}
+
+#detailModal .integrated-detail,
+#detailModal .track-card,
+#detailModal .health-summary,
+#detailModal .detail-grid,
+#detailModal .journey,
+#detailModal .note,
+#detailModal .detail-actions{
+  overflow:visible !important;
+  max-height:none !important;
+}
+
+#detailModal .detail-actions{
+  padding-bottom:4px;
+}
+
+@supports not (height:100dvh){
+  .modal{
+    height:100vh !important;
+    max-height:100vh !important;
+  }
+  .modal > .sheet,
+  #detailModal > .sheet,
+  #shareModal > .sheet,
+  #editorModal > .sheet{
+    max-height:calc(100vh - 18px) !important;
+  }
+}
+
+
+/* =========================================================
+   v17.3 FONT COMFORT
+   Readability tuning for mobile screens.
+   ========================================================= */
+
+/* Base readability */
+html,body{
+  font-size:16px;
+  -webkit-text-size-adjust:100%;
+  text-rendering:optimizeLegibility;
+}
+
+/* Header */
+.brand small{font-size:11px !important}
+.brand h1{font-size:30px !important;line-height:1.08}
+.header-search-shell{font-size:13px !important}
+.sync-badge{font-size:11px !important}
+.header-avatar{font-size:13px !important}
+
+/* Hero / dashboard summary */
+.hero .eyebrow{font-size:11px !important}
+.hero h2{font-size:38px !important}
+.hero p{font-size:12px !important;line-height:1.4}
+.hero-tag{font-size:10px !important}
+.hero-mini b{font-size:21px !important}
+.hero-mini span{font-size:10px !important}
+
+/* Section titles */
+.section-head h3{font-size:14px !important;line-height:1.25}
+.section-head span{font-size:11px !important;line-height:1.3}
+
+/* KPI / regional */
+.region-card b,.kpi strong,.health-kpi strong{font-size:25px !important}
+.region-card span,.kpi div,.health-kpi span{
+  font-size:11px !important;
+  line-height:1.25;
+}
+
+/* Search / filters / chips */
+.search input{font-size:13px !important}
+.chip{font-size:11px !important}
+.field label,
+.editor-field label,
+#pcHardEditor .pc-hard-field label{font-size:10px !important}
+.field select,.field input,.field textarea,
+.editor-field input,.editor-field select,.editor-field textarea,
+#pcHardEditor input[type="text"],#pcHardEditor input[type="date"],
+#pcHardEditor select,#pcHardEditor textarea{
+  font-size:12px !important;
+  line-height:1.35;
+}
+
+/* Site cards */
+.site-name{
+  font-size:16px !important;
+  line-height:1.3 !important;
+}
+.site-sub{
+  font-size:11px !important;
+  line-height:1.35;
+}
+.status{
+  font-size:9px !important;
+}
+.meta span{
+  font-size:9px !important;
+}
+.health-pill,
+.deadline-pill,
+.status-pill{
+  font-size:9px !important;
+}
+.progressline,
+.report-meta,
+.track-sub,
+.track-note,
+.deadline-box,
+.muted,
+.copy-card p,
+.focus-note,
+.process-copy,
+.process-next,
+.summary-line span{
+  font-size:10px !important;
+  line-height:1.4;
+}
+
+/* Buttons */
+.btn{
+  font-size:11px !important;
+}
+.favorite-btn{
+  font-size:18px !important;
+}
+.report-card .report-open-btn{
+  font-size:12px !important;
+}
+
+/* Report */
+.report-top h4{font-size:16px !important}
+.report-top b{font-size:25px !important}
+
+/* Detail site */
+.sheet-head h2{
+  font-size:21px !important;
+  line-height:1.25;
+}
+.detail-k{
+  font-size:9px !important;
+}
+.detail-v{
+  font-size:12px !important;
+  line-height:1.4;
+}
+.journey-row{
+  font-size:11px !important;
+}
+.note{
+  font-size:11px !important;
+  line-height:1.5;
+}
+.track-head h4{
+  font-size:14px !important;
+}
+.track-item small{
+  font-size:9px !important;
+}
+.track-item b{
+  font-size:12px !important;
+  line-height:1.4;
+}
+.health-score{
+  font-size:32px !important;
+}
+.health-score small{
+  font-size:11px !important;
+}
+.health-part b{
+  font-size:12px !important;
+}
+.health-part span{
+  font-size:8px !important;
+}
+.copy-card h4{
+  font-size:13px !important;
+}
+.share-choice,
+.wa-btn{
+  font-size:12px !important;
+}
+
+/* Bottom nav */
+nav button{
+  font-size:9px !important;
+}
+nav button .ico{
+  font-size:19px !important;
+}
+
+/* Toast / small helper text */
+.toast{
+  font-size:10px !important;
+}
+.info-box,
+.template-help,
+.editor-warning{
+  font-size:10px !important;
+  line-height:1.5;
+}
+
+/* Keep compact on small phones without becoming tiny */
+@media(max-width:360px){
+  .brand h1{font-size:27px !important}
+  .site-name{font-size:15px !important}
+  .sheet-head h2{font-size:19px !important}
+}
+
+
+/* =========================================================
+   v18 — SITE COMPLETION CHECKLIST
+   SOW-based completion: NEW SITE / COLLOCATION / PERKUATAN.
+   ========================================================= */
+.site-completion-card{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,#fff 0%,#f7f7f8 100%);
+  border-radius:28px;
+  padding:15px;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+}
+.site-completion-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.site-completion-title{
+  font-size:14px;
+  font-weight:900;
+  color:var(--text);
+}
+.site-completion-sub{
+  margin-top:3px;
+  font-size:10px;
+  color:var(--muted);
+}
+.site-completion-score{
+  font-size:30px;
+  line-height:1;
+  font-weight:900;
+  color:var(--text);
+  flex:0 0 auto;
+}
+.site-completion-score small{
+  font-size:11px;
+  color:var(--muted);
+}
+.site-stage-list{
+  margin-top:12px;
+  display:grid;
+  gap:9px;
+}
+.site-stage-row{
+  display:grid;
+  grid-template-columns:minmax(92px,1fr) minmax(70px,1.4fr) 42px;
+  gap:8px;
+  align-items:center;
+}
+.site-stage-row b{
+  font-size:10px;
+  color:var(--text);
+  overflow-wrap:anywhere;
+}
+.site-stage-bar{
+  height:7px;
+  background:#e9e9ec;
+  border-radius:999px;
+  overflow:hidden;
+}
+.site-stage-bar span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#24262a,#72757d);
+  border-radius:999px;
+}
+.site-stage-row strong{
+  text-align:right;
+  font-size:10px;
+  color:#55575d;
+}
+.site-check-section{
+  margin:16px 0 7px;
+  font-size:10px;
+  font-weight:900;
+  color:#414349;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+.site-check-row{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:11px;
+  margin:8px 0;
+}
+.site-check-name{
+  font-size:11px;
+  line-height:1.4;
+  font-weight:800;
+  color:var(--text);
+}
+.site-check-optional{
+  margin-left:5px;
+  font-size:8px;
+  color:var(--muted);
+  font-weight:700;
+}
+.site-check-control{
+  margin-top:8px;
+  display:grid;
+  grid-template-columns:1fr;
+}
+.site-check-control select{
+  width:100%;
+  min-height:42px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#f5f5f6;
+  color:var(--text);
+  padding:9px 10px;
+  font-size:11px;
+  font-weight:800;
+}
+.site-check-summary{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:14px;
+  margin-bottom:10px;
+}
+.site-check-summary-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+.site-check-summary-score{
+  font-size:32px;
+  font-weight:900;
+  line-height:1;
+}
+.site-check-summary-score small{
+  font-size:11px;
+  color:var(--muted);
+}
+.site-check-summary-copy{
+  font-size:10px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.site-check-stage-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:13px;
+  margin:10px 0;
+}
+.site-check-stage-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+.site-check-stage-head h3{
+  margin:0;
+  font-size:13px;
+}
+.site-check-stage-head span{
+  font-size:10px;
+  font-weight:900;
+  color:#5f6168;
+}
+.site-check-stage-bar{
+  height:7px;
+  background:#ededf0;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:9px;
+}
+.site-check-stage-bar span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#25272c,#70727a);
+}
+.site-check-actions{
+  position:sticky;
+  bottom:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(239,239,239,0),#efefef 28%);
+  z-index:5;
+}
+@media(max-width:360px){
+  .site-stage-row{grid-template-columns:82px minmax(60px,1fr) 38px}
+}
+
+
+/* =========================================================
+   v18.1 — CHECKLIST STATUS VISUALS
+   Selesai = hijau
+   Belum   = normal
+   N/A     = merah
+   + subtle shadow on each item card
+   ========================================================= */
+.site-check-row{
+  box-shadow:0 4px 12px rgba(23,24,27,.05);
+  transition:.16s ease;
+}
+
+.site-check-row.status-ok{
+  background:#eef8f1;
+  border-color:#b9dfc5;
+  box-shadow:0 5px 14px rgba(47,125,81,.10);
+}
+
+.site-check-row.status-na{
+  background:#fbefef;
+  border-color:#e7bcbc;
+  box-shadow:0 5px 14px rgba(180,87,87,.10);
+}
+
+.site-check-row.status-pending{
+  background:#fff;
+  border-color:var(--line);
+}
+
+.site-check-row.status-ok .site-check-name{
+  color:#2f6f4c;
+}
+
+.site-check-row.status-na .site-check-name{
+  color:#a94b4b;
+}
+
+.site-check-row.status-ok select{
+  background:#e4f3e9 !important;
+  border-color:#b8dcc4 !important;
+  color:#2f6f4c !important;
+}
+
+.site-check-row.status-na select{
+  background:#f7e6e6 !important;
+  border-color:#e0b5b5 !important;
+  color:#a94b4b !important;
+}
+
+.site-check-row.status-pending select{
+  background:#f5f5f6 !important;
+  border-color:var(--line) !important;
+  color:var(--text) !important;
+}
+
+
+/* =========================================================
+   v18.2 — FAVORITE -> PIN
+   ========================================================= */
+.pin-btn,
+.favorite-btn,
+.detail-icon-btn.favorite{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.pin-icon{
+  width:18px;
+  height:18px;
+  display:block;
+}
+.favorite-btn .pin-icon{
+  width:19px;
+  height:19px;
+}
+.favorite-btn.on,
+.detail-icon-btn.favorite.on{
+  background:#303237 !important;
+  border-color:#303237 !important;
+  color:#fff !important;
+  box-shadow:0 6px 14px rgba(23,24,27,.13);
+}
+.favorite-btn:not(.on),
+.detail-icon-btn.favorite:not(.on){
+  color:#676970 !important;
+}
+
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="header-inner"><div class="brand"><small>Zero Cost Form Editor</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <small>Project Control</small>
+      <h1>Dashboard</h1>
+    </div>
+    <div class="header-avatar" aria-hidden="true">PC</div>
+  </div>
+  <div class="header-tools">
+    <div class="header-search-shell">⌕ Search site...</div>
+    <div class="sync-badge" id="storageBadge">Memuat...</div>
+  </div>
+</header>
 <main>
 <div id="errorBanner" class="error-banner"></div>
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v14.1</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v18.2</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -244,7 +2619,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
   </section>
 
   <section class="section">
-    <div class="section-head"><h3>Favorite Site</h3><span id="favoriteCount">0 site</span></div>
+    <div class="section-head"><h3>Pinned Site</h3><span id="favoriteCount">0 site</span></div>
     <div id="favoriteList" class="list"></div>
   </section>
 
@@ -344,7 +2719,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <button id="saveTemplatesBtn" class="btn blue">Simpan Template</button>
     <button id="resetTemplatesBtn" class="btn">Reset Template Default</button>
 
-    <div class="info-box"><b>Sistem Project Health v14.1:</b><br>
+    <div class="info-box"><b>Sistem Project Health v18.2:</b><br>
       Project, PLN, Oneflux, Binder, dan BAST Doc masing-masing dihitung 0–100%. Health total = rata-rata 5 bagian. Deadline hanya alert dan tidak mengurangi persentase Health.
     </div>
     <div class="info-box">Mode zero-cost: edit dari WebApp masuk ke Google Form/EDIT LOG, lalu WEBAPP DATA otomatis menampilkan nilai edit terbaru saat Sync. Tidak memakai Google Cloud, Apps Script, Make, atau layanan berbayar.</div>
@@ -364,7 +2739,14 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 <div id="detailModal" class="modal">
   <div class="sheet">
     <div class="grab"></div>
-    <div class="sheet-head"><div><h2 id="detailName"></h2><div id="detailSub" class="muted"></div></div><button id="closeDetailBtn" class="close-btn">×</button></div>
+    <div class="sheet-head">
+      <button id="editGoogleBtn" class="detail-icon-btn" type="button" aria-label="Edit Data Site" title="Edit Data Site">✎</button>
+      <div style="flex:1;min-width:0"><h2 id="detailName"></h2><div id="detailSub" class="muted"></div></div>
+      <div class="detail-head-actions">
+        <button id="favoriteDetailBtn" class="detail-icon-btn favorite" type="button" aria-label="Pin Site" title="Pin Site"></button>
+        <button id="closeDetailBtn" class="close-btn">×</button>
+      </div>
+    </div>
     <div id="detailGrid" class="detail-grid"></div>
     <div class="journey">
       <div class="section-head"><h3>Project Journey</h3><span>Master status</span></div>
@@ -373,14 +2755,21 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <div id="integratedDetail" class="integrated-detail"></div>
     <div id="detailNote" class="note"></div>
     <div class="detail-actions">
-      <button id="editGoogleBtn" class="btn blue" type="button">✎ Edit Data Site</button>
-      <button id="favoriteDetailBtn" class="btn favorite-btn">☆ Favorite</button>
-      <button id="copyBtn" class="btn">Copy Project ID</button>
-      <button id="copySiteBtn" class="btn blue">Copy Data Site</button>
-      <button id="copyPlnBtn" class="btn dark">Copy Data PLN</button>
-      <button id="shareSiteWaBtn" class="btn wa-btn">Share Site WhatsApp</button>
-      <button id="sharePlnWaBtn" class="btn wa-btn">Share PLN WhatsApp</button>
-      <button id="mapsBtn" class="btn">Open Maps</button>
+      <button id="shareBtn" class="btn blue" type="button">↗ Share</button>
+    </div>
+  </div>
+</div>
+
+<div id="shareModal" class="modal">
+  <div class="sheet" style="max-width:420px">
+    <div class="grab"></div>
+    <div class="sheet-head">
+      <div><h2>Bagikan Data</h2><div class="muted">Pilih data yang ingin dikirim ke WA.</div></div>
+      <button id="closeShareBtn" class="close-btn">×</button>
+    </div>
+    <div class="share-choice-wrap">
+      <button id="shareSiteWaBtn" class="share-choice" type="button"><span class="share-ico">↗</span> Share Site WA</button>
+      <button id="sharePlnWaBtn" class="share-choice" type="button"><span class="share-ico">↗</span> Share PLN WA</button>
     </div>
   </div>
 </div>
@@ -434,7 +2823,7 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 <iframe name="pcFormSink" id="pcFormSink" style="display:none;width:0;height:0;border:0"></iframe>
 <div id="toast" class="toast"></div>
 
-<script id="seedData" type="application/json">[{"recordId":"25TS06B0042||NEW SITE||IDY001||TALANGSELEMAN PAYARAMAN","sourceRow":2,"name":"TALANGSELEMAN PAYARAMAN","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"DONE","projectId":"25TS06B0042","siteId":"IDY001","dmtId":"IDL-03-080","deadline":"-","note":"Done"},{"recordId":"25TS08B0044||NEW SITE||SGE123||PEMATANGGAJAH2","sourceRow":3,"name":"PEMATANGGAJAH2","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"BAST","projectId":"25TS08B0044","siteId":"SGE123","dmtId":"SNT-03-122","deadline":"","note":""},{"recordId":"25TS08B0193||NEW SITE||SGE104||PERUMAHANGRANDNEMURA","sourceRow":4,"name":"PERUMAHANGRANDNEMURA","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"DONE","projectId":"25TS08B0193","siteId":"SGE104","dmtId":"SNT-03-124","deadline":"","note":""},{"recordId":"25TS02B0095||NEW SITE||MKD024||BALEKERTO KALIANGKRIK\n (NIB1_2025_000463)","sourceRow":5,"name":"BALEKERTO KALIANGKRIK\n (NIB1_2025_000463)","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS02B0095","siteId":"MKD024","dmtId":"MKD-06-166","deadline":"","note":""},{"recordId":"25TS02B0093||NEW SITE||MKD020||BANJARSARI GRABAG\n (NIB1_2025_000459)","sourceRow":6,"name":"BANJARSARI GRABAG\n (NIB1_2025_000459)","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS02B0093","siteId":"MKD020","dmtId":"MKD-06-164","deadline":"","note":""},{"recordId":"25TS02B0126||NEW SITE||MKD029||SURODADI CANDIMULYO\n (NIB1_2025_000653)","sourceRow":7,"name":"SURODADI CANDIMULYO\n (NIB1_2025_000653)","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS02B0126","siteId":"MKD029","dmtId":"MKD-06-167","deadline":"","note":""},{"recordId":"24IS12C0096||PERKUATAN||14WNG0163||TAWANGREJO_WNG_MT","sourceRow":8,"name":"TAWANGREJO_WNG_MT","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"24IS12C0096","siteId":"14WNG0163","dmtId":"WNG-06-169","deadline":"","note":""},{"recordId":"24EN10C0006||PERKUATAN||MTB004||TSEL_SUNGAIBENGKAL","sourceRow":9,"name":"TSEL_SUNGAIBENGKAL","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"DONE","projectId":"24EN10C0006","siteId":"MTB004","dmtId":"MRT-03-046","deadline":"","note":""},{"recordId":"25IS03C0089||COLLOCATION||14GRO0182||PELEM_GROBOGAN_MT","sourceRow":10,"name":"PELEM_GROBOGAN_MT","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"25IS03C0089","siteId":"14GRO0182","dmtId":"PWD-06-119","deadline":"","note":""},{"recordId":"25IS03C0165||COLLOCATION||14KND0168||TRISOBO_KENDAL_MT","sourceRow":11,"name":"TRISOBO_KENDAL_MT","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"25IS03C0165","siteId":"14KND0168","dmtId":"KDL-06-041","deadline":"","note":""},{"recordId":"25IS03C0089||PERKUATAN||14GRO0182||PELEM_GROBOGAN_MT","sourceRow":12,"name":"PELEM_GROBOGAN_MT","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"25IS03C0089","siteId":"14GRO0182","dmtId":"PWD-06-119","deadline":"","note":""},{"recordId":"25TS04B0006||NEW SITE||SMG723||KAMPUS UNISULA","sourceRow":13,"name":"KAMPUS UNISULA","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"HOLD","projectId":"25TS04B0006","siteId":"SMG723","dmtId":"SMG-06-420","deadline":"","note":""},{"recordId":"25XL08C0426||COLLOCATION||SUM-SS-TLU-0005||PERAMBATAN","sourceRow":14,"name":"PERAMBATAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0426","siteId":"SUM-SS-TLU-0005","dmtId":"MRE-03-009","deadline":"","note":""},{"recordId":"25XL08C0373||COLLOCATION||SUM-SS-TLU-0007||PAGAR_BULAN","sourceRow":15,"name":"PAGAR_BULAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DROP BY DMT","projectId":"25XL08C0373","siteId":"SUM-SS-TLU-0007","dmtId":"","deadline":"","note":""},{"recordId":"25XL08C0300||COLLOCATION||SUM-SS-TLU-0010||TANAH_ABANG","sourceRow":16,"name":"TANAH_ABANG","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0300","siteId":"SUM-SS-TLU-0010","dmtId":"MRE-03-023","deadline":"","note":""},{"recordId":"25XL08C0703||COLLOCATION||JAW-YO-BTL-0032||SAWUNGAN_SANES","sourceRow":17,"name":"SAWUNGAN_SANES","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATENG","status":"BAST","projectId":"25XL08C0703","siteId":"JAW-YO-BTL-0032","dmtId":"BTL-06-081","deadline":"","note":""},{"recordId":"25XL08C0747||COLLOCATION||JAW-JI-TLG-0006||SENDANG_GEGER","sourceRow":18,"name":"SENDANG_GEGER","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"25XL08C0747","siteId":"JAW-JI-TLG-0006","dmtId":"TLG-07-138","deadline":"","note":""},{"recordId":"25XL08C0739||COLLOCATION||JAW-JI-TLG-0004||PUCANGLABAN","sourceRow":19,"name":"PUCANGLABAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"25XL08C0739","siteId":"JAW-JI-TLG-0004","dmtId":"TLG-07-077","deadline":"","note":""},{"recordId":"25XL08C0718||COLLOCATION||JAW-JI-TLG-0005||SENDANG_KEDOYO","sourceRow":20,"name":"SENDANG_KEDOYO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"25XL08C0718","siteId":"JAW-JI-TLG-0005","dmtId":"TLG-07-136","deadline":"","note":""},{"recordId":"25XL09C0014||COLLOCATION||JAW-YO-SMN-0049||HURIN_SAMBISARI","sourceRow":21,"name":"HURIN_SAMBISARI","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATENG","status":"BAST","projectId":"25XL09C0014","siteId":"JAW-YO-SMN-0049","dmtId":"SMN-06-166","deadline":"","note":""},{"recordId":"25XL08C0426||PERKUATAN||SUM-SS-TLU-0005||PERAMBATAN","sourceRow":22,"name":"PERAMBATAN","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0426","siteId":"SUM-SS-TLU-0005","dmtId":"MRE-03-009","deadline":"","note":""},{"recordId":"25XL08C0300||PERKUATAN||SUM-SS-TLU-0010||TANAH_ABANG","sourceRow":23,"name":"TANAH_ABANG","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0300","siteId":"SUM-SS-TLU-0010","dmtId":"MRE-03-023","deadline":"","note":""},{"recordId":"25XL08C0747||PERKUATAN||JAW-JI-TLG-0006||SENDANG_GEGER","sourceRow":24,"name":"SENDANG_GEGER","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"25XL08C0747","siteId":"JAW-JI-TLG-0006","dmtId":"TLG-07-138","deadline":"","note":""},{"recordId":"25XL08C0449||PERKUATAN||SUM-SS-KAG-0013||SUMBER_DERAS","sourceRow":25,"name":"SUMBER_DERAS","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0449","siteId":"SUM-SS-KAG-0013","dmtId":"KAG-03-026","deadline":"","note":""},{"recordId":"25XL10C0004||COLLOCATION||SUM-SS-PKB-0020||WANA_MUKTI","sourceRow":26,"name":"WANA_MUKTI","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0004","siteId":"SUM-SS-PKB-0020","dmtId":"PKB-03-026","deadline":"","note":""},{"recordId":"25XL10C0003||COLLOCATION||SUM-SS-PKB-0019||KARANG_SARI_BANYUASIN","sourceRow":27,"name":"KARANG_SARI_BANYUASIN","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0003","siteId":"SUM-SS-PKB-0019","dmtId":"PKB-03-007","deadline":"","note":""},{"recordId":"25TS10B0003||NEW SITE||BJN756||PASAR KOTA BANJARNEGARA RELOK","sourceRow":28,"name":"PASAR KOTA BANJARNEGARA RELOK","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS10B0003","siteId":"BJN756","dmtId":"BNR-06-105","deadline":"","note":""},{"recordId":"25TS10C0030||COLLOCATION||CMV040||NODAL_SALEM","sourceRow":29,"name":"NODAL_SALEM","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS10C0030","siteId":"CMV040","dmtId":"BBS-06-035","deadline":"","note":""},{"recordId":"25XL10C0238||COLLOCATION||SUM-LA-GNS-0019||SAKTI_BUANA","sourceRow":30,"name":"SAKTI_BUANA","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0238","siteId":"SUM-LA-GNS-0019","dmtId":"GNS-03-134","deadline":"","note":""},{"recordId":"25XL10C0342||COLLOCATION||JAW-JI-TLG-0017||KALIDAWIR_JOHO","sourceRow":31,"name":"KALIDAWIR_JOHO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"25XL10C0342","siteId":"JAW-JI-TLG-0017","dmtId":"TLG-07-042","deadline":"","note":""},{"recordId":"25XL10C0357||COLLOCATION||SUM-SS-BTA-0007||SION_ABU_HASSAN","sourceRow":32,"name":"SION_ABU_HASSAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0357","siteId":"SUM-SS-BTA-0007","dmtId":"BTA-03-019","deadline":"","note":""},{"recordId":"25XL10C0177||COLLOCATION||SUM-SS-PKB-0026||MATARAM_AIR_SALEH","sourceRow":33,"name":"MATARAM_AIR_SALEH","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0177","siteId":"SUM-SS-PKB-0026","dmtId":"PKB-03-160","deadline":"","note":""},{"recordId":"25XL10C0003||PERKUATAN||SUM-SS-PKB-0019||KARANG_SARI_BANYUASIN","sourceRow":34,"name":"KARANG_SARI_BANYUASIN","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0003","siteId":"SUM-SS-PKB-0019","dmtId":"PKB-03-007","deadline":"","note":""},{"recordId":"25TS10C0002||PERKUATAN||CMV006||HANAKAU","sourceRow":35,"name":"HANAKAU","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"BAST","projectId":"25TS10C0002","siteId":"CMV006","dmtId":"LIW-03-022","deadline":"10/12/2025","note":"Done"},{"recordId":"25XL11C0005||COLLOCATION||SUM-LA-KOT-0002||BATUTEGI","sourceRow":36,"name":"BATUTEGI","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"BAST","projectId":"25XL11C0005","siteId":"SUM-LA-KOT-0002","dmtId":"KOT-03-062","deadline":"18/12/2025","note":""},{"recordId":"25XL11C0016||COLLOCATION||SUM-BB-PGP-0007||GIRIMAYA_PINANG","sourceRow":37,"name":"GIRIMAYA_PINANG","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"BAST","projectId":"25XL11C0016","siteId":"SUM-BB-PGP-0007","dmtId":"PGP-03-036","deadline":"18/12/2025","note":""},{"recordId":"25TS12B0010||NEW SITE||BTL016||TAMANANDMT","sourceRow":38,"name":"TAMANANDMT","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS12B0010","siteId":"BTL016","dmtId":"BTL-06-252","deadline":"17/2/2026","note":""},{"recordId":"25TS12B0007||NEW SITE||TAG023||SENDANGRETO","sourceRow":39,"name":"SENDANGRETO","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATIM","status":"DONE","projectId":"25TS12B0007","siteId":"TAG023","dmtId":"TLG-07-157","deadline":"17/2/2026","note":""},{"recordId":"25XL12C0002||COLLOCATION||JAW-JT-SKT-2104||3G WIDURAN","sourceRow":40,"name":"3G WIDURAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"XLSMART","area":"JATENG","status":"PROGRESS","projectId":"25XL12C0002","siteId":"JAW-JT-SKT-2104","dmtId":"SKT-06-205","deadline":"23/12/2025","note":"HOLD\n- Site sedang sitac dari tanggal 9/12/2025"},{"recordId":"25IS12C0020||COLLOCATION||16TAG0186||MANGUNSARITULUNGAGUNG","sourceRow":41,"name":"MANGUNSARITULUNGAGUNG","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"ISAT","area":"JATIM","status":"DONE","projectId":"25IS12C0020","siteId":"16TAG0186","dmtId":"TLG-07-111","deadline":"6/1/2026","note":""},{"recordId":"25TS12B0131||NEW SITE||IDL-03-083||REKTORAT UNSRI","sourceRow":42,"name":"REKTORAT UNSRI","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"25TS12B0131","siteId":"IDL-03-083","dmtId":"OKI275","deadline":"13/1/2026","note":""},{"recordId":"25TS12Z0135||NEW SITE||IDL-03-084||TERMINAL UNSRI","sourceRow":43,"name":"TERMINAL UNSRI","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"25TS12Z0135","siteId":"IDL-03-084","dmtId":"OKI276","deadline":"13/1/2026","note":""},{"recordId":"26XL01C0064||COLLOCATION||JAW-JI-MJY-0022||TANJUNGREJO_MADIUN","sourceRow":44,"name":"TANJUNGREJO_MADIUN","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL01C0064","siteId":"JAW-JI-MJY-0022","dmtId":"MJY-07-027","deadline":"27/1/2026","note":""},{"recordId":"26XL01C0073||COLLOCATION||JAW-JI-KPN-0150||MALANG_NGADIRESO","sourceRow":45,"name":"MALANG_NGADIRESO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL01C0073","siteId":"JAW-JI-KPN-0150","dmtId":"KPN-07-241","deadline":"27/1/2026","note":""},{"recordId":"26TS01B0018||NEW SITE||BJO100||DUKUHANSANTREN1","sourceRow":46,"name":"DUKUHANSANTREN1","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATIM","status":"BAST","projectId":"26TS01B0018","siteId":"BJO100","dmtId":"BJN-07-169","deadline":"31/3/2026","note":""},{"recordId":"26TS01B0040||NEW SITE||KRA078||PLESUNGANGONDANGREJO","sourceRow":47,"name":"PLESUNGANGONDANGREJO","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"26TS01B0040","siteId":"KRA078","dmtId":"KRG-06-179","deadline":"31/3/2026","note":""},{"recordId":"26IS01C0006||COLLOCATION||16TGK0054||SENDANGRETO RELOC","sourceRow":48,"name":"SENDANGRETO RELOC","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATIM","status":"DONE","projectId":"26IS01C0006","siteId":"16TGK0054","dmtId":"TLG-07-157","deadline":"17/2/2026","note":""},{"recordId":"26TS02B0089||NEW SITE||IDY008||TANJUNGBATUTIMUR","sourceRow":49,"name":"TANJUNGBATUTIMUR","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"SUMBAGSEL","status":"DROP BY DMT","projectId":"26TS02B0089","siteId":"IDY008","dmtId":"IDL-03-087","deadline":"17/4/2026","note":""},{"recordId":"26TS02B0084||NEW SITE||RPT024||SUNGAIKIJANG","sourceRow":50,"name":"SUNGAIKIJANG","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26TS02B0084","siteId":"RPT024","dmtId":"RPT-03-022","deadline":"17/4/2026","note":""},{"recordId":"26TS02B0061||NEW SITE||KRA079||KRENDOWAHONOGONDANGREJO","sourceRow":51,"name":"KRENDOWAHONOGONDANGREJO","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"26TS02B0061","siteId":"KRA079","dmtId":"KRG-06-180","deadline":"16/4/2026","note":""},{"recordId":"26XL02C0027||COLLOCATION||JAW-YO-BTL-0145||TAMANANDMT","sourceRow":52,"name":"TAMANANDMT","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"JATENG","status":"PROGRESS","projectId":"26XL02C0027","siteId":"JAW-YO-BTL-0145","dmtId":"BTL-06-252","deadline":"4/5/2026","note":""},{"recordId":"26MR03C0038||COLLOCATION||EMR-28575||LUBUK LINGGAU UTARA","sourceRow":53,"name":"LUBUK LINGGAU UTARA","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0038","siteId":"EMR-28575","dmtId":"LLG-03-018","deadline":"21/5/2026","note":""},{"recordId":"26MR03C0041||COLLOCATION||EMR-29266||TSEL SEMBAWA","sourceRow":54,"name":"TSEL SEMBAWA","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0041","siteId":"EMR-29266","dmtId":"PKB-03-112","deadline":"26/3/2026","note":""},{"recordId":"26MR03C0037||COLLOCATION||EMR-29392||PERUMAHAANGRANDVILLAGSELARAIINDAH","sourceRow":55,"name":"PERUMAHAANGRANDVILLAGSELARAIINDAH","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0037","siteId":"EMR-29392","dmtId":"SKY-03-186","deadline":"26/3/2026","note":""},{"recordId":"26XL03C0027||COLLOCATION||SUM-SS-PKB-0054||KERANG PALEMBANG TANJUNG","sourceRow":56,"name":"KERANG PALEMBANG TANJUNG","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26XL03C0027","siteId":"SUM-SS-PKB-0054","dmtId":"PKB-03-198","deadline":"26/3/2026","note":""},{"recordId":"26MR03C0092||COLLOCATION||EMR-38218||NASUTION METRO","sourceRow":57,"name":"NASUTION METRO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0092","siteId":"EMR-38218","dmtId":"MET-03-007","deadline":"","note":""},{"recordId":"26MR03C0094||COLLOCATION||EMR-24127||BANJAREJO","sourceRow":58,"name":"BANJAREJO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0094","siteId":"EMR-24127","dmtId":"SDN-03-011","deadline":"","note":""},{"recordId":"26XL03C0150||COLLOCATION||JAW-JI-JBG-0055||SRIWIJAYA POKPHAND","sourceRow":59,"name":"SRIWIJAYA POKPHAND","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL03C0150","siteId":"JAW-JI-JBG-0055","dmtId":"JBG-07-039","deadline":"26/3/2026","note":""},{"recordId":"26XL03C0169||COLLOCATION||JAW-JI-JBG-0054||REJOSARI GADINGMANGU","sourceRow":60,"name":"REJOSARI GADINGMANGU","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL03C0169","siteId":"JAW-JI-JBG-0054","dmtId":"JBG-07-006","deadline":"26/3/2026","note":"Tutup lebaran idul fitri dari tanggal 18-30 Untuk Panel dan material alam.\n\n13 Hari\n\n\n26/3/2026 - 7/3/2026 = 13 Hari"},{"recordId":"26TS05C0003||COLLOCATION||MRD049||ULAKAGUNGULU","sourceRow":61,"name":"ULAKAGUNGULU","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26TS05C0003","siteId":"MRD049","dmtId":"MRD-03-016","deadline":"8/6/2026","note":""},{"recordId":"26XL04C0045||COLLOCATION||JAW-JI-JBG-0056||JOMBANG_BANJARDOWO","sourceRow":62,"name":"JOMBANG_BANJARDOWO","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"26XL04C0045","siteId":"JAW-JI-JBG-0056","dmtId":"JBG-07-093","deadline":"12/5/2026","note":""},{"recordId":"26TS05B0010||NEW SITE||LMJ161||PAGOWAN-DMT","sourceRow":63,"name":"PAGOWAN-DMT","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATIM","status":"PROGRESS","projectId":"26TS05B0010","siteId":"LMJ161","dmtId":"LMJ-07-160","deadline":"21/7/2026","note":""},{"recordId":"26XL03C0150||PERKUATAN||JAW-JI-JBG-0055||SRIWIJAYA POKPHAND","sourceRow":64,"name":"SRIWIJAYA POKPHAND","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"26XL03C0150","siteId":"JAW-JI-JBG-0055","dmtId":"JBG-07-039","deadline":"5/6/2026","note":""},{"recordId":"26TS05C0003||NEW SITE||MRD049||ULAKAGUNGULU","sourceRow":65,"name":"ULAKAGUNGULU","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26TS05C0003","siteId":"MRD049","dmtId":"MRD-03-016","deadline":"3/8/2026","note":""},{"recordId":"26TS05B0042||NEW SITE||LMJ002||LUMAJANG2","sourceRow":66,"name":"LUMAJANG2","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"JATIM","status":"DROP BY DMT","projectId":"26TS05B0042","siteId":"LMJ002","dmtId":"LMJ-07-162","deadline":"4/8/2026","note":""},{"recordId":"PML780||NEW SITE||PML780||LOSARI AMPELGADING / BANYUMUDAL MOGA","sourceRow":67,"name":"LOSARI AMPELGADING / BANYUMUDAL MOGA","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"","siteId":"PML780","dmtId":"","deadline":"","note":"522571890783"},{"recordId":"26TE06C0173||COLLOCATION||33PML_0057||KEBONDALEM_PEMALANG","sourceRow":68,"name":"KEBONDALEM_PEMALANG","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0173","siteId":"33PML_0057","dmtId":"PML-06-018","deadline":"","note":""},{"recordId":"26TE06C0147||COLLOCATION||33PML_0056||BOJONGBATA_PEMALANG","sourceRow":69,"name":"BOJONGBATA_PEMALANG","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0147","siteId":"33PML_0056","dmtId":"PML-06-001","deadline":"","note":""},{"recordId":"26TE06C0139||COLLOCATION||33PML_0058||TAMAN","sourceRow":70,"name":"TAMAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0139","siteId":"33PML_0058","dmtId":"PML-06-038","deadline":"","note":""},{"recordId":"26TE06R0004||COLLOCATION||33PML_0067||PESANTREN","sourceRow":71,"name":"PESANTREN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06R0004","siteId":"33PML_0067","dmtId":"PML-06-200","deadline":"","note":""},{"recordId":"26TE06C0180||COLLOCATION||33PML_0059||PELUTAN(P)","sourceRow":72,"name":"PELUTAN(P)","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0180","siteId":"33PML_0059","dmtId":"PML-06-057","deadline":"","note":""},{"recordId":"26TE06C0177||COLLOCATION||33PML_0055||PEMALANG","sourceRow":73,"name":"PEMALANG","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0177","siteId":"33PML_0055","dmtId":"PKL-06-019","deadline":"","note":""},{"recordId":"26TE06C0068||COLLOCATION||33PML_0036||KABUNAN_TAMAN","sourceRow":74,"name":"KABUNAN_TAMAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0068","siteId":"33PML_0036","dmtId":"PML-06-074","deadline":"","note":""},{"recordId":"26TE06C0185||COLLOCATION||33PML_0060||PECANGAKAN_COMAL_GF_SB","sourceRow":75,"name":"PECANGAKAN_COMAL_GF_SB","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0185","siteId":"33PML_0060","dmtId":"PML-06-072","deadline":"","note":""},{"recordId":"26IS06C0014||COLLOCATION||16PAS0271||GEMPENG_BANGIL_MT","sourceRow":76,"name":"GEMPENG_BANGIL_MT","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATIM","status":"PROGRESS","projectId":"26IS06C0014","siteId":"16PAS0271","dmtId":"PSR-07-199","deadline":"","note":""},{"recordId":"26TE06C0295||COLLOCATION||35GSK_0070||DMT_BUNGAHBUNGAH3","sourceRow":77,"name":"DMT_BUNGAHBUNGAH3","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0295","siteId":"35GSK_0070","dmtId":"GSK-07-056","deadline":"13/7/2026","note":""},{"recordId":"26TE06C0302||COLLOCATION||35GSK_0029||DMT_DAHANREJO","sourceRow":78,"name":"DMT_DAHANREJO","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0302","siteId":"35GSK_0029","dmtId":"GSK-07-032","deadline":"","note":""},{"recordId":"26TE06C0380||COLLOCATION||35GSK_0030||DMT_MULUNGDRIYOREJO5","sourceRow":79,"name":"DMT_MULUNGDRIYOREJO5","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0380","siteId":"35GSK_0030","dmtId":"GSK-07-054","deadline":"","note":""},{"recordId":"26TE06C0392||COLLOCATION||35GSK_0033||DMT_KEMUTERANGRESIK","sourceRow":80,"name":"DMT_KEMUTERANGRESIK","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"HOLD","projectId":"26TE06C0392","siteId":"35GSK_0033","dmtId":"GSK-07-065","deadline":"","note":""},{"recordId":"26TE06C0392||PERKUATAN||35GSK_0033||DMT_KEMUTERANGRESIK","sourceRow":81,"name":"DMT_KEMUTERANGRESIK","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"HOLD","projectId":"26TE06C0392","siteId":"35GSK_0033","dmtId":"GSK-07-065","deadline":"","note":""},{"recordId":"26TE06C0360||PERKUATAN||35GSK_0035||DMT_SUCI","sourceRow":82,"name":"DMT_SUCI","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0360","siteId":"35GSK_0035","dmtId":"GSK-07-087","deadline":"","note":""},{"recordId":"26TE06C0295||PERKUATAN||35GSK_0070||DMT_BUNGAHBUNGAH3","sourceRow":83,"name":"DMT_BUNGAHBUNGAH3","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0295","siteId":"35GSK_0070","dmtId":"GSK-07-056","deadline":"","note":""},{"recordId":"26IS06C0041||COLLOCATION||07PLG0384||FUAD PLG ex TANGGA_TAKAT","sourceRow":84,"name":"FUAD PLG ex TANGGA_TAKAT","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"ISAT","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26IS06C0041","siteId":"07PLG0384","dmtId":"PLG-03-037","deadline":"","note":""},{"recordId":"26XL07C0033||COLLOCATION||SUM-LA-BDL-0022||UNILA","sourceRow":85,"name":"UNILA","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26XL07C0033","siteId":"SUM-LA-BDL-0022","dmtId":"BDL-03-104","deadline":"","note":""},{"recordId":"26XL07C0049||COLLOCATION||SUM-LA-BDL-0189||PEMBANGUNAN BDL","sourceRow":86,"name":"PEMBANGUNAN BDL","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26XL07C0049","siteId":"SUM-LA-BDL-0189","dmtId":"BDL-03-064","deadline":"","note":""},{"recordId":"26TE06C0380||PERKUATAN||35GSK_0030||DMT_MULUNGDRIYOREJO5","sourceRow":87,"name":"DMT_MULUNGDRIYOREJO5","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0380","siteId":"35GSK_0030","dmtId":"GSK-07-054","deadline":"","note":""},{"recordId":"26TE07C0007||COLLOCATION||35SDA_0388||PASARBULANG","sourceRow":88,"name":"PASARBULANG","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE07C0007","siteId":"35SDA_0388","dmtId":"SDA-07-153","deadline":"","note":""},{"recordId":"26MR07C0099||COLLOCATION||EMR-24620||TSEL_PUTRARUMBIA / EMR-24620 Lampung Tengah","sourceRow":89,"name":"TSEL_PUTRARUMBIA / EMR-24620 Lampung Tengah","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR07C0099","siteId":"EMR-24620","dmtId":"GNS-03-104","deadline":"","note":""},{"recordId":"26MR07C0100||COLLOCATION||EMR-25946||TSEL_PASARPROYEK / EMR-25946 Lampung Tengah","sourceRow":90,"name":"TSEL_PASARPROYEK / EMR-25946 Lampung Tengah","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR07C0100","siteId":"EMR-25946","dmtId":"GNS-03-098","deadline":"","note":""},{"recordId":"26MR07C0101||COLLOCATION||EMR-27433||RENO BASUKI RUMBIA / EMR-27433 Lampung Tengah","sourceRow":91,"name":"RENO BASUKI RUMBIA / EMR-27433 Lampung Tengah","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR07C0101","siteId":"EMR-27433","dmtId":"GNS-03-025","deadline":"","note":""},{"recordId":"13TS12B1044||PBG||-||Kawasan Industri Candi3 ex Babankerep","sourceRow":92,"name":"Kawasan Industri Candi3 ex Babankerep","sow":"PBG","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"13TS12B1044","siteId":"","dmtId":"","deadline":"","note":""},{"recordId":"26MR08C0017||COLLOCATION||EMR-28089||DS_BRAJA_INDAH / EMR-28089 Lampung Timur","sourceRow":93,"name":"DS_BRAJA_INDAH / EMR-28089 Lampung Timur","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR08C0017","siteId":"EMR-28089","dmtId":"SDN-03-181","deadline":"","note":""},{"recordId":"26MR08C0031||COLLOCATION||EMR-26987||PASAR SEKAMPUNG / EMR-26987 Lampung Timur","sourceRow":94,"name":"PASAR SEKAMPUNG / EMR-26987 Lampung Timur","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR08C0031","siteId":"EMR-26987","dmtId":"SDN-03-032","deadline":"","note":""},{"recordId":"26TE08C0071||COLLOCATION||35PBL_0050||DMT_TRIWUNGUNGKIDULKADEMANGAN","sourceRow":95,"name":"DMT_TRIWUNGUNGKIDULKADEMANGAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0071","siteId":"35PBL_0050","dmtId":"KRS-07-028","deadline":"11/9/2026","note":""},{"recordId":"26TE08C0033||COLLOCATION||35PBL_0051||DMT_TERMINALBAYUANGGA","sourceRow":96,"name":"DMT_TERMINALBAYUANGGA","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0033","siteId":"35PBL_0051","dmtId":"PBL-07-016","deadline":"11/9/2026","note":""},{"recordId":"26TE08C0088||COLLOCATION||35PBL_0053||DMT_RSHIDAYATULLAH","sourceRow":97,"name":"DMT_RSHIDAYATULLAH","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0088","siteId":"35PBL_0053","dmtId":"PBL-07-020","deadline":"11/9/2026","note":""},{"recordId":"26TE08C0051||COLLOCATION||35PBL_0032||SEKARGADUNGBUGULKIDUL","sourceRow":98,"name":"SEKARGADUNGBUGULKIDUL","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0051","siteId":"35PBL_0032","dmtId":"PBL-07-013","deadline":"11/9/2026","note":""}]</script>
+<script id="seedData" type="application/json">[{"recordId":"25TS06B0042||NEW SITE||IDY001||TALANGSELEMAN PAYARAMAN","sourceRow":2,"name":"TALANGSELEMAN PAYARAMAN","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"DONE","projectId":"25TS06B0042","siteId":"IDY001","dmtId":"IDL-03-080","deadline":"-","note":"Done","address":"Dusun II, RT.004, Desa Talang Seleman, Kecamatan Payaraman, Kabupaten Ogan Ilir, Provinsi Sumatera Selatan","coordinate":"-3.420751, 104.484184"},{"recordId":"25TS08B0044||NEW SITE||SGE123||PEMATANGGAJAH2","sourceRow":3,"name":"PEMATANGGAJAH2","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"BAST","projectId":"25TS08B0044","siteId":"SGE123","dmtId":"SNT-03-122","deadline":"","note":"","address":"Dusun Kali Aro, RT.013/000,  Desa Pematang Gajah, Kecamatan Jambi Luar Kota, Kabupaten Muaro Jambi, Provinsi Jambi","coordinate":"-1.64564 , 103.52439"},{"recordId":"25TS08B0193||NEW SITE||SGE104||PERUMAHANGRANDNEMURA","sourceRow":4,"name":"PERUMAHANGRANDNEMURA","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"DONE","projectId":"25TS08B0193","siteId":"SGE104","dmtId":"SNT-03-124","deadline":"","note":"","address":"Dusun I, RT. 030/000, Desa Mekar Jaya, Kecamatan Sungai Gelam, Kabupaten Muara Jambi, Provinsi Jambi","coordinate":"-1.65888 , 103.61153"},{"recordId":"25TS02B0095||NEW SITE||MKD024||BALEKERTO KALIANGKRIK\n (NIB1_2025_000463)","sourceRow":5,"name":"BALEKERTO KALIANGKRIK\n (NIB1_2025_000463)","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS02B0095","siteId":"MKD024","dmtId":"MKD-06-166","deadline":"","note":"","address":"G596+VRJ Balekerto, Magelang Regency, Central Java, Indonesia","coordinate":"-7.4803, 110.162"},{"recordId":"25TS02B0093||NEW SITE||MKD020||BANJARSARI GRABAG\n (NIB1_2025_000459)","sourceRow":6,"name":"BANJARSARI GRABAG\n (NIB1_2025_000459)","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS02B0093","siteId":"MKD020","dmtId":"MKD-06-164","deadline":"","note":"","address":"M962+J74 Banjarsari, Magelang Regency, Central Java, Indonesia","coordinate":"-7.338476, 110.350714"},{"recordId":"25TS02B0126||NEW SITE||MKD029||SURODADI CANDIMULYO\n (NIB1_2025_000653)","sourceRow":7,"name":"SURODADI CANDIMULYO\n (NIB1_2025_000653)","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS02B0126","siteId":"MKD029","dmtId":"MKD-06-167","deadline":"","note":"","address":"G8MC+2CR Surodadi, Magelang Regency, Central Java, Indonesia","coordinate":"-7.467387, 110.321002"},{"recordId":"24IS12C0096||PERKUATAN||14WNG0163||TAWANGREJO_WNG_MT","sourceRow":8,"name":"TAWANGREJO_WNG_MT","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"24IS12C0096","siteId":"14WNG0163","dmtId":"WNG-06-169","deadline":"","note":"","address":"6565+J8P Slogoretno, Wonogiri Regency, Central Java, Indonesia","coordinate":"-7.788418, 111.158323"},{"recordId":"24EN10C0006||PERKUATAN||MTB004||TSEL_SUNGAIBENGKAL","sourceRow":9,"name":"TSEL_SUNGAIBENGKAL","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"DONE","projectId":"24EN10C0006","siteId":"MTB004","dmtId":"MRT-03-046","deadline":"","note":"","address":"Sungai Bengkal, Tebo Ilir, Kab. Tebo, Prov. Jambi","coordinate":"-1.546667, 102.723056"},{"recordId":"25IS03C0089||COLLOCATION||14GRO0182||PELEM_GROBOGAN_MT","sourceRow":10,"name":"PELEM_GROBOGAN_MT","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"25IS03C0089","siteId":"14GRO0182","dmtId":"PWD-06-119","deadline":"","note":"","address":"dusun pelem rt 03. rw 03 desa pelem. kec gabus. kab grobogan","coordinate":"-7.193168, 111.233967"},{"recordId":"25IS03C0165||COLLOCATION||14KND0168||TRISOBO_KENDAL_MT","sourceRow":11,"name":"TRISOBO_KENDAL_MT","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"25IS03C0165","siteId":"14KND0168","dmtId":"KDL-06-041","deadline":"","note":"","address":"RT.006 / RW.002, Desa. Trisobo  Trisobo Boja Kendal Kendal 50241","coordinate":"-7.06206 , 110.28603"},{"recordId":"25IS03C0089||PERKUATAN||14GRO0182||PELEM_GROBOGAN_MT","sourceRow":12,"name":"PELEM_GROBOGAN_MT","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATENG","status":"DONE","projectId":"25IS03C0089","siteId":"14GRO0182","dmtId":"PWD-06-119","deadline":"","note":"","address":"dusun pelem rt 03. rw 03 desa pelem. kec gabus. kab grobogan","coordinate":"-7.193168, 111.233967"},{"recordId":"25TS04B0006||NEW SITE||SMG723||KAMPUS UNISULA","sourceRow":13,"name":"KAMPUS UNISULA","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"HOLD","projectId":"25TS04B0006","siteId":"SMG723","dmtId":"SMG-06-420","deadline":"","note":"","address":"2FW4+8C9 Terboyo Kulon, Semarang City, Central Java, Indonesia","coordinate":"-6.954220 , 110.456120"},{"recordId":"25XL08C0426||COLLOCATION||SUM-SS-TLU-0005||PERAMBATAN","sourceRow":14,"name":"PERAMBATAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0426","siteId":"SUM-SS-TLU-0005","dmtId":"MRE-03-009","deadline":"","note":"","address":"Jl. Raya Perambatan, Dusun I,  Ds. Perambatan Kec. Abab Muara Enim Muara Enim 30114","coordinate":"-3.17012 , 104.16913"},{"recordId":"25XL08C0373||COLLOCATION||SUM-SS-TLU-0007||PAGAR_BULAN","sourceRow":15,"name":"PAGAR_BULAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DROP BY DMT","projectId":"25XL08C0373","siteId":"SUM-SS-TLU-0007","dmtId":"","deadline":"","note":"","address":"","coordinate":""},{"recordId":"25XL08C0300||COLLOCATION||SUM-SS-TLU-0010||TANAH_ABANG","sourceRow":16,"name":"TANAH_ABANG","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0300","siteId":"SUM-SS-TLU-0010","dmtId":"MRE-03-023","deadline":"","note":"","address":"Jalan pertamina  Desa harapan jaya kecamatan tanah abang Muara Enim Muara Enim 30114","coordinate":"-3.28998, 104.13679"},{"recordId":"25XL08C0703||COLLOCATION||JAW-YO-BTL-0032||SAWUNGAN_SANES","sourceRow":17,"name":"SAWUNGAN_SANES","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATENG","status":"BAST","projectId":"25XL08C0703","siteId":"JAW-YO-BTL-0032","dmtId":"BTL-06-081","deadline":"","note":"","address":"Dk. Karangmojo RT.005 Desa Trirenggo  Ds Trirenggo Bantul Bantul Bantul 50241","coordinate":"-7.9152628, 110.337906"},{"recordId":"25XL08C0747||COLLOCATION||JAW-JI-TLG-0006||SENDANG_GEGER","sourceRow":18,"name":"SENDANG_GEGER","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"25XL08C0747","siteId":"JAW-JI-TLG-0006","dmtId":"TLG-07-138","deadline":"","note":"","address":"3QQQ+29V Geger, Tulungagung Regency, East Java, Indonesia","coordinate":"-7.912397, 111.788408"},{"recordId":"25XL08C0739||COLLOCATION||JAW-JI-TLG-0004||PUCANGLABAN","sourceRow":19,"name":"PUCANGLABAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"25XL08C0739","siteId":"JAW-JI-TLG-0004","dmtId":"TLG-07-077","deadline":"","note":"","address":"Dsn Apak Brajang RT/RW 01/01, Ds Pucang Laban, Kec Pucang Laban, Kab Tulungagung","coordinate":"-8.26197, 112.01700"},{"recordId":"25XL08C0718||COLLOCATION||JAW-JI-TLG-0005||SENDANG_KEDOYO","sourceRow":20,"name":"SENDANG_KEDOYO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"25XL08C0718","siteId":"JAW-JI-TLG-0005","dmtId":"TLG-07-136","deadline":"","note":"","address":"2RGG+CCC Kedoyo, Tulungagung Regency, East Java, Indonesia","coordinate":"-7.97394, 111.826"},{"recordId":"25XL09C0014||COLLOCATION||JAW-YO-SMN-0049||HURIN_SAMBISARI","sourceRow":21,"name":"HURIN_SAMBISARI","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATENG","status":"BAST","projectId":"25XL09C0014","siteId":"JAW-YO-SMN-0049","dmtId":"SMN-06-166","deadline":"","note":"","address":"Jl. Mangga, Dukuh Kadirojo II Purwomartani Kalasan Sleman","coordinate":"-7.765363, 110.451884"},{"recordId":"25XL08C0426||PERKUATAN||SUM-SS-TLU-0005||PERAMBATAN","sourceRow":22,"name":"PERAMBATAN","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0426","siteId":"SUM-SS-TLU-0005","dmtId":"MRE-03-009","deadline":"","note":"","address":"Jl. Raya Perambatan, Dusun I,  Ds. Perambatan Kec. Abab Muara Enim Muara Enim 30114","coordinate":"-3.17012 , 104.16913"},{"recordId":"25XL08C0300||PERKUATAN||SUM-SS-TLU-0010||TANAH_ABANG","sourceRow":23,"name":"TANAH_ABANG","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0300","siteId":"SUM-SS-TLU-0010","dmtId":"MRE-03-023","deadline":"","note":"","address":"Jalan pertamina  Desa harapan jaya kecamatan tanah abang Muara Enim Muara Enim 30114","coordinate":"-3.28998, 104.13679"},{"recordId":"25XL08C0747||PERKUATAN||JAW-JI-TLG-0006||SENDANG_GEGER","sourceRow":24,"name":"SENDANG_GEGER","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"25XL08C0747","siteId":"JAW-JI-TLG-0006","dmtId":"TLG-07-138","deadline":"","note":"","address":"3QQQ+29V Geger, Tulungagung Regency, East Java, Indonesia","coordinate":"-7.912397, 111.788408"},{"recordId":"25XL08C0449||PERKUATAN||SUM-SS-KAG-0013||SUMBER_DERAS","sourceRow":25,"name":"SUMBER_DERAS","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL08C0449","siteId":"SUM-SS-KAG-0013","dmtId":"KAG-03-026","deadline":"","note":"","address":"Dusun I, RT.03/RW.01  Desa Sumber Deras, Kecamatan Mesuji Ogan Komering Ilir Ogan Komering Ilir 30114","coordinate":"-4,07374, 105,03924"},{"recordId":"25XL10C0004||COLLOCATION||SUM-SS-PKB-0020||WANA_MUKTI","sourceRow":26,"name":"WANA_MUKTI","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0004","siteId":"SUM-SS-PKB-0020","dmtId":"PKB-03-026","deadline":"","note":"","address":"Dusun I Tanah Kesring  Desa Mukut Kecamatan Pulau Rimau Banyuasin Banyuasin 30114","coordinate":"-2,64685, 104,42224"},{"recordId":"25XL10C0003||COLLOCATION||SUM-SS-PKB-0019||KARANG_SARI_BANYUASIN","sourceRow":27,"name":"KARANG_SARI_BANYUASIN","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0003","siteId":"SUM-SS-PKB-0019","dmtId":"PKB-03-007","deadline":"","note":"","address":"Karang Sari Primer 10 Rt. 03 Dusun I Desa Karang Sari Kecamatan Banyuasin Ii Banyuasin Banyuasin 30114","coordinate":"-2,27125, 104,69896"},{"recordId":"25TS10B0003||NEW SITE||BJN756||PASAR KOTA BANJARNEGARA RELOK","sourceRow":28,"name":"PASAR KOTA BANJARNEGARA RELOK","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS10B0003","siteId":"BJN756","dmtId":"BNR-06-105","deadline":"","note":"","address":"Jl. S. Parman RT01 RW01 Kel. Parakancanggah, Kec. Banjarnegara, Kab. Banjarnegara","coordinate":"-7.39468 , 109.70326"},{"recordId":"25TS10C0030||COLLOCATION||CMV040||NODAL_SALEM","sourceRow":29,"name":"NODAL_SALEM","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS10C0030","siteId":"CMV040","dmtId":"BBS-06-035","deadline":"","note":"","address":"JL. BANGBAYANG, KP. MALANDANG, KEC. SALEM, KAB. BREBES","coordinate":"-7.14981 , 108.79895"},{"recordId":"25XL10C0238||COLLOCATION||SUM-LA-GNS-0019||SAKTI_BUANA","sourceRow":30,"name":"SAKTI_BUANA","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0238","siteId":"SUM-LA-GNS-0019","dmtId":"GNS-03-134","deadline":"","note":"","address":"Dusun Candi Kuning RT.19/08 Desa Sakti Buana Kec.Seputih Banyak","coordinate":"-4.83458, 105.51838"},{"recordId":"25XL10C0342||COLLOCATION||JAW-JI-TLG-0017||KALIDAWIR_JOHO","sourceRow":31,"name":"KALIDAWIR_JOHO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"25XL10C0342","siteId":"JAW-JI-TLG-0017","dmtId":"TLG-07-042","deadline":"","note":"","address":"DSN JOHO DS JOHO KEC KALIDAWIR KAB TULUNGAGUNG","coordinate":"-8.17719 , 111.94580"},{"recordId":"25XL10C0357||COLLOCATION||SUM-SS-BTA-0007||SION_ABU_HASSAN","sourceRow":32,"name":"SION_ABU_HASSAN","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0357","siteId":"SUM-SS-BTA-0007","dmtId":"BTA-03-019","deadline":"","note":"","address":"Jl. Talang Ribang RT 13 RW 05  Batu Kuning Baturaja Ogan Komering Ulu Ogan Komering Ulu 28111","coordinate":"-4.08008, 104.15954"},{"recordId":"25XL10C0177||COLLOCATION||SUM-SS-PKB-0026||MATARAM_AIR_SALEH","sourceRow":33,"name":"MATARAM_AIR_SALEH","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0177","siteId":"SUM-SS-PKB-0026","dmtId":"PKB-03-160","deadline":"","note":"","address":"7XXQ+34J Sri Mulyo, Banyuasin Regency, South Sumatra, Indonesia","coordinate":"-2.702289, 104.987752"},{"recordId":"25XL10C0003||PERKUATAN||SUM-SS-PKB-0019||KARANG_SARI_BANYUASIN","sourceRow":34,"name":"KARANG_SARI_BANYUASIN","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"DONE","projectId":"25XL10C0003","siteId":"SUM-SS-PKB-0019","dmtId":"PKB-03-007","deadline":"","note":"","address":"Karang Sari Primer 10 Rt. 03 Dusun I  Desa Karang Sari Kecamatan Banyuasin Ii Banyuasin Banyuasin 30114","coordinate":"-2.27125, 104.69896"},{"recordId":"25TS10C0002||PERKUATAN||CMV006||HANAKAU","sourceRow":35,"name":"HANAKAU","sow":"PERKUATAN","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"BAST","projectId":"25TS10C0002","siteId":"CMV006","dmtId":"LIW-03-022","deadline":"10/12/2025","note":"Done","address":"Hara Kuning Desa Hanakau, Kec. Sukau  Ds Hanakau Sukau Lampung Barat Lampung Barat 28111","coordinate":"-4.99007, 104.08057"},{"recordId":"25XL11C0005||COLLOCATION||SUM-LA-KOT-0002||BATUTEGI","sourceRow":36,"name":"BATUTEGI","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"BAST","projectId":"25XL11C0005","siteId":"SUM-LA-KOT-0002","dmtId":"KOT-03-062","deadline":"18/12/2025","note":"","address":"PQJC+R7V Batu Tegi, Tanggamus Regency, Lampung, Indonesia","coordinate":"-5.267892, 104.770684"},{"recordId":"25XL11C0016||COLLOCATION||SUM-BB-PGP-0007||GIRIMAYA_PINANG","sourceRow":37,"name":"GIRIMAYA_PINANG","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"BAST","projectId":"25XL11C0016","siteId":"SUM-BB-PGP-0007","dmtId":"PGP-03-036","deadline":"18/12/2025","note":"","address":"Jl. Nusantara Link. Parit Pekir RT 001 Kel. Sungai Liat Kec. Sungai Liat Kab. Bangka, Prov. Kepulauan Bangka Belitung","coordinate":"-2.1423, 106.12069"},{"recordId":"25TS12B0010||NEW SITE||BTL016||TAMANANDMT","sourceRow":38,"name":"TAMANANDMT","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATENG","status":"DONE","projectId":"25TS12B0010","siteId":"BTL016","dmtId":"BTL-06-252","deadline":"17/2/2026","note":"","address":"Dk. Nglebeng RT.02 Desa Tamanan Kec. Banguntapan Kab. Bantul, DIY.","coordinate":"-7.842190° , 110.392090°"},{"recordId":"25TS12B0007||NEW SITE||TAG023||SENDANGRETO","sourceRow":39,"name":"SENDANGRETO","sow":"NEW SITE","bast":true,"oneflux":true,"binder":true,"tenant":"TSEL","area":"JATIM","status":"DONE","projectId":"25TS12B0007","siteId":"TAG023","dmtId":"TLG-07-157","deadline":"17/2/2026","note":"","address":"DUSUN TUGU RT.01 RW.02 DESA TUGU KEC. SENDANG\nKAB. TULUNGAGUNG JAWA TIMUR","coordinate":"-7.964028° , 111.853529°"},{"recordId":"25XL12C0002||COLLOCATION||JAW-JT-SKT-2104||3G WIDURAN","sourceRow":40,"name":"3G WIDURAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"XLSMART","area":"JATENG","status":"PROGRESS","projectId":"25XL12C0002","siteId":"JAW-JT-SKT-2104","dmtId":"SKT-06-205","deadline":"23/12/2025","note":"HOLD\n- Site sedang sitac dari tanggal 9/12/2025","address":"CRRJ+FG7 Gilingan, Surakarta City, Central Java, Indonesia","coordinate":"-7.55883, 110.83130"},{"recordId":"25IS12C0020||COLLOCATION||16TAG0186||MANGUNSARITULUNGAGUNG","sourceRow":41,"name":"MANGUNSARITULUNGAGUNG","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"ISAT","area":"JATIM","status":"DONE","projectId":"25IS12C0020","siteId":"16TAG0186","dmtId":"TLG-07-111","deadline":"6/1/2026","note":"","address":"GEDUNG GRIYA EFB, JL. KH. ABU MANSYUR, R Tawangsari Kedungwaru Tulungagung","coordinate":""},{"recordId":"25TS12B0131||NEW SITE||IDL-03-083||REKTORAT UNSRI","sourceRow":42,"name":"REKTORAT UNSRI","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"25TS12B0131","siteId":"IDL-03-083","dmtId":"OKI275","deadline":"13/1/2026","note":"","address":"JL. RAYA PALEMBANG PRABUMULIH KM.32\nKEL.INDRALAYA INDAH KEC.INDRALAYA KAB.OGAN ILIR\nPROVINSI SUMATERA SELATAN","coordinate":"-3.215911° , 104.650084°"},{"recordId":"25TS12Z0135||NEW SITE||IDL-03-084||TERMINAL UNSRI","sourceRow":43,"name":"TERMINAL UNSRI","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"25TS12Z0135","siteId":"IDL-03-084","dmtId":"OKI276","deadline":"13/1/2026","note":"","address":"JL. RAYA PALEMBANG PRABUMULIH KM.32\nKEL.INDRALAYA INDAH KEC.INDRALAYA KAB.OGAN ILIR\nPROVINSI SUMATERA SELATAN","coordinate":"-3.21954° , 104.64992°"},{"recordId":"26XL01C0064||COLLOCATION||JAW-JI-MJY-0022||TANJUNGREJO_MADIUN","sourceRow":44,"name":"TANJUNGREJO_MADIUN","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL01C0064","siteId":"JAW-JI-MJY-0022","dmtId":"MJY-07-027","deadline":"27/1/2026","note":"","address":"Dsn Tanjungrejo RT 25 RW 08  Desa Tanjungrejo Kec Kebonsari Madiun Madiun 60235","coordinate":"-7.76289, 111.47365"},{"recordId":"26XL01C0073||COLLOCATION||JAW-JI-KPN-0150||MALANG_NGADIRESO","sourceRow":45,"name":"MALANG_NGADIRESO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL01C0073","siteId":"JAW-JI-KPN-0150","dmtId":"KPN-07-241","deadline":"27/1/2026","note":"","address":"Ngadireso RT.02 RW.01 Ds.Ngadireso kec.P Ngadireso Poncokusumo MALANG","coordinate":"-8.070001, 112.77277"},{"recordId":"26TS01B0018||NEW SITE||BJO100||DUKUHANSANTREN1","sourceRow":46,"name":"DUKUHANSANTREN1","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATIM","status":"BAST","projectId":"26TS01B0018","siteId":"BJO100","dmtId":"BJN-07-169","deadline":"31/3/2026","note":"","address":"Dusun Bendo RT.10 RW.01 Desa Bendo Kec. Kapas Kab. Bojonegoro, Jawa Timur","coordinate":"-7.223681 , 111.874141"},{"recordId":"26TS01B0040||NEW SITE||KRA078||PLESUNGANGONDANGREJO","sourceRow":47,"name":"PLESUNGANGONDANGREJO","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"26TS01B0040","siteId":"KRA078","dmtId":"KRG-06-179","deadline":"31/3/2026","note":"","address":"DK. Sulurejo RT.009 RW.009 Ds Plesungan Kec. Gondangrejo Kab. Karanganyar Jawa Tengah","coordinate":"-7.530090° , 110.86253°"},{"recordId":"26IS01C0006||COLLOCATION||16TGK0054||SENDANGRETO RELOC","sourceRow":48,"name":"SENDANGRETO RELOC","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATIM","status":"DONE","projectId":"26IS01C0006","siteId":"16TGK0054","dmtId":"TLG-07-157","deadline":"17/2/2026","note":"","address":"DUSUN TUGU RT.01 RW.02 DESA TUGU KEC. SENDANG\nKAB. TULUNGAGUNG JAWA TIMUR","coordinate":"-7.964028° , 111.853529°"},{"recordId":"26TS02B0089||NEW SITE||IDY008||TANJUNGBATUTIMUR","sourceRow":49,"name":"TANJUNGBATUTIMUR","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"SUMBAGSEL","status":"DROP BY DMT","projectId":"26TS02B0089","siteId":"IDY008","dmtId":"IDL-03-087","deadline":"17/4/2026","note":"","address":"","coordinate":""},{"recordId":"26TS02B0084||NEW SITE||RPT024||SUNGAIKIJANG","sourceRow":50,"name":"SUNGAIKIJANG","sow":"NEW SITE","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26TS02B0084","siteId":"RPT024","dmtId":"RPT-03-022","deadline":"17/4/2026","note":"","address":"Dusun 1, Desa Sungai Kijang, Kec. Rawas Ulu , Kab. Musi Rawas Utara, Provinsi. Sumatera Selatan","coordinate":"-2.57401° , 102.78766°"},{"recordId":"26TS02B0061||NEW SITE||KRA079||KRENDOWAHONOGONDANGREJO","sourceRow":51,"name":"KRENDOWAHONOGONDANGREJO","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"26TS02B0061","siteId":"KRA079","dmtId":"KRG-06-180","deadline":"16/4/2026","note":"","address":"","coordinate":""},{"recordId":"26XL02C0027||COLLOCATION||JAW-YO-BTL-0145||TAMANANDMT","sourceRow":52,"name":"TAMANANDMT","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"JATENG","status":"PROGRESS","projectId":"26XL02C0027","siteId":"JAW-YO-BTL-0145","dmtId":"BTL-06-252","deadline":"4/5/2026","note":"","address":"Dk. Nglebeng RT.02 Desa Tamanan Kec. Banguntapan Kab. Bantul, DIY.","coordinate":"-7.842190° , 110.392090°"},{"recordId":"26MR03C0038||COLLOCATION||EMR-28575||LUBUK LINGGAU UTARA","sourceRow":53,"name":"LUBUK LINGGAU UTARA","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0038","siteId":"EMR-28575","dmtId":"LLG-03-018","deadline":"21/5/2026","note":"","address":"JL. Kenanga II RT.09 Desa Kenanga  Talang Muara Enim Lubuk Linggau Barat Lubuk Linggau, Kota Lubuk Linggau, Kota 28111","coordinate":"-3.28657, 102.86656"},{"recordId":"26MR03C0041||COLLOCATION||EMR-29266||TSEL SEMBAWA","sourceRow":54,"name":"TSEL SEMBAWA","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0041","siteId":"EMR-29266","dmtId":"PKB-03-112","deadline":"26/3/2026","note":"","address":"Emplasemen Kebun Balai Pnelitian Sembawa  Lalang Sembawa Sembawa BANYUASIN BANYUASIN 28111","coordinate":"-2.9327, 104.53905"},{"recordId":"26MR03C0037||COLLOCATION||EMR-29392||PERUMAHAANGRANDVILLAGSELARAIINDAH","sourceRow":55,"name":"PERUMAHAANGRANDVILLAGSELARAIINDAH","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0037","siteId":"EMR-29392","dmtId":"SKY-03-186","deadline":"26/3/2026","note":"","address":"Jln. Selarai, RT.018/RW.003, Kel. Balai Agung, Kec. Sekayu, Kab. Musi banyuasin, South Sumatra, Indonesia","coordinate":"-2.843046, 103.83401"},{"recordId":"26XL03C0027||COLLOCATION||SUM-SS-PKB-0054||KERANG PALEMBANG TANJUNG","sourceRow":56,"name":"KERANG PALEMBANG TANJUNG","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26XL03C0027","siteId":"SUM-SS-PKB-0054","dmtId":"PKB-03-198","deadline":"26/3/2026","note":"","address":"Dusun VII RT.17/07 Desa Tanjung Karang Kec.Rambutan Kab.Banyuasin","coordinate":"-3.090802, 104.950709"},{"recordId":"26MR03C0092||COLLOCATION||EMR-38218||NASUTION METRO","sourceRow":57,"name":"NASUTION METRO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0092","siteId":"EMR-38218","dmtId":"MET-03-007","deadline":"","note":"","address":"Jl. Raden Intan No. 61\nKel. Imopuro, Kec. Metro Pusat\nKota Metro – Lampung","coordinate":"-5.11093 , 105.30937"},{"recordId":"26MR03C0094||COLLOCATION||EMR-24127||BANJAREJO","sourceRow":58,"name":"BANJAREJO","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR03C0094","siteId":"EMR-24127","dmtId":"SDN-03-011","deadline":"","note":"","address":"Dusun III RT 12 RW 05\nKel. Bumiharjo, Kec. Batang Hari\nKab. Lampung Timur","coordinate":"-5.11815 , 105.34874"},{"recordId":"26XL03C0150||COLLOCATION||JAW-JI-JBG-0055||SRIWIJAYA POKPHAND","sourceRow":59,"name":"SRIWIJAYA POKPHAND","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL03C0150","siteId":"JAW-JI-JBG-0055","dmtId":"JBG-07-039","deadline":"26/3/2026","note":"","address":"Jl Sriwijaya RT001 RW 003 Ds Ploso  Ploso Ploso Jombang Jombang 60235","coordinate":"7° 27' 0.01\" S , 112° 14' 3.33\" E"},{"recordId":"26XL03C0169||COLLOCATION||JAW-JI-JBG-0054||REJOSARI GADINGMANGU","sourceRow":60,"name":"REJOSARI GADINGMANGU","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"DONE","projectId":"26XL03C0169","siteId":"JAW-JI-JBG-0054","dmtId":"JBG-07-006","deadline":"26/3/2026","note":"Tutup lebaran idul fitri dari tanggal 18-30 Untuk Panel dan material alam.\n\n13 Hari\n\n\n26/3/2026 - 7/3/2026 = 13 Hari","address":"Dsn Banjarsari RT003/RW001 Ds Banjarsari, Kec Bandar Kedung Mulyo Jombang Jombang 60235","coordinate":"7° 33' 13.85\" S , 112° 9' 31.1\" E"},{"recordId":"26TS05C0003||COLLOCATION||MRD049||ULAKAGUNGULU","sourceRow":61,"name":"ULAKAGUNGULU","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26TS05C0003","siteId":"MRD049","dmtId":"MRD-03-016","deadline":"8/6/2026","note":"","address":"JL. MAHARANI, DESA MUARA DUA KISAM, KEC. MUARA DUA KISAM, KAB. OKU SELATAN","coordinate":"-4.41153 , 103.75463"},{"recordId":"26XL04C0045||COLLOCATION||JAW-JI-JBG-0056||JOMBANG_BANJARDOWO","sourceRow":62,"name":"JOMBANG_BANJARDOWO","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"26XL04C0045","siteId":"JAW-JI-JBG-0056","dmtId":"JBG-07-093","deadline":"12/5/2026","note":"","address":"Dsn Banjar Dowo RT/RW 01/01, Ds Banjar Dowo, Kec Jombang, Kab Jombang","coordinate":"-7.522636, 112.214139"},{"recordId":"26TS05B0010||NEW SITE||LMJ161||PAGOWAN-DMT","sourceRow":63,"name":"PAGOWAN-DMT","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATIM","status":"PROGRESS","projectId":"26TS05B0010","siteId":"LMJ161","dmtId":"LMJ-07-160","deadline":"21/7/2026","note":"","address":"Dusun Saringan RT 014 RW 005, Desa Jambearum, Kec. Pasrujambe, Kab. Lumajang.","coordinate":"-8.12295° , 113.08289°"},{"recordId":"26XL03C0150||PERKUATAN||JAW-JI-JBG-0055||SRIWIJAYA POKPHAND","sourceRow":64,"name":"SRIWIJAYA POKPHAND","sow":"PERKUATAN","bast":false,"oneflux":true,"binder":true,"tenant":"XLSMART","area":"JATIM","status":"BAST","projectId":"26XL03C0150","siteId":"JAW-JI-JBG-0055","dmtId":"JBG-07-039","deadline":"5/6/2026","note":"","address":"Jl Sriwijaya RT001 RW 003 Ds Ploso  Ploso Ploso Jombang Jombang 60235","coordinate":"7° 27' 0.01\" S , 112° 14' 3.33\" E"},{"recordId":"26TS05C0003||NEW SITE||MRD049||ULAKAGUNGULU","sourceRow":65,"name":"ULAKAGUNGULU","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26TS05C0003","siteId":"MRD049","dmtId":"MRD-03-016","deadline":"3/8/2026","note":"","address":"","coordinate":""},{"recordId":"26TS05B0042||NEW SITE||LMJ002||LUMAJANG2","sourceRow":66,"name":"LUMAJANG2","sow":"NEW SITE","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"JATIM","status":"DROP BY DMT","projectId":"26TS05B0042","siteId":"LMJ002","dmtId":"LMJ-07-162","deadline":"4/8/2026","note":"","address":"","coordinate":""},{"recordId":"PML780||NEW SITE||PML780||LOSARI AMPELGADING / BANYUMUDAL MOGA","sourceRow":67,"name":"LOSARI AMPELGADING / BANYUMUDAL MOGA","sow":"NEW SITE","bast":false,"oneflux":false,"binder":true,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"","siteId":"PML780","dmtId":"","deadline":"","note":"522571890783","address":"Ds. Losari RT 04 RW 04, Kec. Ampelgading, Kab. Pemalang","coordinate":"-6.916670° , 109.522810°"},{"recordId":"26TE06C0173||COLLOCATION||33PML_0057||KEBONDALEM_PEMALANG","sourceRow":68,"name":"KEBONDALEM_PEMALANG","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0173","siteId":"33PML_0057","dmtId":"PML-06-018","deadline":"","note":"","address":"Jl Brantas Kebondalem RT 03 RW 02 Kebondalem Pemalang Pemalang Pemalang 50241","coordinate":"-6.89674 , 109.37712"},{"recordId":"26TE06C0147||COLLOCATION||33PML_0056||BOJONGBATA_PEMALANG","sourceRow":69,"name":"BOJONGBATA_PEMALANG","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0147","siteId":"33PML_0056","dmtId":"PML-06-001","deadline":"","note":"","address":"Jl. Anggur Rt : 01 Rw : 1 No 11 Kel. Bojongbata Kec. Pemalang Pemalang Pemalang 52319","coordinate":"-6.915821 , 109.381035"},{"recordId":"26TE06C0139||COLLOCATION||33PML_0058||TAMAN","sourceRow":70,"name":"TAMAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0139","siteId":"33PML_0058","dmtId":"PML-06-038","deadline":"","note":"","address":"JL. HALMAHERA RT.05, RW.02 DESA CIBELOK KECAMATAN TAMAN KABUPATEN PEMALANG","coordinate":"-6.92118 , 109.40874"},{"recordId":"26TE06R0004||COLLOCATION||33PML_0067||PESANTREN","sourceRow":71,"name":"PESANTREN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06R0004","siteId":"33PML_0067","dmtId":"PML-06-200","deadline":"","note":"","address":"Desa Kendaldoyong, RT 01 RW 02, Kec. Pet Pemalang","coordinate":"-6.85033 , 109.50443"},{"recordId":"26TE06C0180||COLLOCATION||33PML_0059||PELUTAN(P)","sourceRow":72,"name":"PELUTAN(P)","sow":"COLLOCATION","bast":true,"oneflux":true,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0180","siteId":"33PML_0059","dmtId":"PML-06-057","deadline":"","note":"","address":"Jl. Re. Martadinata, Kel. Pelutan, Kec. Pemalang, Kab. Pemalang, Prop. Jateng","coordinate":"-6.883086 , 109.380806"},{"recordId":"26TE06C0177||COLLOCATION||33PML_0055||PEMALANG","sourceRow":73,"name":"PEMALANG","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0177","siteId":"33PML_0055","dmtId":"PKL-06-019","deadline":"","note":"","address":"Pekalongan, Kota Pekalongan, Kota Pekalongan, Kota Pekalongan, Kota","coordinate":"-6.90083 , 109.38756"},{"recordId":"26TE06C0068||COLLOCATION||33PML_0036||KABUNAN_TAMAN","sourceRow":74,"name":"KABUNAN_TAMAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0068","siteId":"33PML_0036","dmtId":"PML-06-074","deadline":"","note":"","address":"DESA KABUNAN RT 01 RW 05 KEC. TAMAN KAB. PEMALANG PEMALANG PEMALANG","coordinate":"-6.88626944 , 109.4127194"},{"recordId":"26TE06C0185||COLLOCATION||33PML_0060||PECANGAKAN_COMAL_GF_SB","sourceRow":75,"name":"PECANGAKAN_COMAL_GF_SB","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATENG","status":"PROGRESS","projectId":"26TE06C0185","siteId":"33PML_0060","dmtId":"PML-06-072","deadline":"","note":"","address":"JL MERAPI RAYA NO30 PECANGAKAN COMAL JAW PEMALANG PEMALANG PEMALANG","coordinate":"-6.91443 , 109.53894"},{"recordId":"26IS06C0014||COLLOCATION||16PAS0271||GEMPENG_BANGIL_MT","sourceRow":76,"name":"GEMPENG_BANGIL_MT","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"ISAT","area":"JATIM","status":"PROGRESS","projectId":"26IS06C0014","siteId":"16PAS0271","dmtId":"PSR-07-199","deadline":"","note":"","address":"CQ3X+C7H Gempeng, Pasuruan Regency, East Java, Indonesia","coordinate":"-7.596431, 112.798219"},{"recordId":"26TE06C0295||COLLOCATION||35GSK_0070||DMT_BUNGAHBUNGAH3","sourceRow":77,"name":"DMT_BUNGAHBUNGAH3","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0295","siteId":"35GSK_0070","dmtId":"GSK-07-056","deadline":"13/7/2026","note":"","address":"Jl. Raya Bungah No. 1C Lemahdelik Bungah Gresik Gresik 60235","coordinate":"-7.05576 , 112.57619"},{"recordId":"26TE06C0302||COLLOCATION||35GSK_0029||DMT_DAHANREJO","sourceRow":78,"name":"DMT_DAHANREJO","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0302","siteId":"35GSK_0029","dmtId":"GSK-07-032","deadline":"","note":"","address":"Dusun Banjarsari RT 09 RW 02  Banjarsari Manyar GRESIK GRESIK 60235","coordinate":"-7.14773 , 112.59174"},{"recordId":"26TE06C0380||COLLOCATION||35GSK_0030||DMT_MULUNGDRIYOREJO5","sourceRow":79,"name":"DMT_MULUNGDRIYOREJO5","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0380","siteId":"35GSK_0030","dmtId":"GSK-07-054","deadline":"","note":"","address":"JL. Pancawarna RT.08 RW.08, DS. Petiken, Kel. Mulung, Kec. Driyorejo, Kab.Gresik","coordinate":"-7.339835 , 112.638128"},{"recordId":"26TE06C0392||COLLOCATION||35GSK_0033||DMT_KEMUTERANGRESIK","sourceRow":80,"name":"DMT_KEMUTERANGRESIK","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"HOLD","projectId":"26TE06C0392","siteId":"35GSK_0033","dmtId":"GSK-07-065","deadline":"","note":"","address":"Jl. Sindojoyo X E, Kel. Lumpur, Kec. Gresik, Kab. Gresik","coordinate":"-7.14875 , 112.65416"},{"recordId":"26TE06C0392||PERKUATAN||35GSK_0033||DMT_KEMUTERANGRESIK","sourceRow":81,"name":"DMT_KEMUTERANGRESIK","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"HOLD","projectId":"26TE06C0392","siteId":"35GSK_0033","dmtId":"GSK-07-065","deadline":"","note":"","address":"Jl. Sindojoyo X E, Kel. Lumpur, Kec. Gresik, Kab. Gresik","coordinate":"-7.14875 , 112.65416"},{"recordId":"26TE06C0360||PERKUATAN||35GSK_0035||DMT_SUCI","sourceRow":82,"name":"DMT_SUCI","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0360","siteId":"35GSK_0035","dmtId":"GSK-07-087","deadline":"","note":"","address":"Dusun Suci RT14 RW04 KelSuci KecManyar -- Gresik","coordinate":"-7.14644, 112.60146"},{"recordId":"26TE06C0295||PERKUATAN||35GSK_0070||DMT_BUNGAHBUNGAH3","sourceRow":83,"name":"DMT_BUNGAHBUNGAH3","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0295","siteId":"35GSK_0070","dmtId":"GSK-07-056","deadline":"","note":"","address":"Jl. Raya Bungah No. 1C Lemahdelik Bungah Gresik Gresik 60235","coordinate":"-7.05576 , 112.57619"},{"recordId":"26IS06C0041||COLLOCATION||07PLG0384||FUAD PLG ex TANGGA_TAKAT","sourceRow":84,"name":"FUAD PLG ex TANGGA_TAKAT","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"ISAT","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26IS06C0041","siteId":"07PLG0384","dmtId":"PLG-03-037","deadline":"","note":"","address":"Komplek Permata Biru RT.065/ RW.05  Kelurahan 16 Ulu, Kecamatan Ulu II  Palembang, Kota 30114","coordinate":"-2.990673, 104.787617"},{"recordId":"26XL07C0033||COLLOCATION||SUM-LA-BDL-0022||UNILA","sourceRow":85,"name":"UNILA","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26XL07C0033","siteId":"SUM-LA-BDL-0022","dmtId":"BDL-03-104","deadline":"","note":"","address":"JL. PROF. SOEMANTRI BROJONEGORO  Bandar Lampung, Kota Bandar Lampung, Kota Bandar Lampung, Kota Bandar Lampung, Kota 28111","coordinate":"-5.36944, 105.241389"},{"recordId":"26XL07C0049||COLLOCATION||SUM-LA-BDL-0189||PEMBANGUNAN BDL","sourceRow":86,"name":"PEMBANGUNAN BDL","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"XLSMART","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26XL07C0049","siteId":"SUM-LA-BDL-0189","dmtId":"BDL-03-064","deadline":"","note":"","address":"Jalan Pulau Pandan No.38 RT.09,  Kelurahan Waydadi Kecamatan Sukarame  Bandar Lampung, Kota 30114","coordinate":"-5.3791, 105.29333"},{"recordId":"26TE06C0380||PERKUATAN||35GSK_0030||DMT_MULUNGDRIYOREJO5","sourceRow":87,"name":"DMT_MULUNGDRIYOREJO5","sow":"PERKUATAN","bast":false,"oneflux":false,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE06C0380","siteId":"35GSK_0030","dmtId":"GSK-07-054","deadline":"","note":"","address":"JL. Pancawarna RT.08 RW.08, DS. Petiken, Kel. Mulung, Kec. Driyorejo, Kab.Gresik","coordinate":"-7.33983, 112.63816"},{"recordId":"26TE07C0007||COLLOCATION||35SDA_0388||PASARBULANG","sourceRow":88,"name":"PASARBULANG","sow":"COLLOCATION","bast":false,"oneflux":true,"binder":true,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE07C0007","siteId":"35SDA_0388","dmtId":"SDA-07-153","deadline":"","note":"","address":"Dusun Gampang RT08 RW02 Desa Gampang Kec Prambon Kab Sidoarjo Prop Jawa Timur","coordinate":"-7.48802, 112.60347"},{"recordId":"26MR07C0099||COLLOCATION||EMR-24620||TSEL_PUTRARUMBIA / EMR-24620 Lampung Tengah","sourceRow":89,"name":"TSEL_PUTRARUMBIA / EMR-24620 Lampung Tengah","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR07C0099","siteId":"EMR-24620","dmtId":"GNS-03-104","deadline":"","note":"","address":"Kampung Bina Karya Utama, RT 023. Kec Putra Rumbia","coordinate":"-4.81279, 105.58518"},{"recordId":"26MR07C0100||COLLOCATION||EMR-25946||TSEL_PASARPROYEK / EMR-25946 Lampung Tengah","sourceRow":90,"name":"TSEL_PASARPROYEK / EMR-25946 Lampung Tengah","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR07C0100","siteId":"EMR-25946","dmtId":"GNS-03-098","deadline":"","note":"","address":"Dusun IV RT.001 RW.001 Kel.Sidodadi Kec.Bandar Surabaya Kab.Lampung Tengah","coordinate":"-4.68436, 105.784"},{"recordId":"26MR07C0101||COLLOCATION||EMR-27433||RENO BASUKI RUMBIA / EMR-27433 Lampung Tengah","sourceRow":91,"name":"RENO BASUKI RUMBIA / EMR-27433 Lampung Tengah","sow":"COLLOCATION","bast":true,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR07C0101","siteId":"EMR-27433","dmtId":"GNS-03-025","deadline":"","note":"","address":"Jl, Lintas Rumbia, Dusun III RT 11 RW 006 Kel, Reno Basuki, Kec, Rumbia, Kabupaten Lampung Tengah Provinsi Lampung","coordinate":"-4.81435 , 105.61941"},{"recordId":"13TS12B1044||PBG||-||Kawasan Industri Candi3 ex Babankerep","sourceRow":92,"name":"Kawasan Industri Candi3 ex Babankerep","sow":"PBG","bast":false,"oneflux":false,"binder":false,"tenant":"TSEL","area":"JATENG","status":"PROGRESS","projectId":"13TS12B1044","siteId":"","dmtId":"","deadline":"","note":"","address":"","coordinate":""},{"recordId":"26MR08C0017||COLLOCATION||EMR-28089||DS_BRAJA_INDAH / EMR-28089 Lampung Timur","sourceRow":93,"name":"DS_BRAJA_INDAH / EMR-28089 Lampung Timur","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR08C0017","siteId":"EMR-28089","dmtId":"SDN-03-181","deadline":"","note":"","address":"Dusun IV, RT 013 RW 08, deca Braja Indah, Kec. Braja Selebah, Kab. Lampung Timur, Lampung","coordinate":"-5.1765 , 105.744"},{"recordId":"26MR08C0031||COLLOCATION||EMR-26987||PASAR SEKAMPUNG / EMR-26987 Lampung Timur","sourceRow":94,"name":"PASAR SEKAMPUNG / EMR-26987 Lampung Timur","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":true,"tenant":"MY REPUBLIC","area":"SUMBAGSEL","status":"PROGRESS","projectId":"26MR08C0031","siteId":"EMR-26987","dmtId":"SDN-03-032","deadline":"","note":"","address":"Dusun wonokerto rt.002 rw.001 Wonokarto Sekampung Lampung Timur Lampung Timur 28111","coordinate":"-5.131673 , 105.454637"},{"recordId":"26TE08C0071||COLLOCATION||35PBL_0050||DMT_TRIWUNGUNGKIDULKADEMANGAN","sourceRow":95,"name":"DMT_TRIWUNGUNGKIDULKADEMANGAN","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0071","siteId":"35PBL_0050","dmtId":"KRS-07-028","deadline":"11/9/2026","note":"","address":"Dsn Makmur RT 6 RW 3, Desa Triwung Kidul, Kec Kademangan, Kab Probolinggo","coordinate":"-7.77613, 113.1735"},{"recordId":"26TE08C0033||COLLOCATION||35PBL_0051||DMT_TERMINALBAYUANGGA","sourceRow":96,"name":"DMT_TERMINALBAYUANGGA","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0033","siteId":"35PBL_0051","dmtId":"PBL-07-016","deadline":"11/9/2026","note":"","address":"Jl. Bendi No. 2 RT 03 RW 02, Dsn Sading, Ds Triwung Lor, Kec. Kademangan, Kotamadya Probolinggo, Jawa Timur","coordinate":"-7.76477, 113.174"},{"recordId":"26TE08C0088||COLLOCATION||35PBL_0053||DMT_RSHIDAYATULLAH","sourceRow":97,"name":"DMT_RSHIDAYATULLAH","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0088","siteId":"35PBL_0053","dmtId":"PBL-07-020","deadline":"11/9/2026","note":"","address":"JL SUPRIADI NO4 KANIGARAN, PROBOLINGGO / MAYANGAN, JAWA TIMUR","coordinate":"-7.75846, 113.205"},{"recordId":"26TE08C0051||COLLOCATION||35PBL_0032||SEKARGADUNGBUGULKIDUL","sourceRow":98,"name":"SEKARGADUNGBUGULKIDUL","sow":"COLLOCATION","bast":false,"oneflux":false,"binder":false,"tenant":"SURGE","area":"JATIM","status":"PROGRESS","projectId":"26TE08C0051","siteId":"35PBL_0032","dmtId":"PBL-07-013","deadline":"11/9/2026","note":"","address":"DSN PAKIS JAYA KEDUNG ASEM WONOASIH","coordinate":"-7.78984, 113.2258"}]</script>
 <script>
 (function(){
 "use strict";
@@ -531,8 +2920,8 @@ const refs={
   outstandingList:$("outstandingList"),reportList:$("reportList"),dataInfo:$("dataInfo"),syncInfo:$("syncInfo"),syncNowBtn:$("syncNowBtn"),publishedUrlInput:$("publishedUrlInput"),savePublishedBtn:$("savePublishedBtn"),csvInput:$("csvInput"),jsonInput:$("jsonInput"),
   exportJsonBtn:$("exportJsonBtn"),exportCsvBtn:$("exportCsvBtn"),resetBtn:$("resetBtn"),detailModal:$("detailModal"),
   detailName:$("detailName"),detailSub:$("detailSub"),detailGrid:$("detailGrid"),journeyList:$("journeyList"),integratedDetail:$("integratedDetail"),detailNote:$("detailNote"),
-  closeDetailBtn:$("closeDetailBtn"),mapsBtn:$("mapsBtn"),copyBtn:$("copyBtn"),copySiteBtn:$("copySiteBtn"),copyPlnBtn:$("copyPlnBtn"),
-  favoriteDetailBtn:$("favoriteDetailBtn"),shareSiteWaBtn:$("shareSiteWaBtn"),sharePlnWaBtn:$("sharePlnWaBtn"),
+  closeDetailBtn:$("closeDetailBtn"),favoriteDetailBtn:$("favoriteDetailBtn"),shareBtn:$("shareBtn"),
+  shareModal:$("shareModal"),closeShareBtn:$("closeShareBtn"),shareSiteWaBtn:$("shareSiteWaBtn"),sharePlnWaBtn:$("sharePlnWaBtn"),
   siteTemplateInput:$("siteTemplateInput"),plnTemplateInput:$("plnTemplateInput"),saveTemplatesBtn:$("saveTemplatesBtn"),resetTemplatesBtn:$("resetTemplatesBtn"),
   formPrefillInput:$("formPrefillInput"),editLogUrlInput:$("editLogUrlInput"),editorNameInput:$("editorNameInput"),saveFormConfigBtn:$("saveFormConfigBtn"),clearPendingBtn:$("clearPendingBtn"),
   editorDot:$("editorDot"),editorStatus:$("editorStatus"),editorEmail:$("editorEmail"),editGoogleBtn:$("editGoogleBtn"),
@@ -752,6 +3141,13 @@ function loadData(){
     if(!raw)return clone(fallback);
     const parsed=JSON.parse(raw);
     if(!Array.isArray(parsed)||!parsed.length)return clone(fallback);
+    const fallbackById=new Map(fallback.map(x=>[x.recordId,x]));
+    parsed.forEach(x=>{
+      const base=fallbackById.get(x.recordId);
+      if(!base)return;
+      if(!norm(x.address)&&norm(base.address))x.address=base.address;
+      if(!norm(x.coordinate)&&norm(base.coordinate))x.coordinate=base.coordinate;
+    });
     return parsed;
   }catch(err){
     showError("Data lokal rusak. Database bawaan dipakai sementara. "+err.message);
@@ -803,6 +3199,12 @@ function saveTemplates(){
     localStorage.setItem(PLN_TEMPLATE_KEY,plnTemplate);
   }catch(_){}
 }
+
+function pinIcon(active=false){
+  return active
+    ? `<svg class="pin-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14.9 3.2c.5-.5 1.4-.5 1.9 0l4 4c.5.5.5 1.4 0 1.9l-2 2-2.1-.7-3.3 3.3.6 4.1-1.5 1.5-3.9-3.9-4.7 4.7-.9-.9 4.7-4.7-3.9-3.9 1.5-1.5 4.1.6 3.3-3.3-.7-2.1 2-2Z"/></svg>`
+    : `<svg class="pin-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m14.9 3.2 4 4-2.3 2.3-2.1-.7-4.4 4.4.7 4.1-1.4 1.4-3.7-3.7-4.5 4.5M7.7 9.8l2.1.4 4.4-4.4-.7-2.1 1.4-1.4"/></svg>`;
+}
 function isFavorite(id){return favoriteIds.includes(id)}
 function toggleFavorite(id){
   if(!id)return;
@@ -810,10 +3212,12 @@ function toggleFavorite(id){
   else favoriteIds=[id,...favoriteIds.filter(x=>x!==id)];
   saveFavorites();renderAll();
   if(currentDetail){
-    refs.favoriteDetailBtn.textContent=isFavorite(currentDetail.recordId)?"★ Favorited":"☆ Favorite";
+    refs.favoriteDetailBtn.innerHTML=pinIcon(isFavorite(currentDetail.recordId));
     refs.favoriteDetailBtn.classList.toggle("on",isFavorite(currentDetail.recordId));
+    refs.favoriteDetailBtn.title=isFavorite(currentDetail.recordId)?"Unpin Site":"Pin Site";
+    refs.favoriteDetailBtn.setAttribute("aria-label",refs.favoriteDetailBtn.title);
   }
-  toast(isFavorite(id)?"Site ditambahkan ke Favorite":"Site dihapus dari Favorite");
+  toast(isFavorite(id)?"Site berhasil di-Pin":"Pin Site dilepas");
 }
 function rememberViewed(id){
   if(!id)return;
@@ -856,7 +3260,7 @@ function card(s){
     <div class="signal-row">${healthPill(s)}${deadlinePill(s)}</div>
     <div class="progressbar"><span style="width:${p}%"></span></div><div class="progressline"><span>Progress indikatif</span><span>${p}%</span></div>
     <div class="actions">
-      <button class="btn favorite-btn ${isFavorite(s.recordId)?"on":""}" data-favorite="${attr(s.recordId)}" aria-label="Favorite">${isFavorite(s.recordId)?"★":"☆"}</button>
+      <button class="btn favorite-btn ${isFavorite(s.recordId)?"on":""}" data-favorite="${attr(s.recordId)}" aria-label="${isFavorite(s.recordId)?"Unpin Site":"Pin Site"}" title="${isFavorite(s.recordId)?"Unpin Site":"Pin Site"}">${pinIcon(isFavorite(s.recordId))}</button>
       <button class="btn detail-btn" data-record="${attr(s.recordId)}">Detail</button>
     </div>
   </article>`;
@@ -897,7 +3301,7 @@ function renderDashboard(){
 
   const favorites=recordsFromIds(favoriteIds).slice(0,5);
   refs.favoriteCount.textContent=favorites.length+" site";
-  refs.favoriteList.innerHTML=favorites.length?favorites.map(card).join(""):'<div class="favorite-empty">Belum ada Favorite Site. Tekan ☆ pada site yang ingin dipantau.</div>';
+  refs.favoriteList.innerHTML=favorites.length?favorites.map(card).join(""):'<div class="favorite-empty">Belum ada Pinned Site. Tekan icon Pin pada site yang ingin dipantau.</div>';
 
   const viewed=recordsFromIds(recentViewedIds).slice(0,5);
   refs.recentViewedCount.textContent=viewed.length+" site";
@@ -1065,6 +3469,212 @@ function bastProgress(label,value,detail){
   const b=bastStageInfo(value,detail);
   return `<div class="bast-row-wrap"><div class="bast-row"><b>${esc(label)}</b><div class="bast-track"><span style="width:${b.pct}%"></span></div><strong>${formatPct(b.pct)}</strong></div><div class="bast-row-sub">${b.state==="Completed"?"Completed":"Tahap berikutnya: "+b.next}</div></div>`;
 }
+
+/* ========================= v18 SITE COMPLETION ========================= */
+const SITE_CHECKLIST_KEY="pc_site_completion_v1";
+let siteChecklistState={};
+try{siteChecklistState=JSON.parse(localStorage.getItem(SITE_CHECKLIST_KEY)||"{}")||{}}catch(_){siteChecklistState={}}
+
+const SITE_CHECKLIST_TEMPLATES={
+  NEW_SITE:[
+    {stage:"SITAC",section:"Milestone",items:[
+      ["TSSR"],["Validasi"],["BAN & BAK"],["SPIW & DOK"],["Soltest"],["Rekom Lurcam"],["APD"],["DOK RFC"]
+    ]},
+    {stage:"SITAC",section:"Digitalisasi",items:[["Oneflux Task"]]},
+    {stage:"SITAC",section:"Output",items:[
+      ["Lahan Sewa",true],["Lahan Beli",true],["PKS / AJB-SHM",true]
+    ]},
+    {stage:"PBG",section:"Milestone",items:[
+      ["OSS Process"],["Peta Polygon"],["PKS"],["Surat Jaminan Tower"],["APD Tower"]
+    ]},
+    {stage:"PBG",section:"Digitalisasi",items:[["Oneflux - Digitalisasi PBG Progress"]]},
+    {stage:"PBG",section:"Output",items:[
+      ["PKKPR"],["SPPL"],["NIB"],["SKRD"],["PBG"],["SLF"]
+    ]},
+    {stage:"CME",section:"Milestone",items:[
+      ["SKOM"],["Site Opening"],["Excav / Borepile"],["Rebarring"],["Pouring"],["Curing Time"],["Erection"],["PLN Connection"]
+    ]},
+    {stage:"CME",section:"Digitalisasi",items:[["Oneflux Task"]]},
+    {stage:"CME",section:"Output",items:[["BOQ 1"]]},
+    {stage:"RFI",section:"Milestone",items:[
+      ["Dokumen RFI"],["Fence and Yard"],["Dokumen PLN"],["Kelengkapan"],["Dokumen Pendukung Oneflux"]
+    ]},
+    {stage:"RFI",section:"Digitalisasi",items:[["Oneflux Task"]]},
+    {stage:"RFI",section:"Output",items:[["BOQ 2"]]},
+    {stage:"ATP",section:"Milestone",items:[["ATP Online"],["BAST 1"],["SPP"],["BAST 2"]]},
+    {stage:"ATP",section:"Digitalisasi",items:[["Oneflux Task"]]},
+    {stage:"ATP",section:"Output",items:[["HO to Asset"]]},
+    {stage:"CLOSING PENDING",section:"Closing",items:[["Closing Pending Selesai"]]}
+  ],
+  COLLOCATION:[
+    {stage:"CME",section:"Milestone",items:[
+      ["SKOM"],["Site Opening"],["Excav / Borepile"],["Rebarring"],["Pouring"],["Curing Time"],["Erection"],["PLN Connection"]
+    ]},
+    {stage:"CME",section:"Digitalisasi",items:[["Oneflux Task"]]},
+    {stage:"CME",section:"Output",items:[["BOQ 1"]]},
+    {stage:"RFI",section:"Milestone",items:[
+      ["Dokumen RFI"],["Fence and Yard"],["Dokumen PLN"],["Kelengkapan"],["Dokumen Pendukung Oneflux"]
+    ]},
+    {stage:"RFI",section:"Digitalisasi",items:[["Oneflux Task"]]},
+    {stage:"RFI",section:"Output",items:[["BOQ 2"]]},
+    {stage:"ATP",section:"Milestone",items:[["ATP Online"],["BAST 1"],["SPP"],["BAST 2"]]},
+    {stage:"ATP",section:"Digitalisasi",items:[["Oneflux Task"]]},
+    {stage:"ATP",section:"Output",items:[["HO to Asset"]]},
+    {stage:"CLOSING PENDING",section:"Closing",items:[["Closing Pending Selesai"]]}
+  ],
+  PERKUATAN:[
+    {stage:"PABRIKASI",section:"Dokumen / Foto",items:[
+      ["Foto Implementasi Pekerjaan"],
+      ["Foto Ketebalan Galvanize"],
+      ["Foto Ketebalan Besi"],
+      ["Sertifikat Jaminan / Galvanize"]
+    ]},
+    {stage:"MOS",section:"Dokumen / Foto",items:[
+      ["Berita Acara Material Onsite (MOS)"],
+      ["Foto Pickup"],
+      ["Foto MOS"]
+    ]},
+    {stage:"IMPLEMENTASI",section:"Dokumen / Foto",items:[
+      ["Foto Implementasi Pekerjaan"],
+      ["Foto Before Perkuatan sesuai APD"]
+    ]},
+    {stage:"PEKERJAAN DONE",section:"Dokumen / Foto",items:[
+      ["Foto Pekerjaan Selesai"],
+      ["Foto After Perkuatan sesuai ABD"],
+      ["Undangan ATP"]
+    ]},
+    {stage:"ATP",section:"Dokumen / Foto",items:[
+      ["Foto Implementasi ATP"],
+      ["Foto Torsi Baut"],
+      ["Bebas Hutang"],
+      ["Dok ATP"]
+    ]},
+    {stage:"CLOSING PENDING",section:"Dokumen / Foto",items:[
+      ["Dokumen Closing Pending"],
+      ["Foto Before After Pending",true],
+      ["Bebas Hutang"]
+    ]}
+  ]
+};
+
+function siteChecklistType(s){
+  const sow=headerKey(s?.sow||"").replace(/\s+/g," ");
+  if(sow.includes("NEW SITE"))return"NEW_SITE";
+  if(sow.includes("COLLOCATION")||sow.includes("COLOCATION"))return"COLLOCATION";
+  if(sow.includes("PERKUATAN")||sow==="STR"||sow.includes("STRENGTHEN"))return"PERKUATAN";
+  return"";
+}
+function siteChecklistTemplate(s){return SITE_CHECKLIST_TEMPLATES[siteChecklistType(s)]||[]}
+function siteCheckKey(stage,section,name){return [stage,section,name].join("||")}
+function siteCheckMap(recordId){return siteChecklistState[recordId]||{}}
+function saveSiteChecklistState(){
+  try{localStorage.setItem(SITE_CHECKLIST_KEY,JSON.stringify(siteChecklistState))}catch(_){}
+}
+function siteChecklistFlat(s){
+  return siteChecklistTemplate(s).flatMap(g=>g.items.map(([name,optional])=>({
+    stage:g.stage,section:g.section,name,optional:!!optional,key:siteCheckKey(g.stage,g.section,name)
+  })));
+}
+function siteChecklistStatus(s,item){
+  const raw=siteCheckMap(s.recordId)[item.key];
+  return raw==="OK"||raw==="NA"?""+raw:"BELUM";
+}
+function pctFromItems(s,items){
+  let done=0,total=0;
+  items.forEach(it=>{
+    const st=siteChecklistStatus(s,it);
+    if(st==="NA")return;
+    total++;
+    if(st==="OK")done++;
+  });
+  return total?Math.round(done/total*100):0;
+}
+function siteStageData(s){
+  const flat=siteChecklistFlat(s),order=[];
+  flat.forEach(it=>{if(!order.includes(it.stage))order.push(it.stage)});
+  return order.map(stage=>{
+    const items=flat.filter(it=>it.stage===stage);
+    return {stage,items,pct:pctFromItems(s,items)};
+  });
+}
+function siteCompletionPct(s){return pctFromItems(s,siteChecklistFlat(s))}
+function siteCompletionCard(s){
+  const type=siteChecklistType(s);
+  if(!type)return"";
+  const pct=siteCompletionPct(s),stages=siteStageData(s);
+  return `<div class="site-completion-card process-card-click" data-action="open-site-completion">
+    <div class="site-completion-top">
+      <div><div class="site-completion-title">SITE Completion</div><div class="site-completion-sub">${esc(headerKey(s.sow))} · berdasarkan checklist aktual</div></div>
+      <div class="site-completion-score">${pct}<small>%</small></div>
+    </div>
+    <div class="site-stage-list">
+      ${stages.map(x=>`<div class="site-stage-row"><b>${esc(x.stage)}</b><div class="site-stage-bar"><span style="width:${x.pct}%"></span></div><strong>${x.pct}%</strong></div>`).join("")}
+    </div>
+    <div class="process-next">Tekan card untuk update checklist SITE</div>
+  </div>`;
+}
+function openSiteCompletion(recordId){
+  const s=data.find(x=>x.recordId===recordId)||currentDetail;if(!s)return;
+  const tpl=siteChecklistTemplate(s);
+  if(!tpl.length){toast("Checklist SITE belum tersedia untuk SOW ini");return}
+  closeProcessDetail();
+  const flat=siteChecklistFlat(s),map=siteCheckMap(s.recordId),pct=siteCompletionPct(s),stages=siteStageData(s);
+  const overlay=document.createElement("div");overlay.id="pcProcessDetail";
+  const stageHtml=stages.map(st=>{
+    const groups=tpl.filter(g=>g.stage===st.stage);
+    return `<div class="site-check-stage-card">
+      <div class="site-check-stage-head"><h3>${esc(st.stage)}</h3><span>${st.pct}%</span></div>
+      <div class="site-check-stage-bar"><span style="width:${st.pct}%"></span></div>
+      ${groups.map(g=>`
+        <div class="site-check-section">${esc(g.section)}</div>
+        ${g.items.map(([name,optional])=>{
+          const key=siteCheckKey(g.stage,g.section,name),status=map[key]||"BELUM";
+          const cls=status==="OK"?"status-ok":(status==="NA"?"status-na":"status-pending");
+          return `<div class="site-check-row ${cls}" data-site-check="${attr(key)}">
+            <div class="site-check-name">${esc(name)}${optional?'<span class="site-check-optional">Opsional / boleh N/A</span>':""}</div>
+            <div class="site-check-control"><select>
+              <option value="BELUM"${status==="BELUM"?" selected":""}>Belum</option>
+              <option value="OK"${status==="OK"?" selected":""}>Selesai</option>
+              <option value="NA"${status==="NA"?" selected":""}>N/A</option>
+            </select></div>
+          </div>`;
+        }).join("")}
+      `).join("")}
+    </div>`;
+  }).join("");
+  overlay.innerHTML=`<div class="pc-proc-wrap">
+    <div class="pc-proc-head"><div><h2>SITE Completion</h2><p>${esc(s.name)} · ${esc(headerKey(s.sow))}</p></div><button class="pc-proc-close" type="button">×</button></div>
+    <div class="site-check-summary"><div class="site-check-summary-top"><div class="site-check-summary-score">${pct}<small>%</small></div><div class="site-check-summary-copy"><b>${flat.filter(i=>siteChecklistStatus(s,i)==="OK").length}</b> item selesai<br>N/A tidak masuk pembagi persentase</div></div><div class="process-bar"><span style="width:${pct}%"></span></div></div>
+    ${stageHtml}
+    <div class="site-check-actions"><button class="btn site-check-cancel" type="button">Tutup</button><button class="btn blue site-check-save" type="button">Simpan Checklist</button></div>
+  </div>`;
+  document.body.appendChild(overlay);
+  document.documentElement.style.overflow="hidden";document.body.style.overflow="hidden";
+  overlay.querySelector(".pc-proc-close").onclick=closeProcessDetail;
+  overlay.querySelector(".site-check-cancel").onclick=closeProcessDetail;
+  overlay.querySelectorAll("[data-site-check] select").forEach(sel=>{
+    sel.addEventListener("change",()=>{
+      const row=sel.closest("[data-site-check]");
+      row.classList.remove("status-ok","status-na","status-pending");
+      row.classList.add(sel.value==="OK"?"status-ok":(sel.value==="NA"?"status-na":"status-pending"));
+    });
+  });
+  overlay.querySelector(".site-check-save").onclick=()=>saveSiteCompletionChecklist(s.recordId);
+}
+function saveSiteCompletionChecklist(recordId){
+  const s=data.find(x=>x.recordId===recordId);if(!s)return;
+  const next={...(siteChecklistState[recordId]||{})};
+  document.querySelectorAll("#pcProcessDetail [data-site-check]").forEach(row=>{
+    next[row.dataset.siteCheck]=row.querySelector("select").value;
+  });
+  siteChecklistState[recordId]=next;
+  saveSiteChecklistState();
+  closeProcessDetail();
+  toast("Checklist SITE tersimpan");
+  currentDetail=s;
+  openDetail(s.recordId);
+}
+
 function healthDetailCard(s){
   const h=healthState(s),d=deadlineState(s),b=healthBreakdown(s);
   const dText=d.code==="NONE"?"Deadline belum diisi · tidak memengaruhi persentase Health":d.code==="CLOSED"?"Project closed":d.label+" · "+(s.deadline||"-")+" · alert terpisah dari Health";
@@ -1125,17 +3735,24 @@ function openDetail(recordId){
   currentDetail=s;refs.detailName.textContent=s.name||"(Tanpa Nama Site)";refs.detailSub.textContent=(s.projectId||"-")+" · "+(s.siteId||"-");
   const fields=[
     ["Regional",s.area],["Tenant",s.tenant],["SOW",s.sow],["Status",s.status],
-    ["Project ID",s.projectId],["Site ID",s.siteId],["DMT ID",s.dmtId],["Deadline",s.deadline],
-    ["Alamat Site",s.address],["Koordinat",s.coordinate]
+    ["Project ID",s.projectId,"copy-project"],["Site ID",s.siteId],["DMT ID",s.dmtId],["Deadline",s.deadline],
+    ["Alamat Site",s.address],["Koordinat",s.coordinate,"open-maps"]
   ];
-  refs.detailGrid.innerHTML=fields.map(([k,v])=>`<div class="detail-box"><div class="detail-k">${esc(k)}</div><div class="detail-v">${esc(v||"-")}</div></div>`).join("");
+  refs.detailGrid.innerHTML=fields.map(([k,v,action])=>{
+    const disabled=action==="open-maps"&&(!norm(s.coordinate)||norm(s.coordinate)==="-");
+    const ico=action==="copy-project"?"⧉":"⌖";
+    const label=action==="copy-project"?"Copy Project ID":"Open Maps";
+    const btn=action?`<button class="detail-inline-btn" type="button" data-detail-action="${action}" aria-label="${label}" title="${label}"${disabled?" disabled":""}>${ico}</button>`:"";
+    return `<div class="detail-box"><div class="detail-k">${esc(k)}</div><div class="detail-v-row"><div class="detail-v">${esc(v||"-")}</div>${btn}</div></div>`;
+  }).join("");
   refs.journeyList.innerHTML=
     journey("Binder",!!s.binder)+journey("Oneflux",onefluxSummary(s).state==="Completed")+journey("BAST Document",bastDocPercent(s)===100);
-  refs.integratedDetail.innerHTML=healthDetailCard(s)+integratedCards(s);
+  refs.integratedDetail.innerHTML=siteCompletionCard(s)+healthDetailCard(s)+integratedCards(s);
   refs.detailNote.textContent=s.note||"Tidak ada keterangan.";
-  refs.mapsBtn.disabled=!norm(s.coordinate)||norm(s.coordinate)==="-";refs.mapsBtn.style.opacity=refs.mapsBtn.disabled?".45":"1";
-  refs.favoriteDetailBtn.textContent=isFavorite(s.recordId)?"★ Favorited":"☆ Favorite";
+  refs.favoriteDetailBtn.innerHTML=pinIcon(isFavorite(s.recordId));
   refs.favoriteDetailBtn.classList.toggle("on",isFavorite(s.recordId));
+  refs.favoriteDetailBtn.title=isFavorite(s.recordId)?"Unpin Site":"Pin Site";
+  refs.favoriteDetailBtn.setAttribute("aria-label",refs.favoriteDetailBtn.title);
   renderDashboard();
   refs.detailModal.classList.add("show");
 }
@@ -1293,6 +3910,15 @@ function parseFormPrefillLink(value,throwOnError=true){
 function savePendingEdits(){if(storageAvailable())try{localStorage.setItem(PENDING_EDITS_KEY,JSON.stringify(pendingEdits))}catch(_){}}
 function serializePatchValue(v,type){return type==="bool"?(v?"TRUE":"FALSE"):String(v??"")}
 const PATCH_DEFS={
+  SITE_NAME:{prop:"name",type:"text",label:"Nama Site"},
+  SITE_REGIONAL:{prop:"area",type:"text",label:"Regional"},
+  SITE_TENANT:{prop:"tenant",type:"text",label:"Tenant"},
+  SITE_SOW:{prop:"sow",type:"text",label:"SOW"},
+  SITE_PROJECT_ID:{prop:"projectId",type:"text",label:"Project ID"},
+  SITE_ID:{prop:"siteId",type:"text",label:"Site ID"},
+  SITE_DMT_ID:{prop:"dmtId",type:"text",label:"DMT ID"},
+  SITE_ADDRESS:{prop:"address",type:"text",label:"Alamat Site"},
+  SITE_COORDINATE:{prop:"coordinate",type:"text",label:"Koordinat"},
   MASTER_STATUS:{prop:"status",type:"text",label:"Status Project"},
   MASTER_BINDER:{prop:"binder",type:"bool",label:"Binder"},
   MASTER_ONEFLUX:{prop:"oneflux",type:"bool",label:"Oneflux"},
@@ -1458,6 +4084,19 @@ function openGoogleEditor(){
       <div class="pc-hard-info">EDITOR SIAP · perubahan akan dikirim ke Google Form → EDIT LOG → WEBAPP DATA.</div>
 
       <div class="pc-hard-card">
+        <h3>DATA SITE</h3>
+        <div class="pc-hard-field"><label>Nama Site</label><input id="pcSName" type="text" value="${attr(currentDetail.name||"")}"></div>
+        <div class="pc-hard-field"><label>Regional</label><input id="pcSRegional" type="text" value="${attr(currentDetail.area||"")}"></div>
+        <div class="pc-hard-field"><label>Tenant</label><input id="pcSTenant" type="text" value="${attr(currentDetail.tenant||"")}"></div>
+        <div class="pc-hard-field"><label>SOW</label><input id="pcSSow" type="text" value="${attr(currentDetail.sow||"")}"></div>
+        <div class="pc-hard-field"><label>Project ID</label><input id="pcSProject" type="text" value="${attr(currentDetail.projectId||"")}"></div>
+        <div class="pc-hard-field"><label>Site ID</label><input id="pcSSiteId" type="text" value="${attr(currentDetail.siteId||"")}"></div>
+        <div class="pc-hard-field"><label>DMT ID</label><input id="pcSDmt" type="text" value="${attr(currentDetail.dmtId||"")}"></div>
+        <div class="pc-hard-field"><label>Alamat Site</label><textarea id="pcSAddress">${esc(currentDetail.address||"")}</textarea></div>
+        <div class="pc-hard-field"><label>Koordinat</label><input id="pcSCoordinate" type="text" value="${attr(currentDetail.coordinate||"")}"></div>
+      </div>
+
+      <div class="pc-hard-card">
         <h3>MASTER SITE</h3>
         <div class="pc-hard-field"><label>Status Project</label>
           <select id="pcMStatus">${hardSelectOptions(["PROGRESS","BAST","DONE","HOLD","DROP BY DMT"],currentDetail.status||"PROGRESS")}</select>
@@ -1511,6 +4150,15 @@ function closeGoogleEditor(){
 async function saveGoogleEditor(){
   if(!editorContext||!currentDetail){toast("Data site tidak tersedia");return}
   const patches=[];
+  maybePatch(patches,"SITE_NAME",currentDetail.name,hardEditorEl("pcSName").value.trim());
+  maybePatch(patches,"SITE_REGIONAL",currentDetail.area,hardEditorEl("pcSRegional").value.trim());
+  maybePatch(patches,"SITE_TENANT",currentDetail.tenant,hardEditorEl("pcSTenant").value.trim());
+  maybePatch(patches,"SITE_SOW",currentDetail.sow,hardEditorEl("pcSSow").value.trim());
+  maybePatch(patches,"SITE_PROJECT_ID",currentDetail.projectId,hardEditorEl("pcSProject").value.trim());
+  maybePatch(patches,"SITE_ID",currentDetail.siteId,hardEditorEl("pcSSiteId").value.trim());
+  maybePatch(patches,"SITE_DMT_ID",currentDetail.dmtId,hardEditorEl("pcSDmt").value.trim());
+  maybePatch(patches,"SITE_ADDRESS",currentDetail.address,hardEditorEl("pcSAddress").value.trim());
+  maybePatch(patches,"SITE_COORDINATE",currentDetail.coordinate,hardEditorEl("pcSCoordinate").value.trim());
   maybePatch(patches,"MASTER_STATUS",currentDetail.status,hardEditorEl("pcMStatus").value);
   maybePatch(patches,"MASTER_BINDER",currentDetail.binder,hardEditorEl("pcMBinder").checked);
   maybePatch(patches,"MASTER_BAST",currentDetail.bast,hardEditorEl("pcMBast").checked);
@@ -1655,16 +4303,23 @@ function bindEvents(){
   refs.detailModal.addEventListener("click",e=>{if(e.target===refs.detailModal)closeDetail()});
   refs.integratedDetail.addEventListener("click",e=>{
     const card=e.target.closest("[data-action]");if(!card||!currentDetail)return;
+    if(card.dataset.action==="open-site-completion")openSiteCompletion(currentDetail.recordId);
     if(card.dataset.action==="open-oneflux")openOnefluxChecklist(currentDetail.recordId);
     if(card.dataset.action==="open-bast")openBastDetail(currentDetail.recordId);
   });
-  refs.mapsBtn.addEventListener("click",()=>{if(!currentDetail)return;const url=mapsLink(currentDetail);if(url!=="-")window.open(url,"_blank","noopener")});
-  refs.copyBtn.addEventListener("click",()=>{if(currentDetail)copyText(currentDetail.projectId||"","Project ID disalin")});
-  refs.copySiteBtn.addEventListener("click",()=>{if(currentDetail)copyText(siteCopyText(currentDetail),"Data site disalin")});
-  refs.copyPlnBtn.addEventListener("click",()=>{if(currentDetail)copyText(plnCopyText(currentDetail),"Data PLN disalin")});
-  refs.shareSiteWaBtn.addEventListener("click",()=>{if(currentDetail)shareWhatsApp(siteCopyText(currentDetail))});
-  refs.sharePlnWaBtn.addEventListener("click",()=>{if(currentDetail)shareWhatsApp(plnCopyText(currentDetail))});
-  refs.favoriteDetailBtn.addEventListener("click",()=>{if(currentDetail)toggleFavorite(currentDetail.recordId)});
+  refs.detailGrid.addEventListener("click",e=>{
+    const b=e.target.closest("[data-detail-action]");if(!b||!currentDetail)return;
+    if(b.dataset.detailAction==="copy-project")copyText(currentDetail.projectId||"","Project ID berhasil disalin");
+    if(b.dataset.detailAction==="open-maps"){
+      const url=mapsLink(currentDetail);if(url!=="-"){toast("Membuka Maps…");window.open(url,"_blank","noopener")}
+    }
+  });
+  refs.shareBtn.addEventListener("click",()=>{if(currentDetail)refs.shareModal.classList.add("show")});
+  refs.closeShareBtn.addEventListener("click",()=>refs.shareModal.classList.remove("show"));
+  refs.shareModal.addEventListener("click",e=>{if(e.target===refs.shareModal)refs.shareModal.classList.remove("show")});
+  refs.shareSiteWaBtn.addEventListener("click",()=>{if(currentDetail){toast("Membuka Site WA…");refs.shareModal.classList.remove("show");shareWhatsApp(siteCopyText(currentDetail))}});
+  refs.sharePlnWaBtn.addEventListener("click",()=>{if(currentDetail){toast("Membuka PLN WA…");refs.shareModal.classList.remove("show");shareWhatsApp(plnCopyText(currentDetail))}});
+  refs.favoriteDetailBtn.addEventListener("click",()=>{if(currentDetail){toggleFavorite(currentDetail.recordId);refs.favoriteDetailBtn.innerHTML=pinIcon(isFavorite(currentDetail.recordId));refs.favoriteDetailBtn.classList.toggle("on",isFavorite(currentDetail.recordId));refs.favoriteDetailBtn.title=isFavorite(currentDetail.recordId)?"Unpin Site":"Pin Site";refs.favoriteDetailBtn.setAttribute("aria-label",refs.favoriteDetailBtn.title)}});
   refs.editGoogleBtn.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();openGoogleEditor()});
   document.addEventListener("click",e=>{
     const b=e.target.closest("#editGoogleBtn");
