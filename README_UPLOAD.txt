@@ -1,30 +1,40 @@
-PROJECT CONTROL v10 - FIELD PRODUCTIVITY
+PROJECT CONTROL v11 - PERCENTAGE HEALTH
 
-Fitur baru:
-- Share Data Site langsung ke WhatsApp.
-- Share Data PLN langsung ke WhatsApp.
-- Template Copy/WhatsApp dapat dikustom di Settings.
-- Favorite Site tersimpan lokal di perangkat.
-- Terakhir Dibuka tersimpan lokal, maksimum 10 site.
-- Tombol favorite tersedia di card dan detail site.
-- Semua fitur v9 tetap ada: Live Published Sheet, Health/Deadline, PLN/Oneflux/BAST,
-  ID Pelanggan PLN, alamat, koordinat, copy data, dan Open Maps.
+Perubahan:
+- Project Health sekarang murni sistem persentase.
+- Tidak ada lagi PLN 15/15, Project 15/30, dst.
+- Detail menjadi: Project xx%, PLN xx%, Oneflux xx%, Binder xx%, BAST Doc xx%.
+- Health total = rata-rata lima persentase tersebut.
+- Deadline Alert TIDAK mengurangi persentase Health.
 
-Placeholder template:
-{NAMA_SITE}
-{PROJECT_ID}
-{SITE_ID}
-{ALAMAT}
-{KOORDINAT}
-{LINK_MAPS}
-{DAYA}
-{ID_PELANGGAN}
+Perhitungan PLN:
+- RFI = 20%
+- Connect = 20%
+- HO = 20%
+- Dok PLN = 20%
+- ID Pelanggan = 20%
+- Jika STATUS PLN = DONE, PLN otomatis 100%.
 
-UPDATE GITHUB:
-1. Ganti index.html lama di repository ProjectControl.
-2. Commit changes.
-3. Tunggu GitHub Pages deploy.
-4. Buka ulang https://rizogworks-svg.github.io/ProjectControl/
-5. Tekan Sync Sekarang bila diperlukan.
+Project:
+- DONE 100%
+- BAST 80%
+- PROGRESS 50%
+- HOLD 20%
+- DROP 0%
 
-Published CSV URL lama dan cache v9 dimigrasikan otomatis.
+Oneflux:
+- Selesai 100%
+- Hold 25%
+- Belum 0%
+
+Binder:
+- Done 100%
+- Pending 0%
+
+BAST Document:
+- Dihitung dari progress dokumen SITAC/CME/IMB/Addwork yang tersedia.
+
+Semua fitur v10 tetap ada: WhatsApp, template, Favorite, Recent Viewed, IDPEL, Maps, copy data, live sync.
+
+Cara update:
+Ganti index.html di GitHub dengan index.html v11 lalu commit.

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Project Control v10 · Field Productivity</title>
+<title>Project Control v11 · Percentage Health</title>
 <style>
 :root{
   --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7a8699;--line:#e5e9f0;
@@ -102,13 +102,13 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 </head>
 <body>
 <div class="app">
-<header><div class="header-inner"><div class="brand"><small>Field Productivity Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
+<header><div class="header-inner"><div class="brand"><small>Percentage Project Health Tracker</small><h1>Project Control</h1></div><div class="sync-badge" id="storageBadge">Memuat...</div></div></header>
 <main>
 <div id="errorBanner" class="error-banner"></div>
 
 <section id="homeView" class="view active">
   <div class="hero">
-    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v10</div></div>
+    <div class="hero-head"><div><div class="eyebrow">Total Database</div><h2 id="homeTotal">0</h2><p id="dataCaption">Memuat data project...</p></div><div class="hero-tag">LIVE v11</div></div>
     <div class="hero-grid">
       <div class="hero-mini"><b id="homeDone">0</b><span>Done</span></div>
       <div class="hero-mini"><b id="homeProgress">0</b><span>Progress</span></div>
@@ -133,12 +133,12 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
   </section>
 
   <section class="section">
-    <div class="section-head"><h3>Project Health</h3><span>skor gabungan</span></div>
+    <div class="section-head"><h3>Project Health</h3><span>persentase progres</span></div>
     <div class="health-grid">
       <div class="health-kpi healthy"><strong id="healthHealthy">0</strong><span>Healthy</span></div>
       <div class="health-kpi watch"><strong id="healthWatch">0</strong><span>Watch</span></div>
       <div class="health-kpi critical"><strong id="healthCritical">0</strong><span>Critical</span></div>
-      <div class="health-kpi"><strong id="healthAvg">0</strong><span>Avg Score</span></div>
+      <div class="health-kpi"><strong id="healthAvg">0%</strong><span>Avg Health</span></div>
     </div>
   </section>
 
@@ -248,6 +248,9 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
     <button id="saveTemplatesBtn" class="btn blue">Simpan Template</button>
     <button id="resetTemplatesBtn" class="btn">Reset Template Default</button>
 
+    <div class="info-box"><b>Sistem Project Health v11:</b><br>
+      Project, PLN, Oneflux, Binder, dan BAST Doc masing-masing dihitung 0–100%. Health total = rata-rata 5 bagian. Deadline hanya alert dan tidak mengurangi persentase Health.
+    </div>
     <div class="info-box">Mode published-sheet: aplikasi membaca CSV publik dari tab WEBAPP DATA. Tidak memakai Apps Script. Jika koneksi gagal, cache terakhir di perangkat tetap dipakai.</div>
   </div>
 </section>
@@ -292,11 +295,11 @@ nav button{border:0;background:transparent;color:#8a95a7;padding:5px 2px;font-si
 (function(){
 "use strict";
 
-const STORAGE_KEY="project_control_v10_data";
-const LEGACY_STORAGE_KEY="project_control_v9_data";
+const STORAGE_KEY="project_control_v11_data";
+const LEGACY_STORAGE_KEY="project_control_v10_data";
 const LAST_SYNC_KEY="project_control_v6_last_sync";
 const PUBLISHED_URL_KEY="project_control_v6_published_url";
-const APP_VERSION="10.0";
+const APP_VERSION="11.0";
 const FAVORITES_KEY="project_control_v10_favorites";
 const RECENT_VIEW_KEY="project_control_v10_recent_view";
 const SITE_TEMPLATE_KEY="project_control_v10_site_template";
@@ -436,34 +439,52 @@ function docRatio(s){
   if(low(s.status).includes("bast"))return .6;
   return 0;
 }
-function healthBreakdown(s){
-  const st=low(s.status);
-  let project=st==="done"?30:st.includes("bast")?24:st.includes("progress")?15:st.includes("hold")?5:st.includes("drop")?0:12;
-  const plnKnown=!!norm(s.plnStatus);
-  const pln=low(s.plnStatus)==="done"?15:(plnKnown?3:7);
-  const ofDone=s.onefluxStatus?low(s.onefluxStatus)==="selesai":!!s.oneflux;
-  const oneflux=ofDone?20:0;
-  const binder=s.binder?15:0;
-  const docs=Math.round(docRatio(s)*20);
-  return {project,pln,oneflux,binder,docs};
-}
-function healthScore(s){
+function projectPercent(s){
   const st=low(s.status);
   if(st==="done")return 100;
+  if(st.includes("bast"))return 80;
+  if(st.includes("progress"))return 50;
+  if(st.includes("hold"))return 20;
   if(st.includes("drop"))return 0;
+  return 0;
+}
+function plnPercent(s){
+  if(low(s.plnStatus)==="done")return 100;
+  let done=0,total=5;
+  if(s.plnRfi)done++;
+  const connect=low(s.plnConnect);
+  if(connect && !connect.includes("belum"))done++;
+  if(s.plnHo)done++;
+  if(s.plnDoc)done++;
+  const idPel=norm(s.plnCustomerId);
+  if(idPel && idPel!=="-" && idPel!=="⛔")done++;
+  return Math.round(done/total*100);
+}
+function onefluxPercent(s){
+  const st=low(s.onefluxStatus);
+  if(st==="selesai"||s.oneflux===true)return 100;
+  if(st.includes("hold"))return 25;
+  return 0;
+}
+function binderPercent(s){return s.binder?100:0}
+function bastDocPercent(s){return Math.round(docRatio(s)*100)}
+function healthBreakdown(s){
+  return {
+    project:projectPercent(s),
+    pln:plnPercent(s),
+    oneflux:onefluxPercent(s),
+    binder:binderPercent(s),
+    docs:bastDocPercent(s)
+  };
+}
+function healthScore(s){
   const b=healthBreakdown(s);
-  let score=b.project+b.pln+b.oneflux+b.binder+b.docs;
-  const dl=deadlineState(s);
-  if(dl.code==="OVERDUE")score-=20;
-  else if(dl.code==="H3")score-=10;
-  else if(dl.code==="H7")score-=5;
-  if(st.includes("hold"))score=Math.min(score,45);
-  return Math.max(0,Math.min(100,Math.round(score)));
+  return Math.round((b.project+b.pln+b.oneflux+b.binder+b.docs)/5);
 }
 function healthState(s){
-  const score=healthScore(s),st=low(s.status),dl=deadlineState(s);
-  if(st.includes("drop")||st.includes("hold")||dl.code==="OVERDUE"||score<60)return {code:"CRITICAL",label:"Critical",score,cls:"critical"};
-  if(score<80||dl.code==="H3"||dl.code==="H7")return {code:"WATCH",label:"Watch",score,cls:"watch"};
+  const score=healthScore(s),st=low(s.status);
+  if(st.includes("drop")||st.includes("hold")||score<50)return {code:"CRITICAL",label:"Critical",score,cls:"critical"};
+  if(score<80)return {code:"WATCH",label:"Watch",score,cls:"watch"};
   return {code:"HEALTHY",label:"Healthy",score,cls:"healthy"};
 }
 function isCriticalSite(s){return isActive(s)&&healthState(s).code==="CRITICAL"}
@@ -475,7 +496,7 @@ function criticalSort(a,b){
 }
 function healthPill(s){
   const h=healthState(s);
-  return `<span class="health-pill ${h.cls}">Health ${h.score} · ${h.label}</span>`;
+  return `<span class="health-pill ${h.cls}">Health ${h.score}% · ${h.label}</span>`;
 }
 function deadlinePill(s){
   const d=deadlineState(s);
@@ -623,7 +644,7 @@ function renderDashboard(){
   const watch=healthRows.filter(x=>x.code==="WATCH").length;
   const critical=healthRows.filter(x=>x.code==="CRITICAL").length;
   const avg=data.length?Math.round(data.reduce((n,s)=>n+healthScore(s),0)/data.length):0;
-  refs.healthHealthy.textContent=healthy;refs.healthWatch.textContent=watch;refs.healthCritical.textContent=critical;refs.healthAvg.textContent=avg;
+  refs.healthHealthy.textContent=healthy;refs.healthWatch.textContent=watch;refs.healthCritical.textContent=critical;refs.healthAvg.textContent=avg+"%";
 
   const active=data.filter(isActive),deadlines=active.map(s=>deadlineState(s));
   refs.deadlineOverdue.textContent=deadlines.filter(x=>x.code==="OVERDUE").length;
@@ -728,7 +749,7 @@ function renderReport(){
     return `<div class="report-card">
       <div class="report-top"><div><h4>${esc(a)}</h4><div class="muted">${done} Done · ${prog} Progress · ${bast} BAST</div></div><b>${rows.length}</b></div>
       <div class="bar"><span style="width:${avg}%"></span></div>
-      <div class="report-meta">Health ${avg}/100 · ${critical} Critical · ${overdue} Overdue · ${pct}% DONE</div>
+      <div class="report-meta">Health ${avg}% · ${critical} Critical · ${overdue} Overdue · ${pct}% DONE</div>
       <div class="actions"><button class="btn report-open-btn" data-region-report="${attr(a)}">Buka Site</button></div>
     </div>`;
   }).join("")||'<div class="empty">Belum ada data report.</div>';
@@ -763,18 +784,18 @@ function bastProgress(label,value){
 }
 function healthDetailCard(s){
   const h=healthState(s),d=deadlineState(s),b=healthBreakdown(s);
-  const dText=d.code==="NONE"?"Deadline belum diisi":d.code==="CLOSED"?"Project closed":d.label+" · "+(s.deadline||"-");
+  const dText=d.code==="NONE"?"Deadline belum diisi · tidak memengaruhi persentase Health":d.code==="CLOSED"?"Project closed":d.label+" · "+(s.deadline||"-")+" · alert terpisah dari Health";
   return `<div class="health-summary">
     <div class="health-summary-top">
-      <div><div class="eyebrow">Project Health</div><div class="health-score">${h.score}<small>/100</small></div></div>
+      <div><div class="eyebrow">Project Health</div><div class="health-score">${h.score}<small>%</small></div></div>
       <div>${healthPill(s)}<div style="height:6px"></div>${deadlinePill(s)}</div>
     </div>
     <div class="health-breakdown">
-      <div class="health-part"><b>${b.project}/30</b><span>Project</span></div>
-      <div class="health-part"><b>${b.pln}/15</b><span>PLN</span></div>
-      <div class="health-part"><b>${b.oneflux}/20</b><span>Oneflux</span></div>
-      <div class="health-part"><b>${b.binder}/15</b><span>Binder</span></div>
-      <div class="health-part"><b>${b.docs}/20</b><span>BAST Doc</span></div>
+      <div class="health-part"><b>${b.project}%</b><span>Project</span></div>
+      <div class="health-part"><b>${b.pln}%</b><span>PLN</span></div>
+      <div class="health-part"><b>${b.oneflux}%</b><span>Oneflux</span></div>
+      <div class="health-part"><b>${b.binder}%</b><span>Binder</span></div>
+      <div class="health-part"><b>${b.docs}%</b><span>BAST Doc</span></div>
     </div>
     <div class="deadline-box ${d.cls}">${esc(dText)}</div>
   </div>`;
@@ -1018,7 +1039,7 @@ function bindEvents(){
   refs.exportJsonBtn.addEventListener("click",()=>download("project-control-backup-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify({version:APP_VERSION,exportedAt:new Date().toISOString(),data},null,2),"application/json"));
   refs.exportCsvBtn.addEventListener("click",()=>{
     const headers=["NAME SITE","SOW","TENANT","REGIONAL","STATUS PROJECT","PROJECT ID","SITE ID","SITE ID DMT","ALAMAT SITE","KOORDINAT","HEALTH SCORE","HEALTH STATUS","DEADLINE ALERT","BAST DONE","ONEFLUX","BINDER","DEADLINE PROJECT","KETERANGAN","STATUS PLN","RFI","CONNECT","HO","DOK PLN","PLN NOTE","DAYA PLN","ID PELANGGAN PLN","STATUS ONEFLUX","ONEFLUX ISSUE","ONEFLUX NOTE","BAST SITAC","BAST CME","BAST IMB","BAST ADDWORK 1","BAST ADDWORK 2"];
-    const rows=data.map(s=>[s.name,s.sow,s.tenant,s.area,s.status,s.projectId,s.siteId,s.dmtId,s.address,s.coordinate,healthScore(s),healthState(s).label,deadlineState(s).label,s.bast,s.oneflux,s.binder,s.deadline,s.note,s.plnStatus,s.plnRfi,s.plnConnect,s.plnHo,s.plnDoc,s.plnNote,s.plnPower,s.plnCustomerId,s.onefluxStatus,s.onefluxIssue,s.onefluxNote,s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2]);
+    const rows=data.map(s=>[s.name,s.sow,s.tenant,s.area,s.status,s.projectId,s.siteId,s.dmtId,s.address,s.coordinate,healthScore(s)+"%",healthState(s).label,deadlineState(s).label,s.bast,s.oneflux,s.binder,s.deadline,s.note,s.plnStatus,s.plnRfi,s.plnConnect,s.plnHo,s.plnDoc,s.plnNote,s.plnPower,s.plnCustomerId,s.onefluxStatus,s.onefluxIssue,s.onefluxNote,s.bastSitac,s.bastCme,s.bastImb,s.bastAdd1,s.bastAdd2]);
     download("project-control-"+new Date().toISOString().slice(0,10)+".csv",[headers,...rows].map(r=>r.map(csvEscape).join(",")).join("\n"),"text/csv");
   });
   refs.resetBtn.addEventListener("click",()=>{if(!confirm("Reset cache lokal ke database bawaan?"))return;data=ensureRecordIds(seed());syncMode="cache";activeRegional="ALL";focusFilter="ALL";saveData();clearError();renderAll();toast("Database bawaan dimuat ulang")});
